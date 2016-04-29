@@ -1,5 +1,8 @@
 package thuynh90.tacoma.uw.edu.listitwatchit;
 
+import android.app.SearchManager;
+import android.content.ComponentName;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
@@ -26,16 +29,15 @@ public class MainActivity extends AppCompatActivity {
 
 
         final SearchView searchView = (SearchView) menu.findItem(R.id.search).getActionView();
-        searchView.setQueryHint("Search Movies...");
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             // TODO: Submitted search
             public boolean onQueryTextSubmit(String query) {
                 //Test search value.ToBeDeleted
                 Toast.makeText(MainActivity.this, "Search value: " + query, Toast.LENGTH_SHORT).show();
-                if( ! searchView.isIconified()) {
-                    searchView.setIconified(true);
-                }
+//                if( ! searchView.isIconified()) {
+//                    searchView.setIconified(true);
+//                }
                 return false;
             }
             @Override
@@ -44,6 +46,10 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
+
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(new ComponentName(this, MainActivity.class)));
+        searchView.setIconifiedByDefault(false);
 
         return true;
     }
