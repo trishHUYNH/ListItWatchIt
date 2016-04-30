@@ -14,6 +14,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
@@ -36,21 +37,23 @@ public class MovieSuggestionProvider extends ContentProvider{
     @Nullable
     @Override
     /**
-     * TODO: Add year into Cursor to display in search results
+     * Submits query to TMDb, parses JSON result through helper method, returns array
+     * of suggested results.
+     *
      * TODO: Display "No Results Found"
-     * TODO: Replace spaces in queries with "+"
      */
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
 
-        HttpURLConnection urlConnection;
+        BufferedReader reader = null;
+        HttpURLConnection urlConnection = null;
         String urlString;
         String jsonString;
-        BufferedReader reader;
         String query = uri.getLastPathSegment().toLowerCase();
+        String tmdbQuery = query.replaceAll(" ", "+");
         int limit = Integer.parseInt(uri.getQueryParameter(SearchManager.SUGGEST_PARAMETER_LIMIT));
 
         try {
-            urlString = movieQueryURL + API_KEY + "&query=" + query;
+            urlString = movieQueryURL + API_KEY + "&query=" + tmdbQuery;
             System.out.println(urlString);
             URL url = new URL(urlString);
             urlConnection = (HttpURLConnection) url.openConnection();
@@ -59,7 +62,7 @@ public class MovieSuggestionProvider extends ContentProvider{
 
             //Read input stream into String
             InputStream inputStream = urlConnection.getInputStream();
-            StringBuffer stringBuffer = new StringBuffer();
+            StringBuilder stringBuilder = new StringBuilder();
             if(inputStream == null) {
                 return null;
             }
@@ -67,13 +70,13 @@ public class MovieSuggestionProvider extends ContentProvider{
             String line;
 
             while((line = reader.readLine()) != null) {
-                stringBuffer.append(line + "\n");
+                stringBuilder.append(line + "\n");
             }
-            if(stringBuffer.length() == 0) {
+            if(stringBuilder.length() == 0) {
                 return null;
             }
 
-            jsonString = stringBuffer.toString();
+            jsonString = stringBuilder.toString();
 
             //Call helper method to return String array of JSON paths
             try {
@@ -84,6 +87,17 @@ public class MovieSuggestionProvider extends ContentProvider{
 
         } catch (Exception e) {
                 e.printStackTrace();
+        } finally {
+            if(urlConnection != null) {
+                urlConnection.disconnect();
+            }
+            if(reader != null) {
+                try {
+                    reader.close();
+                } catch (IOException e){
+                    e.printStackTrace();
+                }
+            }
         }
 
 
@@ -95,6 +109,7 @@ public class MovieSuggestionProvider extends ContentProvider{
                         SearchManager.SUGGEST_COLUMN_INTENT_DATA_ID
                 }
         );
+
         if (movies != null) {
             int length = movies.length;
             for (int i = 0; i < length && cursor.getCount() < limit; i++) {
@@ -113,7 +128,6 @@ public class MovieSuggestionProvider extends ContentProvider{
      * @return Array of movie titles
      * @throws JSONException
      *
-     * TODO: Add movie year to array
      */
     private String[] getJSONPaths(String jsonString) throws JSONException {
 
@@ -126,11 +140,13 @@ public class MovieSuggestionProvider extends ContentProvider{
         {
             JSONObject movie = moviesArray.getJSONObject(i);
             String movieTitle = movie.getString("original_title");
-            result[i] = movieTitle;
+            String movieYear = " (" + movie.getString("release_date") + ")";
+            result[i] = movieTitle + movieYear;
         }
 
         return result;
     }
+
 
     @Nullable
     @Override

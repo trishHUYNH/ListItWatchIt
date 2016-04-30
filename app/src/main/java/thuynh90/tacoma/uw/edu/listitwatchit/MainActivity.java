@@ -31,17 +31,12 @@ public class MainActivity extends AppCompatActivity {
         final SearchView searchView = (SearchView) menu.findItem(R.id.search).getActionView();
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
-            // TODO: Submitted search
             public boolean onQueryTextSubmit(String query) {
                 //Test search value.ToBeDeleted
                 Toast.makeText(MainActivity.this, "Search value: " + query, Toast.LENGTH_SHORT).show();
-//                if( ! searchView.isIconified()) {
-//                    searchView.setIconified(true);
-//                }
                 return false;
             }
             @Override
-            // TODO: Suggested results
             public boolean onQueryTextChange(String s) {
                 return false;
             }
