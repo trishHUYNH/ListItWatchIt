@@ -12,7 +12,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import thuynh90.tacoma.uw.edu.listitwatchit.R;
 
@@ -41,8 +40,25 @@ public class LoginFragment extends Fragment {
         buttonLogin.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Test. ToBeDeleted
-                Toast.makeText(getActivity(), "Login button clicked", Toast.LENGTH_SHORT).show();
+                String email = emailLogin.getText().toString().trim();
+                String password = passwordLogin.getText().toString().trim();
+
+                if(email.isEmpty() || !email.contains("@")) {
+                    emailLogin.setError("Enter valid email");
+                    return;
+                }
+                if(password.isEmpty()) {
+                    passwordLogin.setError("Enter valid password");
+                    return;
+                }
+                if(password.length() < 6) {
+                    passwordLogin.setError("Password must be at least six characters");
+                    return;
+                }
+
+                // Passes through all validation
+                // Attempt login
+                ( (LoginActivity) getActivity()).login(email, password);
 
             }
         });

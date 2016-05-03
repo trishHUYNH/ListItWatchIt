@@ -11,6 +11,16 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="thuynh90.tacoma.uw.edu.listitwatchit.MainActivity"
-    tools:showIn="@layout/activity_main">
+    tools:showIn="@layout/activity_main_login_false">
 
+    <TextView android:id="@+id/login_link_from_main"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:gravity="center"
+              android:layout_marginTop="56dp"
+              android:textSize="36sp"
+              android:onClick="directToLogin"
+              android:clickable="true"
+              android:text="@string/main_login_false"/>
 </LinearLayout>
+

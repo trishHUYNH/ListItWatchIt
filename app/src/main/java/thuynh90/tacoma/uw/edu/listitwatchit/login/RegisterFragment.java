@@ -65,7 +65,7 @@ public class RegisterFragment extends Fragment {
                     return;
                 }
 
-                // Passes through all validation.
+                // Passes through all validation
                 // Attempt registration
                 ( (LoginActivity) getActivity()).register(email, password);
             }

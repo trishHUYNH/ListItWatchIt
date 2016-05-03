@@ -4,4 +4,9 @@
     <string name="search_hint">Search a new movie…</string>
     <string name="register_link">Don\'t have a List It Watch It account? Create one!</string>
     <string name="register_login">Already have an account? Login!</string>
+    <string name="main_login_false">Login here to view all of your movie lists!</string>
+
+    <string name="LOGIN_PREFS">thuynh90.tacoma.uw.edu.listitwatchit.PREFS</string>
+    <string name="LOGGEDIN">loggedin</string>
+
 </resources>

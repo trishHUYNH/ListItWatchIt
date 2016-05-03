@@ -1,5 +1,8 @@
 package thuynh90.tacoma.uw.edu.listitwatchit.login;
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -13,6 +16,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import thuynh90.tacoma.uw.edu.listitwatchit.MainActivity;
 import thuynh90.tacoma.uw.edu.listitwatchit.R;
 import thuynh90.tacoma.uw.edu.listitwatchit.login.LoginFragment.LoginInteractionListener;
 import thuynh90.tacoma.uw.edu.listitwatchit.login.RegisterFragment.RegisterInteractionListener;
@@ -20,6 +24,8 @@ import thuynh90.tacoma.uw.edu.listitwatchit.login.RegisterFragment.RegisterInter
 public class LoginActivity extends AppCompatActivity implements RegisterInteractionListener, LoginInteractionListener {
 
     private static final String REGISTER_URL = "http://cssgate.insttech.washington.edu/~_450atm6/registerUser.php?";
+    private static final String LOGIN_URL = "http://cssgate.insttech.washington.edu/~_450atm6/login.php?";
+    private SharedPreferences mSharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,7 +34,6 @@ public class LoginActivity extends AppCompatActivity implements RegisterInteract
         //this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_login);
         getSupportFragmentManager().beginTransaction().add(R.id.login_container, new LoginFragment() ).commit();
-
     }
 
     @Override
@@ -88,10 +93,22 @@ public class LoginActivity extends AppCompatActivity implements RegisterInteract
     }
 
     @Override
+    /**
+     * @TODO: Complete login authentication
+     */
     public void login(String email, String password) {
-        System.out.println("Login method called");
+        mSharedPreferences = getSharedPreferences(getString(R.string.LOGIN_PREFS), Context.MODE_PRIVATE);
+        mSharedPreferences.edit().putBoolean(getString(R.string.LOGGEDIN), true).apply();
+
+        Intent i = new Intent(this, MainActivity.class);
+        startActivity(i);
+        finish();
+
     }
 
+    /**
+     * Helper method to return user to login fragment after successful registration
+     */
     public void returnToLogin() {
 
         getSupportFragmentManager().beginTransaction().replace(R.id.login_container, new LoginFragment()).commit();
