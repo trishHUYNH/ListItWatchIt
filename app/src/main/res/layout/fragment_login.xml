@@ -12,6 +12,14 @@
                android:layout_marginBottom="24dp"
                android:layout_gravity="center_horizontal" />
 
+    <!--<TextView-->
+            <!--android:layout_width="fill_parent"-->
+              <!--android:layout_height="wrap_content"-->
+              <!--android:layout_marginTop="24dp"-->
+              <!--android:text="List It Watch It"-->
+              <!--android:gravity="center"-->
+              <!--android:textSize="80sp"/>-->
+
     <EditText android:id="@+id/login_email"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
@@ -26,11 +34,12 @@
               android:layout_height="wrap_content"
               android:layout_marginTop="8dp"
               android:layout_marginBottom="8dp"
+              android:fontFamily="sans-serif"
               android:inputType="textPassword"
               android:hint="Password"/>
 
     <Button
-        android:id="@+id/login_buttoCreatedCreatsdfddn"
+        android:id="@+id/login_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Login"/>

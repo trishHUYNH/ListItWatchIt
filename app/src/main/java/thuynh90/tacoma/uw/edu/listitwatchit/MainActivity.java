@@ -3,6 +3,7 @@ package thuynh90.tacoma.uw.edu.listitwatchit;
 import android.app.SearchManager;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
@@ -20,6 +21,8 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("List It Watch It");
+
+
     }
 
     @Override
@@ -32,8 +35,6 @@ public class MainActivity extends AppCompatActivity {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                //Test search value.ToBeDeleted
-                Toast.makeText(MainActivity.this, "Search value: " + query, Toast.LENGTH_SHORT).show();
                 return false;
             }
             @Override
@@ -50,8 +51,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-
-
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
@@ -69,8 +68,25 @@ public class MainActivity extends AppCompatActivity {
 
         }
 
-
-
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    /**
+     * Handles search intents.
+     * Suggestion selection returns movie ID from TMDb
+     */
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+            String query = intent.getStringExtra(SearchManager.QUERY);
+            // Test toast. ToBeDeleted
+            Toast.makeText(this, "Searching by: "+ query, Toast.LENGTH_LONG).show();
+
+        } else if (Intent.ACTION_VIEW.equals(intent.getAction())) {
+            String uri = intent.getDataString();
+            // Test toast. ToBeDeleted.
+            Toast.makeText(this, "Movie ID: "+ uri, Toast.LENGTH_LONG).show();
+        }
     }
 }

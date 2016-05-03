@@ -1,6 +1,7 @@
 package thuynh90.tacoma.uw.edu.listitwatchit.login;
 
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -20,6 +21,7 @@ import thuynh90.tacoma.uw.edu.listitwatchit.R;
  */
 public class LoginFragment extends Fragment {
 
+    private LoginInteractionListener mListener;
 
     public LoginFragment() {
         // Required empty public constructor
@@ -41,6 +43,7 @@ public class LoginFragment extends Fragment {
             public void onClick(View v) {
                 //Test. ToBeDeleted
                 Toast.makeText(getActivity(), "Login button clicked", Toast.LENGTH_SHORT).show();
+
             }
         });
         TextView registerLink = (TextView) view.findViewById(R.id.register_link);
@@ -58,6 +61,26 @@ public class LoginFragment extends Fragment {
         });
 
         return view;
+    }
+
+    public interface LoginInteractionListener {
+        void login(String email, String password);
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof LoginInteractionListener) {
+            mListener = (LoginInteractionListener) context;
+        } else {
+            throw new RuntimeException(context.toString() + " must implement LoginInteractionListener");
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mListener = null;
     }
 
 }

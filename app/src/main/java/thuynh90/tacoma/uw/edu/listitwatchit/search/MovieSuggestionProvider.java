@@ -25,7 +25,6 @@ import java.net.URL;
  */
 public class MovieSuggestionProvider extends ContentProvider{
 
-    private String[] movies;
     static private String API_KEY = "6e2537d9c135091718d558d8d56a7cde";
     static private String movieQueryURL = "http://api.themoviedb.org/3/search/movie?api_key=";
 
@@ -37,10 +36,7 @@ public class MovieSuggestionProvider extends ContentProvider{
     @Nullable
     @Override
     /**
-     * Submits query to TMDb, parses JSON result through helper method, returns array
-     * of suggested results.
-     *
-     * TODO: Display "No Results Found"
+     * Submits query to TMDb, parses JSON result, returns cursor array of suggested results.
      */
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
 
@@ -50,6 +46,7 @@ public class MovieSuggestionProvider extends ContentProvider{
         String jsonString;
         String query = uri.getLastPathSegment().toLowerCase();
         String tmdbQuery = query.replaceAll(" ", "+");
+        MatrixCursor cursor;
         int limit = Integer.parseInt(uri.getQueryParameter(SearchManager.SUGGEST_PARAMETER_LIMIT));
 
         try {
@@ -78,9 +75,40 @@ public class MovieSuggestionProvider extends ContentProvider{
 
             jsonString = stringBuilder.toString();
 
-            //Call helper method to return String array of JSON paths
+
             try {
-                movies = getJSONPaths(jsonString);
+                // Retrieves values from String[] movies to put into cursor table that fits user query
+                cursor = new MatrixCursor(
+                        new String[] {
+                                BaseColumns._ID,
+                                SearchManager.SUGGEST_COLUMN_TEXT_1,
+                                SearchManager.SUGGEST_COLUMN_TEXT_2,
+                                SearchManager.SUGGEST_COLUMN_INTENT_DATA
+                        }
+                );
+
+                JSONObject JSONString = new JSONObject(jsonString);
+
+                JSONArray moviesArray = JSONString.getJSONArray("results");
+
+                for(int i = 0; i < moviesArray.length() && cursor.getCount() < limit; i++)
+                {
+
+                    JSONObject movie = moviesArray.getJSONObject(i);
+                    String movieTitle = movie.getString("original_title");
+                    String releaseDate = "Release Date: " + movie.getString("release_date");
+                    String movieID = movie.getString("id");
+                    if (movieTitle.toLowerCase().contains(query)) {
+                        cursor.addRow(new Object[]{i, movieTitle, releaseDate, movieID});
+                    }
+
+                }
+
+                if (cursor.getCount() == 0 && query.length() > 1) {
+                    cursor.addRow(new Object[]{0, "No movies found matching your search", null, null});
+                }
+
+                return cursor;
             } catch (JSONException e) {
                 return null;
             }
@@ -99,52 +127,7 @@ public class MovieSuggestionProvider extends ContentProvider{
                 }
             }
         }
-
-
-        // Retrieves values from String[] movies to put into cursor that fits user query
-        MatrixCursor cursor = new MatrixCursor(
-                new String[] {
-                        BaseColumns._ID,
-                        SearchManager.SUGGEST_COLUMN_TEXT_1,
-                        SearchManager.SUGGEST_COLUMN_INTENT_DATA_ID
-                }
-        );
-
-        if (movies != null) {
-            int length = movies.length;
-            for (int i = 0; i < length && cursor.getCount() < limit; i++) {
-                String movie = movies[i];
-                if (movie.toLowerCase().contains(query)){
-                    cursor.addRow(new Object[]{ i, movie, i });
-                }
-            }
-        }
-        return cursor;
-    }
-
-    /**
-     *
-     * @param jsonString
-     * @return Array of movie titles
-     * @throws JSONException
-     *
-     */
-    private String[] getJSONPaths(String jsonString) throws JSONException {
-
-        JSONObject JSONString = new JSONObject(jsonString);
-
-        JSONArray moviesArray = JSONString.getJSONArray("results");
-        String[] result = new String[moviesArray.length()];
-
-        for(int i = 0; i <moviesArray.length();i++)
-        {
-            JSONObject movie = moviesArray.getJSONObject(i);
-            String movieTitle = movie.getString("original_title");
-            String movieYear = " (" + movie.getString("release_date") + ")";
-            result[i] = movieTitle + movieYear;
-        }
-
-        return result;
+        return null;
     }
 
 
