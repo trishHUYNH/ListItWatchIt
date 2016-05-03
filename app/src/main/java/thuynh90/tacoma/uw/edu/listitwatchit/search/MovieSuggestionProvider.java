@@ -21,7 +21,9 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 /**
- * Created by thuynh90 on 4/28/16.
+ * Provides search suggestions.
+ * Re-populates list of suggestions for each character that the user
+ * enters that best fits their query.
  */
 public class MovieSuggestionProvider extends ContentProvider{
 
@@ -36,7 +38,10 @@ public class MovieSuggestionProvider extends ContentProvider{
     @Nullable
     @Override
     /**
-     * Submits query to TMDb, parses JSON result, returns cursor array of suggested results.
+     * Submits query to TMDb with each character typed.
+     * Parses JSON result.
+     * Returns cursor array of suggested results.
+     * Returns "No results found" if cursor count is zero
      */
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
 
@@ -51,7 +56,6 @@ public class MovieSuggestionProvider extends ContentProvider{
 
         try {
             urlString = movieQueryURL + API_KEY + "&query=" + tmdbQuery;
-            System.out.println(urlString);
             URL url = new URL(urlString);
             urlConnection = (HttpURLConnection) url.openConnection();
             urlConnection.setRequestMethod("GET");
@@ -77,12 +81,16 @@ public class MovieSuggestionProvider extends ContentProvider{
 
 
             try {
-                // Retrieves values from String[] movies to put into cursor table that fits user query
+                // Parses from JSON results to put into cursor table that fits user query
+                // Returns movie ID from TMDb as intent
                 cursor = new MatrixCursor(
                         new String[] {
                                 BaseColumns._ID,
+                                // Movie title
                                 SearchManager.SUGGEST_COLUMN_TEXT_1,
+                                // Release date
                                 SearchManager.SUGGEST_COLUMN_TEXT_2,
+                                // Movie ID
                                 SearchManager.SUGGEST_COLUMN_INTENT_DATA
                         }
                 );
@@ -98,13 +106,15 @@ public class MovieSuggestionProvider extends ContentProvider{
                     String movieTitle = movie.getString("original_title");
                     String releaseDate = "Release Date: " + movie.getString("release_date");
                     String movieID = movie.getString("id");
+                    // Add movie to cursor table if query exists in movie title
                     if (movieTitle.toLowerCase().contains(query)) {
                         cursor.addRow(new Object[]{i, movieTitle, releaseDate, movieID});
                     }
 
                 }
 
-                if (cursor.getCount() == 0 && query.length() > 1) {
+                // Informs user that no results were found matching their search
+                if (cursor.getCount() == 0 && !query.equals("search_suggest_query")) {
                     cursor.addRow(new Object[]{0, "No movies found matching your search", null, null});
                 }
 
