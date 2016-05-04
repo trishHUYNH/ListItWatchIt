@@ -1,5 +1,6 @@
 package thuynh90.tacoma.uw.edu.listitwatchit.login;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -118,6 +119,8 @@ public class LoginActivity extends AppCompatActivity implements RegisterInteract
 
         class LoginTask extends AsyncTask<String, Void, String> {
 
+            ProgressDialog progressDialog;
+
             @Override
             protected String doInBackground(String... params) {
                 String loginValues = params[0];
@@ -139,11 +142,17 @@ public class LoginActivity extends AppCompatActivity implements RegisterInteract
                     if (connection != null)
                         connection.disconnect();
                 }
+
+
             }
 
             @Override
             protected void onPreExecute() {
                 super.onPreExecute();
+                progressDialog = new ProgressDialog(LoginActivity.this);
+                progressDialog.setIndeterminate(true);
+                progressDialog.setMessage("Authenticating...");
+                progressDialog.show();
             }
 
             @Override
@@ -162,6 +171,7 @@ public class LoginActivity extends AppCompatActivity implements RegisterInteract
                     Toast.makeText(getApplicationContext(), "Data problem: " + e.getMessage(), Toast.LENGTH_LONG).show();
                     System.out.println(e.getMessage());
                 }
+                progressDialog.dismiss();
             }
 
         }
