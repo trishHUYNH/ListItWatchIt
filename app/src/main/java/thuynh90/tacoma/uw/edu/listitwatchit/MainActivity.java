@@ -12,10 +12,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
 import thuynh90.tacoma.uw.edu.listitwatchit.login.LoginActivity;
-
 import thuynh90.tacoma.uw.edu.listitwatchit.viewDetails.ViewMovieDetailsActivity;
 
 public class MainActivity extends AppCompatActivity {
@@ -88,6 +86,7 @@ public class MainActivity extends AppCompatActivity {
         if (id == R.id.logout) {
             mSharedPreferences = getSharedPreferences(getString(R.string.LOGIN_PREFS), Context.MODE_PRIVATE);
             mSharedPreferences.edit().putBoolean(getString(R.string.LOGGEDIN), false).apply();
+            mSharedPreferences.edit().putString(getString(R.string.USERNAME), "").apply();
 
             Intent i = new Intent(this, LoginActivity.class);
             startActivity(i);
@@ -108,13 +107,9 @@ public class MainActivity extends AppCompatActivity {
         super.onNewIntent(intent);
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             String query = intent.getStringExtra(SearchManager.QUERY);
-            // Test toast. ToBeDeleted
-            Toast.makeText(this, "Searching by: "+ query, Toast.LENGTH_LONG).show();
 
         } else if (Intent.ACTION_VIEW.equals(intent.getAction())) {
             String uri = intent.getDataString();
-            // Test toast. ToBeDeleted.
-            Toast.makeText(this, "Movie ID: "+ uri, Toast.LENGTH_LONG).show();
             Intent detailIntent = new Intent (this, ViewMovieDetailsActivity.class);
             detailIntent.putExtra("movieID", uri);
             startActivity(detailIntent);

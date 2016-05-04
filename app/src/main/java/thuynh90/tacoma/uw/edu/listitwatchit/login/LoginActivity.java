@@ -114,6 +114,8 @@ public class LoginActivity extends AppCompatActivity implements RegisterInteract
      */
     public void login(String email, String password) {
         String userInformation = "email=" + email + "&password=" + password;
+        final String emailSharedPrefs = email;
+
         class LoginTask extends AsyncTask<String, Void, String> {
 
             @Override
@@ -151,7 +153,7 @@ public class LoginActivity extends AppCompatActivity implements RegisterInteract
                     String status = (String) jsonObject.get("result");
                     if (status.equals("success")) {
                         Toast.makeText(getApplicationContext(), "Login successful. Hello again!", Toast.LENGTH_LONG).show();
-                        directToMain();
+                        directToMain(emailSharedPrefs);
 
                     } else {
                         Toast.makeText(getApplicationContext(), "Login failed: " + jsonObject.get("error"), Toast.LENGTH_LONG).show();
@@ -179,10 +181,12 @@ public class LoginActivity extends AppCompatActivity implements RegisterInteract
     /**
      * Helper method to return user to main after successful login.
      * Edits SharedPreferences to be true that user is logged in.
+     * Edits SharedPreferences to add email to use for MySQL queries.
      */
-    public void directToMain() {
+    public void directToMain(String email) {
         mSharedPreferences = getSharedPreferences(getString(R.string.LOGIN_PREFS), Context.MODE_PRIVATE);
         mSharedPreferences.edit().putBoolean(getString(R.string.LOGGEDIN), true).apply();
+        mSharedPreferences.edit().putString(getString(R.string.USERNAME), email).apply();
 
         Intent i = new Intent(this, MainActivity.class);
         startActivity(i);
