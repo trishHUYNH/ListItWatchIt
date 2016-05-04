@@ -16,7 +16,9 @@ import android.widget.TextView;
 import thuynh90.tacoma.uw.edu.listitwatchit.R;
 
 /**
- * A simple {@link Fragment} subclass.
+ * Login fragment.
+ * Validates user inputs before calling login method.
+ * Calls RegistrationFragment when users select link.
  */
 public class LoginFragment extends Fragment {
 
@@ -28,15 +30,13 @@ public class LoginFragment extends Fragment {
 
 
     @Override
-    /**
-     * TODO: Login authentication
-     */
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_login, container, false);
         final EditText emailLogin = (EditText) view.findViewById(R.id.login_email);
         final EditText passwordLogin = (EditText) view.findViewById(R.id.login_password);
         Button buttonLogin = (Button) view.findViewById(R.id.login_button);
+        // Listener validates all input before passing values to login()
         buttonLogin.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -62,6 +62,7 @@ public class LoginFragment extends Fragment {
 
             }
         });
+        // Listener to re-direct user to register fragment
         TextView registerLink = (TextView) view.findViewById(R.id.register_link);
         registerLink.setOnClickListener(new OnClickListener() {
             @Override

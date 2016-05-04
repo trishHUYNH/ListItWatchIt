@@ -24,6 +24,7 @@ public class MainActivity extends AppCompatActivity {
     /**
      * If not logged in, only search functionality is available.
      * Provides link for user to log in.
+     * Sets different layout depending on status of login.
      */
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -82,7 +83,6 @@ public class MainActivity extends AppCompatActivity {
             return true;
         }
 
-
         if (id == R.id.logout) {
             mSharedPreferences = getSharedPreferences(getString(R.string.LOGIN_PREFS), Context.MODE_PRIVATE);
             mSharedPreferences.edit().putBoolean(getString(R.string.LOGGEDIN), false).apply();
@@ -91,6 +91,7 @@ public class MainActivity extends AppCompatActivity {
             startActivity(i);
             finish();
             return true;
+
         }
 
         return super.onOptionsItemSelected(item);
