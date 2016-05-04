@@ -6,6 +6,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
@@ -14,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import thuynh90.tacoma.uw.edu.listitwatchit.login.LoginActivity;
+import thuynh90.tacoma.uw.edu.listitwatchit.tabs.PagerAdapter;
 import thuynh90.tacoma.uw.edu.listitwatchit.viewDetails.ViewMovieDetailsActivity;
 
 public class MainActivity extends AppCompatActivity {
@@ -36,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
             setContentView(R.layout.activity_main);
             Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
             setSupportActionBar(toolbar);
+            createTabs();
 
         } else {
             // Not logged in. Only search function is available
@@ -113,7 +117,6 @@ public class MainActivity extends AppCompatActivity {
             Intent detailIntent = new Intent (this, ViewMovieDetailsActivity.class);
             detailIntent.putExtra("movieID", uri);
             startActivity(detailIntent);
-
         }
     }
 
@@ -126,5 +129,42 @@ public class MainActivity extends AppCompatActivity {
         Intent i = new Intent(this, LoginActivity.class);
         startActivity(i);
         finish();
+    }
+
+    /**
+     * Helper method to create tabs and display on to layout.
+     * Called from onCreate. Only called for users that are logged in.
+     */
+    public void createTabs() {
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
+        final TabLayout.Tab toWatch = tabLayout.newTab().setText("To Watch");
+        final TabLayout.Tab watched = tabLayout.newTab().setText("Watched");
+        final TabLayout.Tab myLists = tabLayout.newTab().setText("My Lists");
+
+        tabLayout.addTab(toWatch);
+        tabLayout.addTab(watched);
+        tabLayout.addTab(myLists);
+        tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+
+        final ViewPager viewPager = (ViewPager) findViewById(R.id.view_pager);
+        final PagerAdapter adapter = new PagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount());
+        viewPager.setAdapter(adapter);
+        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                viewPager.setCurrentItem(tab.getPosition());
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
     }
 }
