@@ -4,12 +4,15 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import org.json.JSONObject;
 
 import java.io.BufferedInputStream;
@@ -22,6 +25,10 @@ import java.net.URL;
 import thuynh90.tacoma.uw.edu.listitwatchit.R;
 
 public class ViewMovieDetailsActivity extends AppCompatActivity {
+
+    private final static String MOVIE_ADD_URL
+            = "http://cssgate.insttech.washington.edu/~_450atm6/addMovie.php?";
+
 
     static private String API_KEY = "6e2537d9c135091718d558d8d56a7cde";
 
@@ -39,6 +46,10 @@ public class ViewMovieDetailsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Intent intent = getIntent();
+        id = intent.getStringExtra("movieID");
+        loadMovieDetailsTask task = new loadMovieDetailsTask();
+        task.execute();
         setContentView(R.layout.activity_view_movie_details);
 
         mMovieTitleTextView = (TextView) findViewById(R.id.movie_title);
@@ -46,10 +57,20 @@ public class ViewMovieDetailsActivity extends AppCompatActivity {
         mSynopsisTextView = (TextView) findViewById(R.id.synopsis);
         mPosterImageView = (ImageView) findViewById(R.id.poster);
 
-        Intent intent = getIntent();
-        id = intent.getStringExtra("movieID");
-        loadMovieDetailsTask task = new loadMovieDetailsTask();
-        task.execute();
+        Button addMovieButton = (Button) findViewById(R.id.add_to_list_button);
+        addMovieButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getApplicationContext(), "Adding " + movieTitle + " to your To Watch list.", Toast.LENGTH_LONG)
+                        .show();
+
+                String url = buildAddMovieURL();
+                addMovieTask addTask = new addMovieTask();
+                addTask.execute(url);
+            }
+        });
+
+
 
     }
 
@@ -139,4 +160,63 @@ public class ViewMovieDetailsActivity extends AppCompatActivity {
         super.onStart();
         updateView();
     }
+
+
+
+    private String buildAddMovieURL() {
+
+        StringBuilder urlBuilder = new StringBuilder(MOVIE_ADD_URL);
+
+        try {
+            urlBuilder.append("movie_id=");
+            urlBuilder.append(id);
+
+            urlBuilder.append("&movie_title=");
+            urlBuilder.append(movieTitle);
+
+            urlBuilder.append("&release_date=");
+            urlBuilder.append(releaseDate);
+
+            urlBuilder.append("&list_id=");
+            urlBuilder.append("1"); //Hard coding in list #1
+
+            urlBuilder.append("&synopsis=");
+            urlBuilder.append(synopsis.replaceAll(" ", "+"));
+
+        }
+        catch(Exception e) {
+            Toast.makeText(getApplicationContext(), "Something wrong with the url" + e.getMessage(), Toast.LENGTH_LONG)
+                    .show();
+        }
+        return urlBuilder.toString();
+    }
+
+    private class addMovieTask extends AsyncTask<String, Void, String> {
+
+        @Override
+        protected String doInBackground(String... params) {
+            BufferedReader bufferedReader;
+            HttpURLConnection connection = null;
+            String result;
+            try {
+                URL url = new URL(params[0]);
+                connection = (HttpURLConnection) url.openConnection();
+                bufferedReader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+
+                result = bufferedReader.readLine();
+                Log.d("PHP response", result);
+
+                return result;
+            } catch (Exception e) {
+                Log.d("PHP response", e.getMessage());
+                return result = "Unable to Add. Reason: " + e.getMessage();
+            }
+            finally {
+                if (connection != null)
+                    connection.disconnect();
+            }
+        }
+    }
+
+
 }

@@ -46,4 +46,12 @@
         android:layout_height="wrap_content"
         android:id="@+id/synopsis" />
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Add to List"
+        android:id="@+id/add_to_list_button"
+        android:layout_gravity="center_horizontal" />
+
+
 </LinearLayout>
