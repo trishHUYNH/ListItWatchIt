@@ -8,5 +8,7 @@
 
     <string name="LOGIN_PREFS">thuynh90.tacoma.uw.edu.listitwatchit.PREFS</string>
     <string name="LOGGEDIN">loggedin</string>
+    <string name="released">Released:</string>
+    <string name="synopsis">Synopsis:</string>
 
 </resources>

@@ -16,6 +16,8 @@ import android.widget.Toast;
 
 import thuynh90.tacoma.uw.edu.listitwatchit.login.LoginActivity;
 
+import thuynh90.tacoma.uw.edu.listitwatchit.viewDetails.ViewMovieDetailsActivity;
+
 public class MainActivity extends AppCompatActivity {
 
     private SharedPreferences mSharedPreferences;
@@ -113,6 +115,10 @@ public class MainActivity extends AppCompatActivity {
             String uri = intent.getDataString();
             // Test toast. ToBeDeleted.
             Toast.makeText(this, "Movie ID: "+ uri, Toast.LENGTH_LONG).show();
+            Intent detailIntent = new Intent (this, ViewMovieDetailsActivity.class);
+            detailIntent.putExtra("movieID", uri);
+            startActivity(detailIntent);
+
         }
     }
 
