@@ -1,11 +1,13 @@
 package thuynh90.tacoma.uw.edu.listitwatchit.viewDetails;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -28,7 +30,7 @@ import thuynh90.tacoma.uw.edu.listitwatchit.R;
 public class ViewMovieDetailsActivity extends AppCompatActivity {
 
     private final static String MOVIE_ADD_URL = "http://cssgate.insttech.washington.edu/~_450atm6/addMovie.php?";
-
+    private SharedPreferences mSharedPreferences;
     static private String API_KEY = "6e2537d9c135091718d558d8d56a7cde";
 
     private TextView mMovieTitleTextView;
@@ -165,23 +167,24 @@ public class ViewMovieDetailsActivity extends AppCompatActivity {
     private String buildAddMovieURL() {
 
         StringBuilder urlBuilder = new StringBuilder(MOVIE_ADD_URL);
-        // Delete this
-        String listId = "370";
+        mSharedPreferences = getSharedPreferences(getString(R.string.LOGIN_PREFS), Context.MODE_PRIVATE);
+        String email = mSharedPreferences.getString(getString(R.string.USERNAME), "error");
+
         try {
             urlBuilder.append("movie_id=");
             urlBuilder.append(id.replaceAll(" ", "+").trim());
 
             urlBuilder.append("&movie_title=");
-            urlBuilder.append(movieTitle.replaceAll(" ", "+").trim());
+            urlBuilder.append(movieTitle.replaceAll(" ", "+").replace("\'", "\\'").trim());
 
             urlBuilder.append("&release_date=");
             urlBuilder.append(releaseDate.trim());
 
-            urlBuilder.append("&list_id=");
-            urlBuilder.append(listId.trim()); //Hard coding in list #1
+            urlBuilder.append("&email=");
+            urlBuilder.append(email.trim());
 
             urlBuilder.append("&synopsis=");
-            urlBuilder.append(synopsis.replaceAll(" ", "+").trim());
+            urlBuilder.append(synopsis.replaceAll(" ", "+").replace("\'", "\\'").trim());
 
         }
         catch(Exception e) {
@@ -203,8 +206,6 @@ public class ViewMovieDetailsActivity extends AppCompatActivity {
                 HttpURLConnection connection = null;
                 String result;
                 try {
-                    // Test. ToBeDeleted.
-                    System.out.println("MOVIE DETAIL URL: " + movieDetailUrl);
                     URL url = new URL(movieDetailUrl);
                     connection = (HttpURLConnection) url.openConnection();
                     bufferedReader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
