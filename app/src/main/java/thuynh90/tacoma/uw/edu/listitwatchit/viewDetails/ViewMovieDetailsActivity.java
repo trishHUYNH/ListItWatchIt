@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedInputStream;
@@ -26,9 +27,7 @@ import thuynh90.tacoma.uw.edu.listitwatchit.R;
 
 public class ViewMovieDetailsActivity extends AppCompatActivity {
 
-    private final static String MOVIE_ADD_URL
-            = "http://cssgate.insttech.washington.edu/~_450atm6/addMovie.php?";
-
+    private final static String MOVIE_ADD_URL = "http://cssgate.insttech.washington.edu/~_450atm6/addMovie.php?";
 
     static private String API_KEY = "6e2537d9c135091718d558d8d56a7cde";
 
@@ -58,17 +57,17 @@ public class ViewMovieDetailsActivity extends AppCompatActivity {
         mPosterImageView = (ImageView) findViewById(R.id.poster);
 
         Button addMovieButton = (Button) findViewById(R.id.add_to_list_button);
-        addMovieButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(getApplicationContext(), "Adding " + movieTitle + " to your To Watch list.", Toast.LENGTH_LONG)
-                        .show();
-
-                String url = buildAddMovieURL();
-                addMovieTask addTask = new addMovieTask();
-                addTask.execute(url);
-            }
-        });
+//        addMovieButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Toast.makeText(getApplicationContext(), "Adding " + movieTitle + " to your To Watch list.", Toast.LENGTH_LONG)
+//                        .show();
+//
+//                String url = buildAddMovieURL();
+//                addMovieTask addTask = new addMovieTask();
+//                addTask.execute(url);
+//            }
+//        });
 
 
 
@@ -166,22 +165,23 @@ public class ViewMovieDetailsActivity extends AppCompatActivity {
     private String buildAddMovieURL() {
 
         StringBuilder urlBuilder = new StringBuilder(MOVIE_ADD_URL);
-
+        // Delete this
+        String listId = "370";
         try {
             urlBuilder.append("movie_id=");
-            urlBuilder.append(id);
+            urlBuilder.append(id.replaceAll(" ", "+").trim());
 
             urlBuilder.append("&movie_title=");
-            urlBuilder.append(movieTitle);
+            urlBuilder.append(movieTitle.replaceAll(" ", "+").trim());
 
             urlBuilder.append("&release_date=");
-            urlBuilder.append(releaseDate);
+            urlBuilder.append(releaseDate.trim());
 
             urlBuilder.append("&list_id=");
-            urlBuilder.append("1"); //Hard coding in list #1
+            urlBuilder.append(listId.trim()); //Hard coding in list #1
 
             urlBuilder.append("&synopsis=");
-            urlBuilder.append(synopsis.replaceAll(" ", "+"));
+            urlBuilder.append(synopsis.replaceAll(" ", "+").trim());
 
         }
         catch(Exception e) {
@@ -191,32 +191,65 @@ public class ViewMovieDetailsActivity extends AppCompatActivity {
         return urlBuilder.toString();
     }
 
-    private class addMovieTask extends AsyncTask<String, Void, String> {
+    public void addMovie(View view) {
+        String movieDetails = buildAddMovieURL();
+        System.out.println(movieDetails);
+        class addMovieTask extends AsyncTask<String, Void, String> {
 
-        @Override
-        protected String doInBackground(String... params) {
-            BufferedReader bufferedReader;
-            HttpURLConnection connection = null;
-            String result;
-            try {
-                URL url = new URL(params[0]);
-                connection = (HttpURLConnection) url.openConnection();
-                bufferedReader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            @Override
+            protected String doInBackground(String... params) {
+                String movieDetailUrl = params[0];
+                BufferedReader bufferedReader;
+                HttpURLConnection connection = null;
+                String result;
+                try {
+                    // Test. ToBeDeleted.
+                    System.out.println("MOVIE DETAIL URL: " + movieDetailUrl);
+                    URL url = new URL(movieDetailUrl);
+                    connection = (HttpURLConnection) url.openConnection();
+                    bufferedReader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
 
-                result = bufferedReader.readLine();
-                Log.d("PHP response", result);
+                    result = bufferedReader.readLine();
+                    Log.d("PHP response", result);
 
-                return result;
-            } catch (Exception e) {
-                Log.d("PHP response", e.getMessage());
-                return result = "Unable to Add. Reason: " + e.getMessage();
+                    return result;
+                } catch (Exception e) {
+                    Log.d("PHP response", e.getMessage());
+                    return result = "Unable to Add. Reason: " + e.getMessage();
+                }
+                finally {
+                    if (connection != null)
+                        connection.disconnect();
+                }
             }
-            finally {
-                if (connection != null)
-                    connection.disconnect();
+
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+            }
+
+            @Override
+            protected void onPostExecute(String result) {
+                try {
+                    JSONObject jsonObject = new JSONObject(result);
+                    String status = (String) jsonObject.get("result");
+                    if (status.equals("success")) {
+                        Toast.makeText(getApplicationContext(), "Movie successfully added", Toast.LENGTH_LONG).show();
+
+                    } else {
+                        Toast.makeText(getApplicationContext(), "Movie not added: " + jsonObject.get("error"), Toast.LENGTH_LONG).show();
+                    }
+                } catch (JSONException e) {
+                    Toast.makeText(getApplicationContext(), "Data problem: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                    System.out.println(e.getMessage());
+                }
             }
         }
+        addMovieTask addMovie = new addMovieTask();
+        addMovie.execute(movieDetails);
     }
+
+
 
 
 }
