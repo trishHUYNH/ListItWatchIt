@@ -44,10 +44,13 @@ public class ToWatchFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
     }
 
     @Override
+    /**
+     * Concatenates URL with user's email from SharedPreferences.
+     * Calls DownloadMoviesTask to retrieve movie from database.
+     */
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_movie_list, container, false);
 
@@ -60,12 +63,11 @@ public class ToWatchFragment extends Fragment {
             } else {
                 mRecyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-
         }
         mSharedPreferences = this.getActivity().getSharedPreferences(getString(R.string.LOGIN_PREFS), Context.MODE_PRIVATE);
+        // Retrieves email from SharedPreferences, return 'error' if email not found
         String email = mSharedPreferences.getString(getString(R.string.USERNAME), "error");
         DownloadMoviesTask downloadMovies = new DownloadMoviesTask();
-        System.out.println(VIEW_LIST_URL + email);
         downloadMovies.execute(new String[]{VIEW_LIST_URL + email});
 
         return view;
@@ -78,8 +80,7 @@ public class ToWatchFragment extends Fragment {
         if (context instanceof OnListFragmentInteractionListener) {
             mListener = (OnListFragmentInteractionListener) context;
         } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnListFragmentInteractionListener");
+            throw new RuntimeException(context.toString() + " must implement OnListFragmentInteractionListener");
         }
     }
 
@@ -99,6 +100,11 @@ public class ToWatchFragment extends Fragment {
         void onListFragmentInteraction(Movie item);
     }
 
+    /**
+     * Opens URL connection and parses JSON result to view lists specific
+     * to users. Called from onCreate.
+     *
+     */
     private class DownloadMoviesTask extends AsyncTask<String, Void, String> {
 
 
@@ -141,13 +147,11 @@ public class ToWatchFragment extends Fragment {
                 return;
             }
 
-            // Everything is good, show the list of courses.
+            // Everything is good, show the list of movies.
             if (!movieList.isEmpty()) {
                 mRecyclerView.setAdapter(new MyMovieRecyclerViewAdapter(movieList, mListener));
             }
         }
-
-
 
     }
 }

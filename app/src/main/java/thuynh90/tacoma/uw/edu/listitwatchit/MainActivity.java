@@ -83,7 +83,6 @@ public class MainActivity extends AppCompatActivity implements OnListFragmentInt
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        // TODO: Make decisions on Settings
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
@@ -125,7 +124,6 @@ public class MainActivity extends AppCompatActivity implements OnListFragmentInt
     /**
      * Called when user clicks on login from main
      * @param view
-     * @TODO: Add current activity to stack
      */
     public void directToLogin(View view) {
         Intent i = new Intent(this, LoginActivity.class);
@@ -171,6 +169,9 @@ public class MainActivity extends AppCompatActivity implements OnListFragmentInt
     }
 
     @Override
+    /**
+     * Fragment interaction for movie lists in tabs
+     */
     public void onListFragmentInteraction(Movie item) {
 
     }

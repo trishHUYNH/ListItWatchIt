@@ -12,6 +12,9 @@ import thuynh90.tacoma.uw.edu.listitwatchit.R;
 import thuynh90.tacoma.uw.edu.listitwatchit.tabs.ToWatchFragment.OnListFragmentInteractionListener;
 
 
+/**
+ * Provides layout for movie lists in tabs.
+ */
 public class MyMovieRecyclerViewAdapter extends RecyclerView.Adapter<MyMovieRecyclerViewAdapter.ViewHolder> {
 
     private final List<Movie> mValues;
@@ -21,8 +24,6 @@ public class MyMovieRecyclerViewAdapter extends RecyclerView.Adapter<MyMovieRecy
         mValues = items;
         mListener = listener;
     }
-
-
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
