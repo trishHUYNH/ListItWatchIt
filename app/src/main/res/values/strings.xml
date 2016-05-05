@@ -19,6 +19,10 @@
     <string name="released">Released:</string>
     <string name="synopsis">Synopsis:</string>
 
+    <!-- Movie Details -->
+    <string name="watched">We\'re in the Watched tab. To be implemented.</string>
+    <string name="my_list">We\'re in the My Lists tab. To be implemented</string>
+
 
 
 

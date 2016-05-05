@@ -16,10 +16,12 @@ import android.view.MenuItem;
 import android.view.View;
 
 import thuynh90.tacoma.uw.edu.listitwatchit.login.LoginActivity;
+import thuynh90.tacoma.uw.edu.listitwatchit.tabs.Movie;
 import thuynh90.tacoma.uw.edu.listitwatchit.tabs.PagerAdapter;
+import thuynh90.tacoma.uw.edu.listitwatchit.tabs.ToWatchFragment.OnListFragmentInteractionListener;
 import thuynh90.tacoma.uw.edu.listitwatchit.viewDetails.ViewMovieDetailsActivity;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements OnListFragmentInteractionListener {
 
     private SharedPreferences mSharedPreferences;
 
@@ -166,5 +168,10 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    @Override
+    public void onListFragmentInteraction(Movie item) {
+
     }
 }
