@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.widget.Toast;
 
 import org.json.JSONException;
@@ -49,6 +50,8 @@ public class LoginActivity extends AppCompatActivity implements RegisterInteract
      * Parses JSON result looking for 'success' if registration went through,
      * then redirects user to login page.
      * Creates instance of inner class RegisterTask.
+     * @param email The email address entered
+     * @param password The password entered
      */
     public void register(String email, String password) {
         String userInformation = "email=" + email + "&password=" + password;
@@ -66,6 +69,7 @@ public class LoginActivity extends AppCompatActivity implements RegisterInteract
                     bufferedReader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
 
                     result = bufferedReader.readLine();
+
 
                     return result;
                 } catch (Exception e) {
@@ -112,6 +116,8 @@ public class LoginActivity extends AppCompatActivity implements RegisterInteract
      * Parses JSON result looking for 'success' if login went through,
      * then redirects user to MainActivity.
      * Creates instance of inner class LoginTask.
+     * @param email The email address entered
+     * @param password The password entered
      */
     public void login(String email, String password) {
         String userInformation = "email=" + email + "&password=" + password;
@@ -133,6 +139,7 @@ public class LoginActivity extends AppCompatActivity implements RegisterInteract
                     bufferedReader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
 
                     result = bufferedReader.readLine();
+                    Log.d("PHP response result", result);
 
                     return result;
                 } catch (Exception e) {
@@ -192,6 +199,7 @@ public class LoginActivity extends AppCompatActivity implements RegisterInteract
      * Helper method to return user to main after successful login.
      * Edits SharedPreferences to be true that user is logged in.
      * Edits SharedPreferences to add email to use for MySQL queries.
+     * @param email The email address of the user who has just logged in
      */
     public void directToMain(String email) {
         mSharedPreferences = getSharedPreferences(getString(R.string.LOGIN_PREFS), Context.MODE_PRIVATE);

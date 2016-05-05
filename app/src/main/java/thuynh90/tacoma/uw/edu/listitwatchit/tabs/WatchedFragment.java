@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import thuynh90.tacoma.uw.edu.listitwatchit.R;
 
 /**
+ * A fragment for displaying the movies in the user's Watched list
  * A simple {@link Fragment} subclass.
  */
 public class WatchedFragment extends Fragment {

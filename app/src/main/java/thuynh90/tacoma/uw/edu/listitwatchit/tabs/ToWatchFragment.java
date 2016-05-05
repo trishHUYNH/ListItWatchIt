@@ -23,7 +23,7 @@ import java.util.List;
 import thuynh90.tacoma.uw.edu.listitwatchit.R;
 
 /**
- * A fragment representing a list of Movie items for the "To Watch" list.
+ * A fragment representing a list of Movie items for the user's "To Watch" list.
  * MainActivity implements OnListFragmentInteractionListener.
  */
 public class ToWatchFragment extends Fragment {

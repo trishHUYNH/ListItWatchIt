@@ -80,6 +80,9 @@ public class LoginFragment extends Fragment {
         return view;
     }
 
+    /**
+     * Listener interface for when Login is selected
+     */
     public interface LoginInteractionListener {
         void login(String email, String password);
     }

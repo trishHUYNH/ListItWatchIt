@@ -21,6 +21,9 @@ import thuynh90.tacoma.uw.edu.listitwatchit.tabs.PagerAdapter;
 import thuynh90.tacoma.uw.edu.listitwatchit.tabs.ToWatchFragment.OnListFragmentInteractionListener;
 import thuynh90.tacoma.uw.edu.listitwatchit.viewDetails.ViewMovieDetailsActivity;
 
+/**
+ * Activity that is the home screen on the app. Houses the search function and has links to the other Activities
+ */
 public class MainActivity extends AppCompatActivity implements OnListFragmentInteractionListener {
 
     private SharedPreferences mSharedPreferences;
@@ -107,6 +110,7 @@ public class MainActivity extends AppCompatActivity implements OnListFragmentInt
     /**
      * Handles search intents.
      * Suggestion selection returns movie ID from TMDb
+     * @param intent The new intent that was created
      */
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
@@ -123,7 +127,7 @@ public class MainActivity extends AppCompatActivity implements OnListFragmentInt
 
     /**
      * Called when user clicks on login from main
-     * @param view
+     * @param view The current view
      */
     public void directToLogin(View view) {
         Intent i = new Intent(this, LoginActivity.class);

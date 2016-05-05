@@ -27,6 +27,9 @@ import java.net.URL;
 
 import thuynh90.tacoma.uw.edu.listitwatchit.R;
 
+/**
+ * An Activity which shows the details of a movie (Title, Poster, Release Date, and Synopsis) on one screen
+ */
 public class ViewMovieDetailsActivity extends AppCompatActivity {
 
     private final static String MOVIE_ADD_URL = "http://cssgate.insttech.washington.edu/~_450atm6/addMovie.php?";
@@ -44,6 +47,10 @@ public class ViewMovieDetailsActivity extends AppCompatActivity {
     Bitmap poster;
 
 
+    /**
+     * Runs AsyncTask to load movie details and sets the TextView and ImageView variables to the proper layout views from the XML file
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,25 +64,11 @@ public class ViewMovieDetailsActivity extends AppCompatActivity {
         mReleaseDateTextView = (TextView) findViewById(R.id.release_date);
         mSynopsisTextView = (TextView) findViewById(R.id.synopsis);
         mPosterImageView = (ImageView) findViewById(R.id.poster);
-
-        Button addMovieButton = (Button) findViewById(R.id.add_to_list_button);
-//        addMovieButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Toast.makeText(getApplicationContext(), "Adding " + movieTitle + " to your To Watch list.", Toast.LENGTH_LONG)
-//                        .show();
-//
-//                String url = buildAddMovieURL();
-//                addMovieTask addTask = new addMovieTask();
-//                addTask.execute(url);
-//            }
-//        });
-
-
-
     }
 
-
+    /**
+     * AsyncTask to retrieve movie details from TMDb
+     */
     public class loadMovieDetailsTask extends AsyncTask<Void, Void, Void> {
 
         @Override
@@ -84,13 +77,21 @@ public class ViewMovieDetailsActivity extends AppCompatActivity {
             return null;
         }
 
+        /**
+         * Runs onStart() so that the view will be updated
+         * @param aVoid
+         */
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            updateView();
             onStart();
         }
 
+        /**
+         * Opens HTTP connection to query TMDb for details of a specified movie,
+         * parses JSON response to get string values for movieTitle, releaseDate, and synopsis, and a url for the poster
+         * @param movieID TMDb id for the movie that is being looked up
+         */
         public void query(String movieID) {
             Log.d("Context", "Beginning of Query");
             BufferedReader reader;
@@ -149,12 +150,16 @@ public class ViewMovieDetailsActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * Sets TextViews to the proper values that have been set in the AsyncTask
+     */
     public void updateView(){
         mMovieTitleTextView.setText(movieTitle);
         mReleaseDateTextView.setText(releaseDate);
         mSynopsisTextView.setText(synopsis);
         mPosterImageView.setImageBitmap(poster);
     }
+
 
     @Override
     public void onStart() {
@@ -163,7 +168,10 @@ public class ViewMovieDetailsActivity extends AppCompatActivity {
     }
 
 
-
+    /**
+     * Builds a URL that will be sent to the database so that a movie can be added to a User's list
+     * @return The URL that was built
+     */
     private String buildAddMovieURL() {
 
         StringBuilder urlBuilder = new StringBuilder(MOVIE_ADD_URL);
@@ -194,6 +202,10 @@ public class ViewMovieDetailsActivity extends AppCompatActivity {
         return urlBuilder.toString();
     }
 
+    /**
+     * Runs an AsyncTask to send movie information to the database so that the movie may be added to a user's list
+     * @param view
+     */
     public void addMovie(View view) {
         String movieDetails = buildAddMovieURL();
         System.out.println(movieDetails);
@@ -249,8 +261,4 @@ public class ViewMovieDetailsActivity extends AppCompatActivity {
         addMovieTask addMovie = new addMovieTask();
         addMovie.execute(movieDetails);
     }
-
-
-
-
 }

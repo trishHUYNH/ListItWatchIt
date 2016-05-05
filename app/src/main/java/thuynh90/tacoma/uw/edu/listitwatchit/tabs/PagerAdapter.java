@@ -16,6 +16,11 @@ public class PagerAdapter extends FragmentStatePagerAdapter {
         this.mNumberOfTabs = numberOfTabs;
     }
 
+    /**
+     * Creates the appropriate list fragment depending on which tab is selected
+     * @param position The number tab selected
+     * @return A toWatch, watched, or myLists fragment
+     */
     @Override
     public Fragment getItem(int position) {
 

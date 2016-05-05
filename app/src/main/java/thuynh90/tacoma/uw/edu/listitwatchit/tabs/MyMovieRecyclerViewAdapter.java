@@ -20,6 +20,11 @@ public class MyMovieRecyclerViewAdapter extends RecyclerView.Adapter<MyMovieRecy
     private final List<Movie> mValues;
     private final OnListFragmentInteractionListener mListener;
 
+    /**
+     * Creates a RecyclerViewAdapter for movie lists
+     * @param items List of movies
+     * @param listener OnListFragmentInteractionListener
+     */
     public MyMovieRecyclerViewAdapter(List<Movie> items, OnListFragmentInteractionListener listener) {
         mValues = items;
         mListener = listener;

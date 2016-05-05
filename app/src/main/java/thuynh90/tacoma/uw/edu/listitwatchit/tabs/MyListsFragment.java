@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 
 import thuynh90.tacoma.uw.edu.listitwatchit.R;
 
-/**
+/**A fragment for displaying the custom lists created by the user
  * A simple {@link Fragment} subclass.
  */
 public class MyListsFragment extends Fragment {

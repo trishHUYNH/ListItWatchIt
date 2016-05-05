@@ -91,6 +91,9 @@ public class RegisterFragment extends Fragment {
         return view;
     }
 
+    /**
+     * Listener interface for when register is selected
+     */
     public interface RegisterInteractionListener {
         void register(String email, String password);
     }
