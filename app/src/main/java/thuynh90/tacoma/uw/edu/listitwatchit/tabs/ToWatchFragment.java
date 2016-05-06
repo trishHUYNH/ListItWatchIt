@@ -103,10 +103,8 @@ public class ToWatchFragment extends Fragment {
     /**
      * Opens URL connection and parses JSON result to view lists specific
      * to users. Called from onCreate.
-     *
      */
     private class DownloadMoviesTask extends AsyncTask<String, Void, String> {
-
 
         @Override
         protected String doInBackground(String... params) {
@@ -150,6 +148,8 @@ public class ToWatchFragment extends Fragment {
             // Everything is good, show the list of movies.
             if (!movieList.isEmpty()) {
                 mRecyclerView.setAdapter(new MyMovieRecyclerViewAdapter(movieList, mListener));
+            } else {
+                Toast.makeText(getActivity().getApplicationContext(), "You haven't added any movies yet!", Toast.LENGTH_LONG).show();
             }
         }
 
