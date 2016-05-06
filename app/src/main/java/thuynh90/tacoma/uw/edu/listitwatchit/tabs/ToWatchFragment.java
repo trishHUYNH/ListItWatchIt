@@ -24,7 +24,7 @@ import thuynh90.tacoma.uw.edu.listitwatchit.R;
 
 /**
  * A fragment representing a list of Movie items for the user's "To Watch" list.
- * MainActivity implements OnListFragmentInteractionListener.
+ * MainActivity implements toWatchFragmentInteractionListener.
  */
 public class ToWatchFragment extends Fragment {
 
@@ -97,7 +97,7 @@ public class ToWatchFragment extends Fragment {
      * activity.
      */
     public interface OnListFragmentInteractionListener {
-        void onListFragmentInteraction(Movie item);
+        void toWatchFragmentInteraction(Movie item);
     }
 
     /**
@@ -147,7 +147,7 @@ public class ToWatchFragment extends Fragment {
 
             // Everything is good, show the list of movies.
             if (!movieList.isEmpty()) {
-                mRecyclerView.setAdapter(new MyMovieRecyclerViewAdapter(movieList, mListener));
+                mRecyclerView.setAdapter(new ToWatchRecyclerViewAdapter(movieList, mListener));
             } else {
                 Toast.makeText(getActivity().getApplicationContext(), "You haven't added any movies yet!", Toast.LENGTH_LONG).show();
             }

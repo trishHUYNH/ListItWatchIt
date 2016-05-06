@@ -15,7 +15,7 @@ import thuynh90.tacoma.uw.edu.listitwatchit.tabs.ToWatchFragment.OnListFragmentI
 /**
  * Provides layout for movie lists in tabs.
  */
-public class MyMovieRecyclerViewAdapter extends RecyclerView.Adapter<MyMovieRecyclerViewAdapter.ViewHolder> {
+public class ToWatchRecyclerViewAdapter extends RecyclerView.Adapter<ToWatchRecyclerViewAdapter.ViewHolder> {
 
     private final List<Movie> mValues;
     private final OnListFragmentInteractionListener mListener;
@@ -25,7 +25,7 @@ public class MyMovieRecyclerViewAdapter extends RecyclerView.Adapter<MyMovieRecy
      * @param items List of movies
      * @param listener OnListFragmentInteractionListener
      */
-    public MyMovieRecyclerViewAdapter(List<Movie> items, OnListFragmentInteractionListener listener) {
+    public ToWatchRecyclerViewAdapter(List<Movie> items, OnListFragmentInteractionListener listener) {
         mValues = items;
         mListener = listener;
     }
@@ -48,7 +48,7 @@ public class MyMovieRecyclerViewAdapter extends RecyclerView.Adapter<MyMovieRecy
                 if (null != mListener) {
                     // Notify the active callbacks interface (the activity, if the
                     // fragment is attached to one) that an item has been selected.
-                    mListener.onListFragmentInteraction(holder.mItem);
+                    mListener.toWatchFragmentInteraction(holder.mItem);
                 }
             }
         });

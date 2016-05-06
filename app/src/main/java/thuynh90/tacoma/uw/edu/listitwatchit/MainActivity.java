@@ -18,13 +18,14 @@ import android.view.View;
 import thuynh90.tacoma.uw.edu.listitwatchit.login.LoginActivity;
 import thuynh90.tacoma.uw.edu.listitwatchit.tabs.Movie;
 import thuynh90.tacoma.uw.edu.listitwatchit.tabs.PagerAdapter;
-import thuynh90.tacoma.uw.edu.listitwatchit.tabs.ToWatchFragment.OnListFragmentInteractionListener;
+import thuynh90.tacoma.uw.edu.listitwatchit.tabs.ToWatchFragment;
+import thuynh90.tacoma.uw.edu.listitwatchit.tabs.WatchedFragment;
 import thuynh90.tacoma.uw.edu.listitwatchit.viewDetails.ViewMovieDetailsActivity;
 
 /**
  * Activity that is the home screen on the app. Houses the search function and has links to the other Activities
  */
-public class MainActivity extends AppCompatActivity implements OnListFragmentInteractionListener {
+public class MainActivity extends AppCompatActivity implements ToWatchFragment.OnListFragmentInteractionListener, WatchedFragment.OnListFragmentInteractionListener {
 
     private SharedPreferences mSharedPreferences;
 
@@ -173,9 +174,17 @@ public class MainActivity extends AppCompatActivity implements OnListFragmentInt
 
     @Override
     /**
-     * Fragment interaction for movie lists in tabs
+     * Fragment interaction for To Watch tab
      */
-    public void onListFragmentInteraction(Movie item) {
+    public void toWatchFragmentInteraction(Movie item) {
+
+    }
+
+    @Override
+    /**
+     * Fragment interaction for Watched tab
+     */
+    public void watchedFragmentInteraction(Movie item) {
 
     }
 }
