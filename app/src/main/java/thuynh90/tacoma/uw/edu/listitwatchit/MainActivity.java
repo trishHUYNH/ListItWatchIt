@@ -38,20 +38,19 @@ public class MainActivity extends AppCompatActivity implements OnListFragmentInt
 
         mSharedPreferences = getSharedPreferences(getString(R.string.LOGIN_PREFS), Context.MODE_PRIVATE);
 
-        // Logged in. Users can view their lists
-        if (mSharedPreferences.getBoolean(getString(R.string.LOGGEDIN), true)) {
+        // Not logged in. Only search is available.
+        if (!mSharedPreferences.getBoolean(getString(R.string.LOGGEDIN), false)) {
+            super.onCreate(savedInstanceState);
+            setContentView(R.layout.activity_main_login_false);
+            Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+            setSupportActionBar(toolbar);
+        } else {
+            // Logged in. Tabs are displayed.
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_main);
             Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
             setSupportActionBar(toolbar);
             createTabs();
-
-        } else {
-            // Not logged in. Only search function is available
-            super.onCreate(savedInstanceState);
-            setContentView(R.layout.activity_main_login_false);
-            Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-            setSupportActionBar(toolbar);
             }
         }
 
