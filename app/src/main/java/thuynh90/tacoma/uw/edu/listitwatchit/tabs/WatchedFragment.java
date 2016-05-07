@@ -30,7 +30,7 @@ public class WatchedFragment extends Fragment {
 
     private int mColumnCount = 1;
     // Change this for Watched list
-    private static final String VIEW_LIST_URL = "http://cssgate.insttech.washington.edu/~_450atm6/viewList.php?cmd=towatch&email=";
+    private static final String VIEW_LIST_URL = "http://cssgate.insttech.washington.edu/~_450atm6/viewList.php?cmd=watched&email=";
     private OnListFragmentInteractionListener mListener;
     private RecyclerView mRecyclerView;
     private SharedPreferences mSharedPreferences;
@@ -65,11 +65,8 @@ public class WatchedFragment extends Fragment {
                 mRecyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
         }
-        mSharedPreferences = this.getActivity().getSharedPreferences(getString(R.string.LOGIN_PREFS), Context.MODE_PRIVATE);
-        // Retrieves email from SharedPreferences, return 'error' if email not found
-        String email = mSharedPreferences.getString(getString(R.string.USERNAME), "error");
-        DownloadMoviesTask downloadMovies = new DownloadMoviesTask();
-        downloadMovies.execute(new String[]{VIEW_LIST_URL + email});
+        // Retrieve movie list data
+        downloadHelper();
 
         return view;
     }
@@ -81,7 +78,7 @@ public class WatchedFragment extends Fragment {
         if (context instanceof OnListFragmentInteractionListener) {
             mListener = (OnListFragmentInteractionListener) context;
         } else {
-            throw new RuntimeException(context.toString() + " must implement OnListFragmentInteractionListener");
+            throw new RuntimeException(context.toString() + " must implement toWatchFragmentInteractionListener");
         }
     }
 
@@ -89,6 +86,16 @@ public class WatchedFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    /**
+     * Refreshes "To Watch" list when user returns back to fragment after searching a movie.
+     * Calls helper method to retrieve data.
+     */
+    public void onResume(){
+        super.onResume();
+        downloadHelper();
     }
 
     /**
@@ -149,10 +156,19 @@ public class WatchedFragment extends Fragment {
             // Everything is good, show the list of movies.
             if (!movieList.isEmpty()) {
                 mRecyclerView.setAdapter(new WatchedRecyclerViewAdapter(movieList, mListener));
-            } else {
-                Toast.makeText(getActivity().getApplicationContext(), "You haven't watched any movies yet!", Toast.LENGTH_LONG).show();
             }
         }
+    }
 
+    /**
+     * Helper method that retrieves user email and creates an instance of
+     * DownloadMoviesTask to retrieve movie list from database.
+     */
+    public void downloadHelper() {
+        mSharedPreferences = this.getActivity().getSharedPreferences(getString(R.string.LOGIN_PREFS), Context.MODE_PRIVATE);
+        // Retrieves email from SharedPreferences, return 'error' if email not found
+        String email = mSharedPreferences.getString(getString(R.string.USERNAME), "error");
+        DownloadMoviesTask downloadMovies = new DownloadMoviesTask();
+        downloadMovies.execute(new String[]{VIEW_LIST_URL + email});
     }
 }

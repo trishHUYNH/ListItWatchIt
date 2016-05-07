@@ -30,7 +30,7 @@ public class ToWatchFragment extends Fragment {
 
     private int mColumnCount = 1;
     private static final String VIEW_LIST_URL = "http://cssgate.insttech.washington.edu/~_450atm6/viewList.php?cmd=towatch&email=";
-    private OnListFragmentInteractionListener mListener;
+    private toWatchFragmentInteractionListener mListener;
     private RecyclerView mRecyclerView;
     private SharedPreferences mSharedPreferences;
 
@@ -64,11 +64,8 @@ public class ToWatchFragment extends Fragment {
                 mRecyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
         }
-        mSharedPreferences = this.getActivity().getSharedPreferences(getString(R.string.LOGIN_PREFS), Context.MODE_PRIVATE);
-        // Retrieves email from SharedPreferences, return 'error' if email not found
-        String email = mSharedPreferences.getString(getString(R.string.USERNAME), "error");
-        DownloadMoviesTask downloadMovies = new DownloadMoviesTask();
-        downloadMovies.execute(new String[]{VIEW_LIST_URL + email});
+        // Retrieve movie list data
+        downloadHelper();
 
         return view;
     }
@@ -77,10 +74,10 @@ public class ToWatchFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnListFragmentInteractionListener) {
-            mListener = (OnListFragmentInteractionListener) context;
+        if (context instanceof toWatchFragmentInteractionListener) {
+            mListener = (toWatchFragmentInteractionListener) context;
         } else {
-            throw new RuntimeException(context.toString() + " must implement OnListFragmentInteractionListener");
+            throw new RuntimeException(context.toString() + " must implement toWatchFragmentInteractionListener");
         }
     }
 
@@ -90,13 +87,23 @@ public class ToWatchFragment extends Fragment {
         mListener = null;
     }
 
+    @Override
+    /**
+     * Refreshes "To Watch" list when user returns back to fragment after searching a movie.
+     * Calls helper method to retrieve data.
+     */
+    public void onResume(){
+        super.onResume();
+        downloadHelper();
+    }
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
      * to the activity and potentially other fragments contained in that
      * activity.
      */
-    public interface OnListFragmentInteractionListener {
+    public interface toWatchFragmentInteractionListener {
         void toWatchFragmentInteraction(Movie item);
     }
 
@@ -152,6 +159,17 @@ public class ToWatchFragment extends Fragment {
                 Toast.makeText(getActivity().getApplicationContext(), "You haven't added any movies yet!", Toast.LENGTH_LONG).show();
             }
         }
+    }
 
+    /**
+     * Helper method that retrieves user email and creates an instance of
+     * DownloadMoviesTask to retrieve movie list from database.
+     */
+    public void downloadHelper() {
+        mSharedPreferences = this.getActivity().getSharedPreferences(getString(R.string.LOGIN_PREFS), Context.MODE_PRIVATE);
+        // Retrieves email from SharedPreferences, return 'error' if email not found
+        String email = mSharedPreferences.getString(getString(R.string.USERNAME), "error");
+        DownloadMoviesTask downloadMovies = new DownloadMoviesTask();
+        downloadMovies.execute(new String[]{VIEW_LIST_URL + email});
     }
 }

@@ -23,7 +23,7 @@ public class WatchedRecyclerViewAdapter extends RecyclerView.Adapter<WatchedRecy
     /**
      * Creates a RecyclerViewAdapter for movie lists
      * @param items List of movies
-     * @param listener OnListFragmentInteractionListener
+     * @param listener toWatchFragmentInteractionListener
      */
     public WatchedRecyclerViewAdapter(List<Movie> items, OnListFragmentInteractionListener listener) {
         mValues = items;
@@ -62,19 +62,21 @@ public class WatchedRecyclerViewAdapter extends RecyclerView.Adapter<WatchedRecy
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
         public final TextView mIdView;
-        public final TextView mContentView;
+        //public final TextView mContentView;
         public Movie mItem;
 
         public ViewHolder(View view) {
             super(view);
             mView = view;
             mIdView = (TextView) view.findViewById(R.id.id);
-            mContentView = (TextView) view.findViewById(R.id.content);
+           // mContentView = (TextView) view.findViewById(R.id.content);
         }
 
         @Override
         public String toString() {
-            return super.toString() + " '" + mContentView.getText() + "'";
+
+           // return super.toString() + " '" + mContentView.getText() + "'";
+            return super.toString();
         }
     }
 }

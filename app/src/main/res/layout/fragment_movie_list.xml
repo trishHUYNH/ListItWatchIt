@@ -11,4 +11,6 @@
     android:layout_marginRight="16dp"
     app:layoutManager="LinearLayoutManager"
     tools:context="thuynh90.tacoma.uw.edu.listitwatchit.tabs.ToWatchFragment"
-    tools:listitem="@layout/fragment_movie"/>
+    tools:listitem="@layout/fragment_movie">
+
+</android.support.v7.widget.RecyclerView>

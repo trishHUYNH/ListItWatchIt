@@ -18,14 +18,14 @@ import android.view.View;
 import thuynh90.tacoma.uw.edu.listitwatchit.login.LoginActivity;
 import thuynh90.tacoma.uw.edu.listitwatchit.tabs.Movie;
 import thuynh90.tacoma.uw.edu.listitwatchit.tabs.PagerAdapter;
-import thuynh90.tacoma.uw.edu.listitwatchit.tabs.ToWatchFragment;
+import thuynh90.tacoma.uw.edu.listitwatchit.tabs.ToWatchFragment.toWatchFragmentInteractionListener;
 import thuynh90.tacoma.uw.edu.listitwatchit.tabs.WatchedFragment;
 import thuynh90.tacoma.uw.edu.listitwatchit.viewDetails.ViewMovieDetailsActivity;
 
 /**
  * Activity that is the home screen on the app. Houses the search function and has links to the other Activities
  */
-public class MainActivity extends AppCompatActivity implements ToWatchFragment.OnListFragmentInteractionListener, WatchedFragment.OnListFragmentInteractionListener {
+public class MainActivity extends AppCompatActivity implements toWatchFragmentInteractionListener, WatchedFragment.OnListFragmentInteractionListener {
 
     private SharedPreferences mSharedPreferences;
 

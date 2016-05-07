@@ -9,23 +9,23 @@ import android.widget.TextView;
 import java.util.List;
 
 import thuynh90.tacoma.uw.edu.listitwatchit.R;
-import thuynh90.tacoma.uw.edu.listitwatchit.tabs.ToWatchFragment.OnListFragmentInteractionListener;
+import thuynh90.tacoma.uw.edu.listitwatchit.tabs.ToWatchFragment.toWatchFragmentInteractionListener;
 
 
 /**
- * Provides layout for movie lists in tabs.
+ * Provides layout for "To Watch" list in tabs.
  */
 public class ToWatchRecyclerViewAdapter extends RecyclerView.Adapter<ToWatchRecyclerViewAdapter.ViewHolder> {
 
     private final List<Movie> mValues;
-    private final OnListFragmentInteractionListener mListener;
+    private final toWatchFragmentInteractionListener mListener;
 
     /**
      * Creates a RecyclerViewAdapter for movie lists
      * @param items List of movies
-     * @param listener OnListFragmentInteractionListener
+     * @param listener toWatchFragmentInteractionListener
      */
-    public ToWatchRecyclerViewAdapter(List<Movie> items, OnListFragmentInteractionListener listener) {
+    public ToWatchRecyclerViewAdapter(List<Movie> items, toWatchFragmentInteractionListener listener) {
         mValues = items;
         mListener = listener;
     }
@@ -62,19 +62,20 @@ public class ToWatchRecyclerViewAdapter extends RecyclerView.Adapter<ToWatchRecy
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
         public final TextView mIdView;
-        public final TextView mContentView;
+        //public final TextView mContentView;
         public Movie mItem;
 
         public ViewHolder(View view) {
             super(view);
             mView = view;
             mIdView = (TextView) view.findViewById(R.id.id);
-            mContentView = (TextView) view.findViewById(R.id.content);
+            //mContentView = (TextView) view.findViewById(R.id.content);
         }
 
         @Override
         public String toString() {
-            return super.toString() + " '" + mContentView.getText() + "'";
+            //return super.toString() + " '" + mContentView.getText() + "'";
+            return super.toString();
         }
     }
 }
