@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
-              android:orientation="vertical">
+              android:orientation="horizontal">
 
     <TextView
-        android:id="@+id/id"
+        android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/text_margin"
@@ -20,21 +20,30 @@
         <!--android:layout_below="@id/id"-->
         <!--android:textAppearance="?attr/textAppearanceListItem"/>-->
 
-    <!--<Button-->
-        <!--android:id="@+id/delete_to_watch"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_alignParentRight="true"-->
-        <!--android:layout_centerVertical="true"-->
-        <!--android:layout_marginRight="5dp"-->
-        <!--android:text="Delete" />-->
+    <Button
+        android:id="@+id/watched_to_watch"
+        android:layout_width="71dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:textSize="10sp"
+        android:text="@string/watched_button" />
 
-    <!--<Button-->
+    <!--<ImageButton-->
         <!--android:id="@+id/watched_to_watch"-->
         <!--android:layout_width="wrap_content"-->
         <!--android:layout_height="wrap_content"-->
-        <!--android:layout_toLeftOf="@id/delete_to_watch"-->
-        <!--android:layout_centerVertical="true"-->
-        <!--android:layout_marginRight="10dp"-->
-        <!--android:text="Watched" />-->
-</LinearLayout>
+        <!--android:layout_alignParentRight="true"-->
+        <!--android:layout_alignParentEnd="true"-->
+        <!--android:src="@drawable/check"-->
+        <!--android:scaleType="fitCenter"/>-->
+
+    <!--<Button-->
+    <!--android:id="@+id/delete_to_watch"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_toLeftOf="@id/watched_to_watch"-->
+    <!--android:text="Delete" />-->
+
+
+</RelativeLayout>

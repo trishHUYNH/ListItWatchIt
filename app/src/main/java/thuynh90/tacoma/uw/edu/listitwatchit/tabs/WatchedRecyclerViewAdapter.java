@@ -68,7 +68,7 @@ public class WatchedRecyclerViewAdapter extends RecyclerView.Adapter<WatchedRecy
         public ViewHolder(View view) {
             super(view);
             mView = view;
-            mIdView = (TextView) view.findViewById(R.id.id);
+            mIdView = (TextView) view.findViewById(R.id.title);
            // mContentView = (TextView) view.findViewById(R.id.content);
         }
 
