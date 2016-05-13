@@ -33,7 +33,7 @@ public class MyListsFragment extends Fragment {
 
     private int mColumnCount = 1;
     //Change this for My Lists
-    private static final String VIEW_LIST_URL = "http://cssgate.insttech.washington.edu/~_450atm6/viewList.php?cmd=towatch&email=";
+    private static final String VIEW_LIST_URL = "http://cssgate.insttech.washington.edu/~_450atm6/viewList.php?cmd=mylists&email=";
     private myListsFragmentInteractionListener mListener;
     private RecyclerView mRecyclerView;
     private SharedPreferences mSharedPreferences;
@@ -58,14 +58,15 @@ public class MyListsFragment extends Fragment {
         // Set the adapter
         if (view instanceof RecyclerView) {
             Context context = view.getContext();
-            RecyclerView recyclerView = (RecyclerView) view;
+            mRecyclerView = (RecyclerView) view;
             if (mColumnCount <= 1) {
-                recyclerView.setLayoutManager(new LinearLayoutManager(context));
+                mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
             } else {
-                recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
+                mRecyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            downloadHelper();
         }
+        // Retrieve user's custom list data
+        downloadHelper();
         return view;
     }
 

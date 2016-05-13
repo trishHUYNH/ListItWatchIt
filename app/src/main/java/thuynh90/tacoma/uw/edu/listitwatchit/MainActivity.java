@@ -177,21 +177,34 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     /**
-     * Fragment interaction for To Watch tab
+     * Fragment interaction for To Watch tab.
+     * Passes movie ID as intent to ViewMovieDetailsActivity
+     * @param item Movie item in list
      */
     public void toWatchFragmentInteraction(Movie item) {
-
+        String uri = item.getMovieID();
+        Intent detailIntent = new Intent (this, ViewMovieDetailsActivity.class);
+        detailIntent.putExtra("movieID", uri);
+        startActivity(detailIntent);
     }
 
     @Override
     /**
-     * Fragment interaction for Watched tab
+     * Fragment interaction for Watched tab.
+     * Passes movie ID as intent to ViewMovieDetailsActivity
+     * @param item Movie item in list
      */
     public void watchedFragmentInteraction(Movie item) {
-
+        String uri = item.getMovieID();
+        Intent detailIntent = new Intent (this, ViewMovieDetailsActivity.class);
+        detailIntent.putExtra("movieID", uri);
+        startActivity(detailIntent);
     }
 
     @Override
+    /**
+     * Fragment interaction for My Lists tab.
+     */
     public void myListFragmentInteraction(MyList eachList) {
 
     }

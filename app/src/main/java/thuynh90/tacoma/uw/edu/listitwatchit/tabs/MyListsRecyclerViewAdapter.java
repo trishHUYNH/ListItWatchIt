@@ -4,6 +4,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import java.util.List;
@@ -34,8 +35,9 @@ public class MyListsRecyclerViewAdapter extends RecyclerView.Adapter<MyListsRecy
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
-        holder.mIdView.setText(mValues.get(position).getListName());
-        holder.mContentView.setText(mValues.get(position).getListID());
+        //holder.mIdView.setText(mValues.get(position).getListID());
+        holder.mContentView.setText(mValues.get(position).getListName());
+
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -56,15 +58,17 @@ public class MyListsRecyclerViewAdapter extends RecyclerView.Adapter<MyListsRecy
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
-        public final TextView mIdView;
+        //public final TextView mIdView;
         public final TextView mContentView;
+        public final ImageButton delete;
         public MyList mItem;
 
         public ViewHolder(View view) {
             super(view);
             mView = view;
-            mIdView = (TextView) view.findViewById(R.id.id);
+            //mIdView = (TextView) view.findViewById(R.id.id);
             mContentView = (TextView) view.findViewById(R.id.content);
+            delete = (ImageButton) view.findViewById(R.id.delete_my_lists);
         }
 
         @Override

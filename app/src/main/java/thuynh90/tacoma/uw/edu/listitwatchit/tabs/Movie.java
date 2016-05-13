@@ -15,34 +15,35 @@ public class Movie implements Serializable {
 
     private String mMovieTitle;
     private String mReleaseDate;
+    private String mMovieID;
 
     public static final String MOVIE_TITLE = "Title";
-    public static final String MOVIE_RELEASE_DATE = "ReleaseDate";
+    public static final String MOVIE_ID = "MovieID";
 
     /**
      * Creates a Movie object that holds a movie's title and release date
      * @param movieTitle The title of the movie
-     * @param releaseDate The date the movie was released
+     * @param movieID The movie ID associated with TMDb
      */
-    public Movie(String movieTitle, String releaseDate) {
+    public Movie(String movieTitle, String movieID) {
         setMovieTitle(movieTitle);
-        setMovieReleaseDate(releaseDate);
+        setMovieID(movieID);
     }
 
     public String getMovieTitle() {
         return mMovieTitle;
     }
 
-    public String getMovieReleaseDate() {
-        return mReleaseDate;
+    public String getMovieID() {
+        return mMovieID;
     }
 
     public void setMovieTitle(String movieTitle) {
         this.mMovieTitle = movieTitle;
     }
 
-    public void setMovieReleaseDate(String releaseDate) {
-        this.mReleaseDate = releaseDate;
+    public void setMovieID(String movieID) {
+        this.mMovieID = movieID;
     }
 
     /**
@@ -59,7 +60,7 @@ public class Movie implements Serializable {
 
                 for (int i = 0; i < arr.length(); i++) {
                     JSONObject obj = arr.getJSONObject(i);
-                    Movie movie = new Movie(obj.getString(Movie.MOVIE_TITLE), obj.getString(Movie.MOVIE_RELEASE_DATE));
+                    Movie movie = new Movie(obj.getString(Movie.MOVIE_TITLE), obj.getString(Movie.MOVIE_ID));
                     movieList.add(movie);
                 }
             } catch (JSONException e) {
@@ -68,5 +69,4 @@ public class Movie implements Serializable {
         }
         return reason;
     }
-
 }

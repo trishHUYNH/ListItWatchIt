@@ -40,8 +40,8 @@ public class ToWatchRecyclerViewAdapter extends RecyclerView.Adapter<ToWatchRecy
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
-        holder.mIdView.setText(mValues.get(position).getMovieTitle());
-        //holder.mContentView.setText(mValues.get(position).getMovieReleaseDate());
+        holder.mContentView.setText(mValues.get(position).getMovieTitle());
+        //holder.mIdView.setText(mValues.get(position).getMovieReleaseDate());
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -62,8 +62,8 @@ public class ToWatchRecyclerViewAdapter extends RecyclerView.Adapter<ToWatchRecy
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
-        public final TextView mIdView;
-        //public final TextView mContentView;
+        // public final TextView mIdView;
+        public final TextView mContentView;
         public final ImageButton watched;
        // public final ImageButton delete;
         public Movie mItem;
@@ -71,16 +71,15 @@ public class ToWatchRecyclerViewAdapter extends RecyclerView.Adapter<ToWatchRecy
         public ViewHolder(View view) {
             super(view);
             mView = view;
-            mIdView = (TextView) view.findViewById(R.id.title);
-            //mContentView = (TextView) view.findViewById(R.id.content);
+            //mIdView = (TextView) view.findViewById(R.id.title);
+            mContentView = (TextView) view.findViewById(R.id.title);
             watched = (ImageButton) view.findViewById(R.id.watched_to_watch);
             //delete = (ImageButton) view.findViewById(R.id.delete_to_watch);
         }
 
         @Override
         public String toString() {
-            //return super.toString() + " '" + mContentView.getText() + "'";
-            return super.toString();
+            return super.toString() + " '" + mContentView.getText() + "'";
         }
     }
 }
