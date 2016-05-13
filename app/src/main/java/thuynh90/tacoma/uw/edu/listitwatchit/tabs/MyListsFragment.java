@@ -23,7 +23,7 @@ import java.util.List;
 import thuynh90.tacoma.uw.edu.listitwatchit.R;
 
 /**
- * A fragment representing a list of Items.
+ * A fragment representing a list of user's custom movie lists.
  * <p/>
  * Activities containing this fragment MUST implement the {@link myListsFragmentInteractionListener}
  * interface.

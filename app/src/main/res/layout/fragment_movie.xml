@@ -11,39 +11,22 @@
         android:layout_margin="@dimen/text_margin"
         android:textAppearance="?attr/textAppearanceListItem"/>
 
-
-    <!--<TextView-->
-        <!--android:id="@+id/content"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_margin="@dimen/text_margin"-->
-        <!--android:layout_below="@id/id"-->
-        <!--android:textAppearance="?attr/textAppearanceListItem"/>-->
-
-    <Button
+    <ImageButton
         android:id="@+id/watched_to_watch"
-        android:layout_width="71dp"
-        android:layout_height="wrap_content"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:textSize="10sp"
-        android:text="@string/watched_button" />
+        android:src="@drawable/check"
+        android:scaleType="fitCenter"/>
 
     <!--<ImageButton-->
-        <!--android:id="@+id/watched_to_watch"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_alignParentRight="true"-->
-        <!--android:layout_alignParentEnd="true"-->
-        <!--android:src="@drawable/check"-->
+        <!--android:id="@+id/delete_to_watch"-->
+        <!--android:layout_width="50dp"-->
+        <!--android:layout_height="50dp"-->
+        <!--android:layout_toLeftOf="@id/watched_to_watch"-->
+        <!--android:src="@drawable/trash"-->
         <!--android:scaleType="fitCenter"/>-->
-
-    <!--<Button-->
-    <!--android:id="@+id/delete_to_watch"-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_toLeftOf="@id/watched_to_watch"-->
-    <!--android:text="Delete" />-->
 
 
 </RelativeLayout>

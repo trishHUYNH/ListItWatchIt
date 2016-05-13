@@ -4,7 +4,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import java.util.List;
@@ -64,8 +64,8 @@ public class ToWatchRecyclerViewAdapter extends RecyclerView.Adapter<ToWatchRecy
         public final View mView;
         public final TextView mIdView;
         //public final TextView mContentView;
-        public final Button watched;
-        //public final Button delete;
+        public final ImageButton watched;
+       // public final ImageButton delete;
         public Movie mItem;
 
         public ViewHolder(View view) {
@@ -73,8 +73,8 @@ public class ToWatchRecyclerViewAdapter extends RecyclerView.Adapter<ToWatchRecy
             mView = view;
             mIdView = (TextView) view.findViewById(R.id.title);
             //mContentView = (TextView) view.findViewById(R.id.content);
-            watched = (Button) view.findViewById(R.id.watched_to_watch);
-            //delete = (Button) view.findViewById(R.id.delete_to_watch);
+            watched = (ImageButton) view.findViewById(R.id.watched_to_watch);
+            //delete = (ImageButton) view.findViewById(R.id.delete_to_watch);
         }
 
         @Override

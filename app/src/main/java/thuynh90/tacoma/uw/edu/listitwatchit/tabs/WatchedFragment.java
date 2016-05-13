@@ -31,7 +31,7 @@ public class WatchedFragment extends Fragment {
     private int mColumnCount = 1;
     // Change this for Watched list
     private static final String VIEW_LIST_URL = "http://cssgate.insttech.washington.edu/~_450atm6/viewList.php?cmd=watched&email=";
-    private OnListFragmentInteractionListener mListener;
+    private WatchedListFragmentInteractionListener mListener;
     private RecyclerView mRecyclerView;
     private SharedPreferences mSharedPreferences;
 
@@ -75,8 +75,8 @@ public class WatchedFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnListFragmentInteractionListener) {
-            mListener = (OnListFragmentInteractionListener) context;
+        if (context instanceof WatchedListFragmentInteractionListener) {
+            mListener = (WatchedListFragmentInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString() + " must implement toWatchFragmentInteractionListener");
         }
@@ -104,7 +104,7 @@ public class WatchedFragment extends Fragment {
      * to the activity and potentially other fragments contained in that
      * activity.
      */
-    public interface OnListFragmentInteractionListener {
+    public interface WatchedListFragmentInteractionListener {
         void watchedFragmentInteraction(Movie item);
     }
 
