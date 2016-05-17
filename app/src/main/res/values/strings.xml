@@ -26,7 +26,10 @@
     <!-- Buttons -->
     <string name="watched_button">Watched</string>
 
-
+    <!-- Dialogs -->
+    <string name="enter_list_name">Enter list name </string>
+    <string name="create_list">Create List</string>
+    <string name="cancel">Cancel</string>
 
 
 </resources>

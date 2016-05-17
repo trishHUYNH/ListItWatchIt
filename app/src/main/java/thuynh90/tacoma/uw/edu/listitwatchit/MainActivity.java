@@ -1,21 +1,35 @@
 package thuynh90.tacoma.uw.edu.listitwatchit;
 
+import android.app.DialogFragment;
 import android.app.SearchManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 import thuynh90.tacoma.uw.edu.listitwatchit.login.LoginActivity;
+import thuynh90.tacoma.uw.edu.listitwatchit.tabs.ListNameDialogFragment;
 import thuynh90.tacoma.uw.edu.listitwatchit.tabs.Movie;
 import thuynh90.tacoma.uw.edu.listitwatchit.tabs.MyList;
 import thuynh90.tacoma.uw.edu.listitwatchit.tabs.MyListsFragment;
@@ -31,6 +45,7 @@ public class MainActivity extends AppCompatActivity
         implements toWatchFragmentInteractionListener, WatchedListFragmentInteractionListener, MyListsFragment.myListsFragmentInteractionListener {
 
     private SharedPreferences mSharedPreferences;
+    private static final String ADDLIST_URL = "http://cssgate.insttech.washington.edu/~_450atm6/addList.php?";
 
     @Override
     /**
@@ -153,6 +168,18 @@ public class MainActivity extends AppCompatActivity
         tabLayout.addTab(myLists);
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
+        final FloatingActionButton addListButton = (FloatingActionButton)
+                findViewById(R.id.add_list_button);
+        addListButton.hide();
+
+        addListButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                DialogFragment listNameDialog = new ListNameDialogFragment();
+                listNameDialog.show(getFragmentManager(), "list title dialog");
+            }
+        });
+
         final ViewPager viewPager = (ViewPager) findViewById(R.id.view_pager);
         final PagerAdapter adapter = new PagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount());
         viewPager.setAdapter(adapter);
@@ -161,15 +188,25 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 viewPager.setCurrentItem(tab.getPosition());
+
+                if (tab.equals(myLists)) {
+                    addListButton.show();
+                }
             }
 
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
+                if (tab.equals(myLists)) {
+                    addListButton.hide();
+                }
 
             }
 
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
+                if (tab.equals(myLists)) {
+                    addListButton.show();
+                }
 
             }
         });
@@ -208,4 +245,60 @@ public class MainActivity extends AppCompatActivity
     public void myListFragmentInteraction(MyList eachList) {
 
     }
+
+
+    public void createList(String listName){
+
+        class CreateListTask extends AsyncTask<String, Void, String> {
+
+            @Override
+            protected String doInBackground(String... params) {
+                String listInfo = params[0];
+                BufferedReader bufferedReader;
+                HttpURLConnection connection = null;
+                String result;
+                try {
+                    URL url = new URL(ADDLIST_URL + listInfo);
+                    connection = (HttpURLConnection) url.openConnection();
+                    bufferedReader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+
+                    result = bufferedReader.readLine();
+                    return result;
+                } catch (Exception e) {
+                    return result = "Unable to add list. Reason: " + e.getMessage();
+                }
+                finally {
+                    if (connection != null)
+                        connection.disconnect();
+                }
+
+            }
+            @Override
+            protected void onPostExecute(String result)  {
+                try {
+                    JSONObject jsonObject = new JSONObject(result);
+                    String status = (String) jsonObject.get("result");
+                    if (status.equals("success")) {
+                        Toast.makeText(getApplicationContext(), "List added", Toast.LENGTH_LONG).show();
+
+
+                    } else {
+                        Toast.makeText(getApplicationContext(), "Could not add list: " + jsonObject.get("error"), Toast.LENGTH_LONG).show();
+                    }
+                } catch (JSONException e) {
+                    Toast.makeText(getApplicationContext(), "Data problem: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                }
+            }
+        }
+
+        mSharedPreferences = getSharedPreferences(getString(R.string.LOGIN_PREFS), Context.MODE_PRIVATE);
+        String email = mSharedPreferences.getString(getString(R.string.USERNAME), "error");
+        Log.d("SharedPref email", email);
+
+
+        CreateListTask newListTask = new CreateListTask();
+        newListTask.execute("list_name=" + listName + "&email=" + email);
+
+    }
+
 }
