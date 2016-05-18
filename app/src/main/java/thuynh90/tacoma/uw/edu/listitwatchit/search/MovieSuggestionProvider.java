@@ -103,7 +103,7 @@ public class MovieSuggestionProvider extends ContentProvider{
                 {
 
                     JSONObject movie = moviesArray.getJSONObject(i);
-                    String movieTitle = movie.getString("original_title");
+                    String movieTitle = movie.getString("title");
                     String releaseDate = "Release Date: " + movie.getString("release_date");
                     String movieID = movie.getString("id");
                     // Add movie to cursor table if query exists in movie title
