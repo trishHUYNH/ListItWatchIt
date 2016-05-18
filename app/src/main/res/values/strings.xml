@@ -25,6 +25,7 @@
 
     <!-- Buttons -->
     <string name="watched_button">Watched</string>
+    <string name="delete_button">Delete</string>
 
 
 

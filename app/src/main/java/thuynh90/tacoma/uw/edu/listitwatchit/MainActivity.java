@@ -124,6 +124,7 @@ public class MainActivity extends AppCompatActivity
             String uri = intent.getDataString();
             Intent detailIntent = new Intent (this, ViewMovieDetailsActivity.class);
             detailIntent.putExtra("movieID", uri);
+            detailIntent.putExtra("location", "fromSearch");
             startActivity(detailIntent);
         }
     }
@@ -185,6 +186,8 @@ public class MainActivity extends AppCompatActivity
         String uri = item.getMovieID();
         Intent detailIntent = new Intent (this, ViewMovieDetailsActivity.class);
         detailIntent.putExtra("movieID", uri);
+        detailIntent.putExtra("location", "fromToWatch");
+        detailIntent.putExtra("listName", "To Watch");
         startActivity(detailIntent);
     }
 
@@ -198,6 +201,8 @@ public class MainActivity extends AppCompatActivity
         String uri = item.getMovieID();
         Intent detailIntent = new Intent (this, ViewMovieDetailsActivity.class);
         detailIntent.putExtra("movieID", uri);
+        detailIntent.putExtra("location", "fromWatched");
+        detailIntent.putExtra("listName", "To Watch");
         startActivity(detailIntent);
     }
 

@@ -156,7 +156,7 @@ public class ToWatchFragment extends Fragment {
             if (!movieList.isEmpty()) {
                 mRecyclerView.setAdapter(new ToWatchRecyclerViewAdapter(movieList, mListener));
             } else {
-                Toast.makeText(getActivity().getApplicationContext(), "You haven't added any movies yet!", Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity().getApplicationContext(), "You haven't added any movies yet!", Toast.LENGTH_SHORT).show();
             }
         }
     }

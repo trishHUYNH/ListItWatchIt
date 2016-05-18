@@ -32,6 +32,7 @@ import thuynh90.tacoma.uw.edu.listitwatchit.R;
 public class ViewMovieDetailsActivity extends AppCompatActivity {
 
     private final static String MOVIE_ADD_URL = "http://cssgate.insttech.washington.edu/~_450atm6/addMovie.php?";
+    private final static String MOVIE_DELETE_URL = "http://cssgate.insttech.washington.edu/~_450atm6/deleteMovie.php?";
     private SharedPreferences mSharedPreferences;
     static private String API_KEY = "6e2537d9c135091718d558d8d56a7cde";
 
@@ -44,6 +45,7 @@ public class ViewMovieDetailsActivity extends AppCompatActivity {
     String releaseDate= "";
     String synopsis= "";
     Bitmap poster;
+    String listName = "";
 
 
     /**
@@ -55,9 +57,16 @@ public class ViewMovieDetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         Intent intent = getIntent();
         id = intent.getStringExtra("movieID");
+        listName = intent.getStringExtra("listName");
+        String lastLocation = intent.getStringExtra("location");
         loadMovieDetailsTask task = new loadMovieDetailsTask();
         task.execute();
-        setContentView(R.layout.activity_view_movie_details);
+
+        if(lastLocation.equals("fromSearch") || lastLocation.equals("fromWatched")) {
+            setContentView(R.layout.activity_view_movie_details);
+        } else if (lastLocation.equals("fromToWatch")){
+            setContentView(R.layout.activity_view_movie_details_from_watched);
+        }
 
         mMovieTitleTextView = (TextView) findViewById(R.id.movie_title);
         mReleaseDateTextView = (TextView) findViewById(R.id.release_date);
@@ -195,8 +204,7 @@ public class ViewMovieDetailsActivity extends AppCompatActivity {
 
         }
         catch(Exception e) {
-            Toast.makeText(getApplicationContext(), "Something wrong with the url" + e.getMessage(), Toast.LENGTH_LONG)
-                    .show();
+            Toast.makeText(getApplicationContext(), "URL error: " + e.getMessage(), Toast.LENGTH_LONG).show();
         }
         return urlBuilder.toString();
     }
@@ -208,56 +216,100 @@ public class ViewMovieDetailsActivity extends AppCompatActivity {
     public void addMovie(View view) {
         String movieDetails = buildAddMovieURL();
         System.out.println(movieDetails);
-        class addMovieTask extends AsyncTask<String, Void, String> {
 
-            @Override
-            protected String doInBackground(String... params) {
-                String movieDetailUrl = params[0];
-                BufferedReader bufferedReader;
-                HttpURLConnection connection = null;
-                String result;
-                try {
-                    URL url = new URL(movieDetailUrl);
-                    connection = (HttpURLConnection) url.openConnection();
-                    bufferedReader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+        editListTask addMovie = new editListTask();
+        addMovie.execute(movieDetails);
+    }
 
-                    result = bufferedReader.readLine();
-                    Log.d("PHP response", result);
+    /**
+     * Runs an AsyncTask to send movie information to the database so that the movie selected movie can
+     * be deleted from "To Watch" and added to "Watched"
+     * @param view
+     */
+    public void moveToWatched(View view) {
 
-                    return result;
-                } catch (Exception e) {
-                    Log.d("PHP response", e.getMessage());
-                    return result = "Unable to Add. Reason: " + e.getMessage();
-                }
-                finally {
-                    if (connection != null)
-                        connection.disconnect();
-                }
+    }
+
+    /**
+     * Runs an AsyncTask to send movie information to the database so that the movie can be deleted
+     * from the selected list
+     * @param view
+     */
+    public void deleteMovie(View view) {
+
+        StringBuilder urlBuilder = new StringBuilder(MOVIE_DELETE_URL);
+        mSharedPreferences = getSharedPreferences(getString(R.string.LOGIN_PREFS), Context.MODE_PRIVATE);
+        String email = mSharedPreferences.getString(getString(R.string.USERNAME), "error");
+
+        try {
+            urlBuilder.append("email=");
+            urlBuilder.append(email.trim());
+
+            urlBuilder.append("&list=");
+            urlBuilder.append(listName.replaceAll(" ", "+").trim());
+
+            urlBuilder.append("&movie_id=");
+            urlBuilder.append(id.trim());
+
+        }
+        catch(Exception e) {
+            Toast.makeText(getApplicationContext(), "URL error: " + e.getMessage(), Toast.LENGTH_LONG).show();
+        }
+
+        System.out.println(urlBuilder.toString());
+
+        editListTask deleteMovie = new editListTask();
+        deleteMovie.execute(urlBuilder.toString());
+    }
+
+    private class editListTask extends AsyncTask<String, Void, String> {
+
+        @Override
+        protected String doInBackground(String... params) {
+            String movieDetailUrl = params[0];
+            BufferedReader bufferedReader;
+            HttpURLConnection connection = null;
+            String result;
+            try {
+                URL url = new URL(movieDetailUrl);
+                connection = (HttpURLConnection) url.openConnection();
+                bufferedReader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+
+                result = bufferedReader.readLine();
+                Log.d("PHP response", result);
+
+                return result;
+            } catch (Exception e) {
+                Log.d("PHP response", e.getMessage());
+                return result = "Error. Reason: " + e.getMessage();
             }
-
-            @Override
-            protected void onPreExecute() {
-                super.onPreExecute();
-            }
-
-            @Override
-            protected void onPostExecute(String result) {
-                try {
-                    JSONObject jsonObject = new JSONObject(result);
-                    String status = (String) jsonObject.get("result");
-                    if (status.equals("success")) {
-                        Toast.makeText(getApplicationContext(), "Movie successfully added", Toast.LENGTH_LONG).show();
-
-                    } else {
-                        Toast.makeText(getApplicationContext(), "" + jsonObject.get("error"), Toast.LENGTH_LONG).show();
-                    }
-                } catch (JSONException e) {
-                    Toast.makeText(getApplicationContext(), "Data problem: " + e.getMessage(), Toast.LENGTH_LONG).show();
-                    System.out.println(e.getMessage());
-                }
+            finally {
+                if (connection != null)
+                    connection.disconnect();
             }
         }
-        addMovieTask addMovie = new addMovieTask();
-        addMovie.execute(movieDetails);
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        //TODO: Handle movie added to list that already exists in Movies
+        protected void onPostExecute(String result) {
+            try {
+                JSONObject jsonObject = new JSONObject(result);
+                String status = (String) jsonObject.get("result");
+                if (status.equals("success")) {
+                    Toast.makeText(getApplicationContext(), jsonObject.get("message").toString() , Toast.LENGTH_SHORT).show();
+
+                } else {
+                    Toast.makeText(getApplicationContext(), jsonObject.get("error").toString(), Toast.LENGTH_LONG).show();
+                }
+            } catch (JSONException e) {
+                Toast.makeText(getApplicationContext(), "Data problem: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                System.out.println(e.getMessage());
+            }
+        }
     }
 }
