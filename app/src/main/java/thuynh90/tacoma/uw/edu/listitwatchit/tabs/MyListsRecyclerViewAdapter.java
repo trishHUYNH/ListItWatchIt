@@ -27,17 +27,16 @@ public class MyListsRecyclerViewAdapter extends RecyclerView.Adapter<MyListsRecy
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.fragment_list, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_list, parent, false);
+
         return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, int position) {
+    public void onBindViewHolder(final ViewHolder holder, final int position) {
         holder.mItem = mValues.get(position);
         //holder.mIdView.setText(mValues.get(position).getListID());
         holder.mContentView.setText(mValues.get(position).getListName());
-
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -45,8 +44,15 @@ public class MyListsRecyclerViewAdapter extends RecyclerView.Adapter<MyListsRecy
                 if (null != mListener) {
                     // Notify the active callbacks interface (the activity, if the
                     // fragment is attached to one) that an item has been selected.
-                    mListener.myListFragmentInteraction(holder.mItem);
+                    mListener.myListFragmentInteraction(holder.mItem, "viewList");
                 }
+            }
+        });
+
+        holder.mDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mListener.myListFragmentInteraction(holder.mItem, "deleteList");
             }
         });
     }
@@ -60,7 +66,7 @@ public class MyListsRecyclerViewAdapter extends RecyclerView.Adapter<MyListsRecy
         public final View mView;
         //public final TextView mIdView;
         public final TextView mContentView;
-        public final ImageButton delete;
+        public final ImageButton mDelete;
         public MyList mItem;
 
         public ViewHolder(View view) {
@@ -68,7 +74,7 @@ public class MyListsRecyclerViewAdapter extends RecyclerView.Adapter<MyListsRecy
             mView = view;
             //mIdView = (TextView) view.findViewById(R.id.id);
             mContentView = (TextView) view.findViewById(R.id.content);
-            delete = (ImageButton) view.findViewById(R.id.delete_my_lists);
+            mDelete = (ImageButton) view.findViewById(R.id.delete_my_lists);
         }
 
         @Override

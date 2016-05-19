@@ -51,8 +51,7 @@ public class MyListsFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_my_lists, container, false);
 
         // Set the adapter
@@ -87,6 +86,17 @@ public class MyListsFragment extends Fragment {
         mListener = null;
     }
 
+    @Override
+    /**
+     * Refreshes "My lists" list when user returns back to fragment after viewing a different
+     * activity.
+     * Calls helper method to retrieve data.
+     */
+    public void onResume(){
+        super.onResume();
+        downloadHelper();
+    }
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -98,7 +108,7 @@ public class MyListsFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface myListsFragmentInteractionListener {
-        void myListFragmentInteraction(MyList eachList);
+        void myListFragmentInteraction(MyList eachList, String viewList);
     }
 
     /**
@@ -166,4 +176,5 @@ public class MyListsFragment extends Fragment {
         DownloadMyListsTask downloadMovies = new DownloadMyListsTask();
         downloadMovies.execute(new String[]{VIEW_LIST_URL + email});
     }
+
 }

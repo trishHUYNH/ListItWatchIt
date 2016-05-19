@@ -210,20 +210,21 @@ public class ViewMovieDetailsActivity extends AppCompatActivity {
     }
 
     /**
-     * Runs an AsyncTask to send movie information to the database so that the movie may be added to a user's list
+     * Runs an AsyncTask helper method to send movie information to the database so that the movie
+     * may be added to a user's list
      * @param view
      */
     public void addMovie(View view) {
         String movieDetails = buildAddMovieURL();
         System.out.println(movieDetails);
 
-        editListTask addMovie = new editListTask();
+        UpdateListTask addMovie = new UpdateListTask();
         addMovie.execute(movieDetails);
     }
 
     /**
-     * Runs an AsyncTask to send movie information to the database so that the movie selected movie can
-     * be deleted from "To Watch" and added to "Watched"
+     * Runs an AsyncTask helper method to send movie information to the database so that the movie
+     * selected movie can be deleted from "To Watch" and added to "Watched"
      * @param view
      */
     public void moveToWatched(View view) {
@@ -231,8 +232,8 @@ public class ViewMovieDetailsActivity extends AppCompatActivity {
     }
 
     /**
-     * Runs an AsyncTask to send movie information to the database so that the movie can be deleted
-     * from the selected list
+     * Runs an AsyncTask helper method to send movie information to the database so that the movie
+     * can be deleted from the selected list
      * @param view
      */
     public void deleteMovie(View view) {
@@ -258,11 +259,11 @@ public class ViewMovieDetailsActivity extends AppCompatActivity {
 
         System.out.println(urlBuilder.toString());
 
-        editListTask deleteMovie = new editListTask();
+        UpdateListTask deleteMovie = new UpdateListTask();
         deleteMovie.execute(urlBuilder.toString());
     }
 
-    private class editListTask extends AsyncTask<String, Void, String> {
+    private class UpdateListTask extends AsyncTask<String, Void, String> {
 
         @Override
         protected String doInBackground(String... params) {
@@ -295,7 +296,6 @@ public class ViewMovieDetailsActivity extends AppCompatActivity {
         }
 
         @Override
-        //TODO: Handle movie added to list that already exists in Movies
         protected void onPostExecute(String result) {
             try {
                 JSONObject jsonObject = new JSONObject(result);
