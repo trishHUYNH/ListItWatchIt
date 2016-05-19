@@ -31,8 +31,8 @@ import thuynh90.tacoma.uw.edu.listitwatchit.R;
  */
 public class ViewMovieDetailsActivity extends AppCompatActivity {
 
-    private final static String MOVIE_ADD_URL = "http://cssgate.insttech.washington.edu/~_450atm6/addMovie.php?";
-    private final static String MOVIE_DELETE_URL = "http://cssgate.insttech.washington.edu/~_450atm6/deleteMovie.php?";
+    private final static String ADD_MOVIE_URL = "http://cssgate.insttech.washington.edu/~_450atm6/addMovie.php?";
+    private final static String DELETE_MOVIE_URL = "http://cssgate.insttech.washington.edu/~_450atm6/deleteMovie.php?";
     private SharedPreferences mSharedPreferences;
     static private String API_KEY = "6e2537d9c135091718d558d8d56a7cde";
 
@@ -182,7 +182,7 @@ public class ViewMovieDetailsActivity extends AppCompatActivity {
      */
     private String buildAddMovieURL() {
 
-        StringBuilder urlBuilder = new StringBuilder(MOVIE_ADD_URL);
+        StringBuilder urlBuilder = new StringBuilder(ADD_MOVIE_URL);
         mSharedPreferences = getSharedPreferences(getString(R.string.LOGIN_PREFS), Context.MODE_PRIVATE);
         String email = mSharedPreferences.getString(getString(R.string.USERNAME), "error");
 
@@ -225,6 +225,7 @@ public class ViewMovieDetailsActivity extends AppCompatActivity {
     /**
      * Runs an AsyncTask helper method to send movie information to the database so that the movie
      * selected movie can be deleted from "To Watch" and added to "Watched"
+     * TODO: Implement moveToWatched from details activity
      * @param view
      */
     public void moveToWatched(View view) {
@@ -238,7 +239,7 @@ public class ViewMovieDetailsActivity extends AppCompatActivity {
      */
     public void deleteMovie(View view) {
 
-        StringBuilder urlBuilder = new StringBuilder(MOVIE_DELETE_URL);
+        StringBuilder urlBuilder = new StringBuilder(DELETE_MOVIE_URL);
         mSharedPreferences = getSharedPreferences(getString(R.string.LOGIN_PREFS), Context.MODE_PRIVATE);
         String email = mSharedPreferences.getString(getString(R.string.USERNAME), "error");
 

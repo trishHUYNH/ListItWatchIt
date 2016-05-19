@@ -5,12 +5,12 @@
               android:orientation="horizontal">
 
     <ImageButton
-        android:id="@+id/watched_to_watch"
+        android:id="@+id/delete_watched"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:src="@drawable/check"
+        android:src="@drawable/trash"
         android:scaleType="fitCenter"/>
 
     <TextView
@@ -21,20 +21,11 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:scrollHorizontally="true"
-        android:layout_toLeftOf="@id/watched_to_watch"
-        android:layout_toStartOf="@id/watched_to_watch"
+        android:layout_toLeftOf="@id/delete_watched"
+        android:layout_toStartOf="@id/delete_watched"
         android:singleLine="true"
         android:ellipsize="end"
         android:textAppearance="?attr/textAppearanceListItem"/>
-
-
-    <!--<ImageButton-->
-        <!--android:id="@+id/delete_to_watch"-->
-        <!--android:layout_width="50dp"-->
-        <!--android:layout_height="50dp"-->
-        <!--android:layout_toLeftOf="@id/watched_to_watch"-->
-        <!--android:src="@drawable/trash"-->
-        <!--android:scaleType="fitCenter"/>-->
 
 
 </RelativeLayout>

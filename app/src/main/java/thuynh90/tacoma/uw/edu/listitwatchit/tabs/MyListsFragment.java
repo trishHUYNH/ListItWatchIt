@@ -114,6 +114,7 @@ public class MyListsFragment extends Fragment {
     /**
      * Opens URL connection and parses JSON result to view lists specific
      * to users. Called from onCreate.
+     * TODO: Remove "Watched" and "To Watch" from "My Lists" tab
      */
     private class DownloadMyListsTask extends AsyncTask<String, Void, String> {
 
@@ -174,7 +175,7 @@ public class MyListsFragment extends Fragment {
         // Retrieves email from SharedPreferences, return 'error' if email not found
         String email = mSharedPreferences.getString(getString(R.string.USERNAME), "error");
         DownloadMyListsTask downloadMovies = new DownloadMyListsTask();
-        downloadMovies.execute(new String[]{VIEW_LIST_URL + email});
+        downloadMovies.execute(VIEW_LIST_URL + email);
     }
 
 }

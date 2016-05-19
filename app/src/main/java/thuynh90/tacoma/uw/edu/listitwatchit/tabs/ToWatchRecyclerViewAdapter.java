@@ -49,10 +49,22 @@ public class ToWatchRecyclerViewAdapter extends RecyclerView.Adapter<ToWatchRecy
                 if (null != mListener) {
                     // Notify the active callbacks interface (the activity, if the
                     // fragment is attached to one) that an item has been selected.
-                    mListener.toWatchFragmentInteraction(holder.mItem);
+                    mListener.toWatchFragmentInteraction(holder.mItem, "viewDetails");
                 }
             }
         });
+
+        holder.mWatched.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (null != mListener) {
+                    // Notify the active callbacks interface (the activity, if the
+                    // fragment is attached to one) that an item has been selected.
+                    mListener.toWatchFragmentInteraction(holder.mItem, "watchedMovie");
+                }
+            }
+        });
+
     }
 
     @Override
@@ -64,7 +76,7 @@ public class ToWatchRecyclerViewAdapter extends RecyclerView.Adapter<ToWatchRecy
         public final View mView;
         // public final TextView mIdView;
         public final TextView mContentView;
-        public final ImageButton watched;
+        public final ImageButton mWatched;
        // public final ImageButton delete;
         public Movie mItem;
 
@@ -73,7 +85,7 @@ public class ToWatchRecyclerViewAdapter extends RecyclerView.Adapter<ToWatchRecy
             mView = view;
             //mIdView = (TextView) view.findViewById(R.id.title);
             mContentView = (TextView) view.findViewById(R.id.title);
-            watched = (ImageButton) view.findViewById(R.id.watched_to_watch);
+            mWatched = (ImageButton) view.findViewById(R.id.watched_to_watch);
             //delete = (ImageButton) view.findViewById(R.id.delete_to_watch);
         }
 

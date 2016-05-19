@@ -104,7 +104,7 @@ public class ToWatchFragment extends Fragment {
      * activity.
      */
     public interface toWatchFragmentInteractionListener {
-        void toWatchFragmentInteraction(Movie item);
+        void toWatchFragmentInteraction(Movie item, String task);
     }
 
     /**
@@ -170,6 +170,6 @@ public class ToWatchFragment extends Fragment {
         // Retrieves email from SharedPreferences, return 'error' if email not found
         String email = mSharedPreferences.getString(getString(R.string.USERNAME), "error");
         DownloadMoviesTask downloadMovies = new DownloadMoviesTask();
-        downloadMovies.execute(new String[]{VIEW_LIST_URL + email});
+        downloadMovies.execute(VIEW_LIST_URL + email);
     }
 }

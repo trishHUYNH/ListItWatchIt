@@ -31,7 +31,7 @@ import thuynh90.tacoma.uw.edu.listitwatchit.login.LoginActivity;
 import thuynh90.tacoma.uw.edu.listitwatchit.tabs.ListNameDialogFragment;
 import thuynh90.tacoma.uw.edu.listitwatchit.tabs.Movie;
 import thuynh90.tacoma.uw.edu.listitwatchit.tabs.MyList;
-import thuynh90.tacoma.uw.edu.listitwatchit.tabs.MyListsFragment;
+import thuynh90.tacoma.uw.edu.listitwatchit.tabs.MyListsFragment.myListsFragmentInteractionListener;
 import thuynh90.tacoma.uw.edu.listitwatchit.tabs.PagerAdapter;
 import thuynh90.tacoma.uw.edu.listitwatchit.tabs.ToWatchFragment.toWatchFragmentInteractionListener;
 import thuynh90.tacoma.uw.edu.listitwatchit.tabs.WatchedFragment.WatchedListFragmentInteractionListener;
@@ -41,11 +41,13 @@ import thuynh90.tacoma.uw.edu.listitwatchit.viewDetails.ViewMovieDetailsActivity
  * Activity that is the home screen on the app. Houses the search function and has links to the other Activities
  */
 public class MainActivity extends AppCompatActivity
-        implements toWatchFragmentInteractionListener, WatchedListFragmentInteractionListener, MyListsFragment.myListsFragmentInteractionListener {
+        implements toWatchFragmentInteractionListener, WatchedListFragmentInteractionListener, myListsFragmentInteractionListener {
 
     private SharedPreferences mSharedPreferences;
     private static final String ADD_LIST_URL = "http://cssgate.insttech.washington.edu/~_450atm6/addList.php?";
     private static final String DELETE_LIST_URL = "http://cssgate.insttech.washington.edu/~_450atm6/deleteList.php?";
+    private static final String MOVE_TO_WATCHED_URL = "http://cssgate.insttech.washington.edu/~_450atm6/moveToWatched.php?";
+    private final static String DELETE_MOVIE_URL = "http://cssgate.insttech.washington.edu/~_450atm6/deleteMovie.php?";
 
     @Override
     /**
@@ -160,6 +162,7 @@ public class MainActivity extends AppCompatActivity
      */
     public void createTabs() {
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
+        assert tabLayout != null;
         final TabLayout.Tab toWatch = tabLayout.newTab().setText("To Watch");
         final TabLayout.Tab watched = tabLayout.newTab().setText("Watched");
         final TabLayout.Tab myLists = tabLayout.newTab().setText("My Lists");
@@ -217,36 +220,85 @@ public class MainActivity extends AppCompatActivity
     @Override
     /**
      * Fragment interaction for To Watch tab.
-     * Passes movie ID as intent to ViewMovieDetailsActivity
+     * Passes movie ID as intent to ViewMovieDetailsActivity if task is to view details
+     * Else makes an instance of UpdateListTask to move movie to "Watched"
+     * TODO: Update "To Watch" tab when movie is moved to "Watched"
      * @param item Movie item in list
+     * @param task String that describes task that describes whether to view or move movie to "Watched"
      */
-    public void toWatchFragmentInteraction(Movie item) {
-        String uri = item.getMovieID();
-        Intent detailIntent = new Intent (this, ViewMovieDetailsActivity.class);
-        detailIntent.putExtra("movieID", uri);
-        detailIntent.putExtra("location", "fromToWatch");
-        detailIntent.putExtra("listName", "To Watch");
-        startActivity(detailIntent);
+    public void toWatchFragmentInteraction(Movie item, String task) {
+        if(task.equals("viewDetails")) {
+            Intent detailIntent = new Intent(this, ViewMovieDetailsActivity.class);
+            detailIntent.putExtra("movieID", item.getMovieID());
+            detailIntent.putExtra("location", "fromToWatch");
+            detailIntent.putExtra("listName", "To Watch");
+            startActivity(detailIntent);
+        } else if(task.equals("watchedMovie")) {
+            StringBuilder urlBuilder = new StringBuilder(MOVE_TO_WATCHED_URL);
+            mSharedPreferences = getSharedPreferences(getString(R.string.LOGIN_PREFS), Context.MODE_PRIVATE);
+            String email = mSharedPreferences.getString(getString(R.string.USERNAME), "error");
+
+            try {
+                urlBuilder.append("email=");
+                urlBuilder.append(email.trim());
+
+                urlBuilder.append("&movie_id=");
+                urlBuilder.append(item.getMovieID().trim());
+            }
+            catch(Exception e) {
+                Toast.makeText(getApplicationContext(), "URL error: " + e.getMessage(), Toast.LENGTH_LONG).show();
+            }
+            System.out.println(urlBuilder.toString());
+            UpdateListTask newListTask = new UpdateListTask();
+            newListTask.execute(urlBuilder.toString());
+        }
     }
 
     @Override
     /**
      * Fragment interaction for Watched tab.
      * Passes movie ID as intent to ViewMovieDetailsActivity
+     * TODO: Update "Watched" tab when movie is deleted
+     * TODO: Update "Watched" tab when movie is added
      * @param item Movie item in list
+     * @param task String that describes task that describes whether to view or delete movie
      */
-    public void watchedFragmentInteraction(Movie item) {
-        String uri = item.getMovieID();
-        Intent detailIntent = new Intent (this, ViewMovieDetailsActivity.class);
-        detailIntent.putExtra("movieID", uri);
-        detailIntent.putExtra("location", "fromWatched");
-        detailIntent.putExtra("listName", "To Watch");
-        startActivity(detailIntent);
+    public void watchedFragmentInteraction(Movie item, String task) {
+        if(task.equals("viewDetails")) {
+            Intent detailIntent = new Intent(this, ViewMovieDetailsActivity.class);
+            detailIntent.putExtra("movieID", item.getMovieID());
+            detailIntent.putExtra("location", "fromWatched");
+            detailIntent.putExtra("listName", "Watched");
+            startActivity(detailIntent);
+        } else if(task.equals("deleteMovie")) {
+            StringBuilder urlBuilder = new StringBuilder(DELETE_MOVIE_URL);
+            mSharedPreferences = getSharedPreferences(getString(R.string.LOGIN_PREFS), Context.MODE_PRIVATE);
+            String email = mSharedPreferences.getString(getString(R.string.USERNAME), "error");
+
+            try {
+                urlBuilder.append("email=");
+                urlBuilder.append(email.trim());
+
+                urlBuilder.append("&list=");
+                urlBuilder.append("Watched");
+
+                urlBuilder.append("&movie_id=");
+                urlBuilder.append(item.getMovieID().trim());
+
+            }
+            catch(Exception e) {
+                Toast.makeText(getApplicationContext(), "URL error: " + e.getMessage(), Toast.LENGTH_LONG).show();
+            }
+            System.out.println(urlBuilder.toString());
+            UpdateListTask newListTask = new UpdateListTask();
+            newListTask.execute(urlBuilder.toString());
+        }
     }
 
     /**
      * Fragment interaction for My Lists tab. If d
      * TODO: Update "My Lists" tab when list is deleted
+     * TODO: View list details when selecting list
      * @param eachList List item in My Lists
      * @param task String that describes task that describes whether to view or delete list
      */
@@ -272,7 +324,7 @@ public class MainActivity extends AppCompatActivity
             newListTask.execute(urlBuilder.toString());
 
         } else {
-            System.out.println("View movie details");
+            System.out.println("View list details");
         }
     }
 
@@ -302,15 +354,6 @@ public class MainActivity extends AppCompatActivity
         System.out.println(urlBuilder.toString());
         UpdateListTask newListTask = new UpdateListTask();
         newListTask.execute(urlBuilder.toString());
-    }
-
-
-    /**
-     *
-     * @param view
-     */
-    public void moveToWatched(View view) {
-        Toast.makeText(this, "Movie move to Watched", Toast.LENGTH_LONG).show();
     }
 
     /**

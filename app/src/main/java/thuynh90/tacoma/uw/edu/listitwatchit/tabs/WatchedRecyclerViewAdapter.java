@@ -4,6 +4,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import java.util.List;
@@ -32,7 +33,7 @@ public class WatchedRecyclerViewAdapter extends RecyclerView.Adapter<WatchedRecy
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_movie, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_movie_watched, parent, false);
         return new ViewHolder(view);
     }
 
@@ -48,8 +49,15 @@ public class WatchedRecyclerViewAdapter extends RecyclerView.Adapter<WatchedRecy
                 if (null != mListener) {
                     // Notify the active callbacks interface (the activity, if the
                     // fragment is attached to one) that an item has been selected.
-                    mListener.watchedFragmentInteraction(holder.mItem);
+                    mListener.watchedFragmentInteraction(holder.mItem, "viewDetails");
                 }
+            }
+        });
+
+        holder.mDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mListener.watchedFragmentInteraction(holder.mItem, "deleteMovie");
             }
         });
     }
@@ -63,12 +71,14 @@ public class WatchedRecyclerViewAdapter extends RecyclerView.Adapter<WatchedRecy
         public final View mView;
         //public final TextView mIdView;
         public final TextView mContentView;
+        public final ImageButton mDelete;
         public Movie mItem;
 
         public ViewHolder(View view) {
             super(view);
             mView = view;
             mContentView = (TextView) view.findViewById(R.id.title);
+            mDelete = (ImageButton) view.findViewById(R.id.delete_watched);
         }
 
         @Override

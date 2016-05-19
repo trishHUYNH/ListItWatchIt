@@ -53,7 +53,7 @@ public class WatchedFragment extends Fragment {
      * Calls DownloadMoviesTask to retrieve movie from database.
      */
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_movie_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_movie_list_watched, container, false);
 
         // Set the adapter
         if (view instanceof RecyclerView) {
@@ -105,7 +105,7 @@ public class WatchedFragment extends Fragment {
      * activity.
      */
     public interface WatchedListFragmentInteractionListener {
-        void watchedFragmentInteraction(Movie item);
+        void watchedFragmentInteraction(Movie item, String task);
     }
 
     /**
@@ -169,6 +169,6 @@ public class WatchedFragment extends Fragment {
         // Retrieves email from SharedPreferences, return 'error' if email not found
         String email = mSharedPreferences.getString(getString(R.string.USERNAME), "error");
         DownloadMoviesTask downloadMovies = new DownloadMoviesTask();
-        downloadMovies.execute(new String[]{VIEW_LIST_URL + email});
+        downloadMovies.execute(VIEW_LIST_URL + email);
     }
 }
