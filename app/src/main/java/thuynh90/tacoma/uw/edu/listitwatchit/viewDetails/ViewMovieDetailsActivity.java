@@ -37,6 +37,7 @@ public class ViewMovieDetailsActivity extends AppCompatActivity implements AddTo
 
     private final static String ADD_MOVIE_URL = "http://cssgate.insttech.washington.edu/~_450atm6/addMovie.php?";
     private final static String DELETE_MOVIE_URL = "http://cssgate.insttech.washington.edu/~_450atm6/deleteMovie.php?";
+    private static final String MOVE_TO_WATCHED_URL = "http://cssgate.insttech.washington.edu/~_450atm6/moveToWatched.php?";
     private SharedPreferences mSharedPreferences;
     static private String API_KEY = "6e2537d9c135091718d558d8d56a7cde";
 
@@ -249,7 +250,22 @@ public class ViewMovieDetailsActivity extends AppCompatActivity implements AddTo
      * @param view
      */
     public void moveToWatched(View view) {
+        StringBuilder urlBuilder = new StringBuilder(MOVE_TO_WATCHED_URL);
+        mSharedPreferences = getSharedPreferences(getString(R.string.LOGIN_PREFS), Context.MODE_PRIVATE);
+        String email = mSharedPreferences.getString(getString(R.string.USERNAME), "error");
 
+        try {
+            urlBuilder.append("email=");
+            urlBuilder.append(email.trim());
+
+            urlBuilder.append("&movie_id=");
+            urlBuilder.append(id.replaceAll(" ", "+").trim());
+        }
+        catch(Exception e) {
+            Toast.makeText(getApplicationContext(), "URL error: " + e.getMessage(), Toast.LENGTH_LONG).show();
+        }
+        UpdateListTask newListTask = new UpdateListTask();
+        newListTask.execute(urlBuilder.toString());
     }
 
     /**
