@@ -173,6 +173,7 @@ public class MainActivity extends AppCompatActivity
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
         final FloatingActionButton addListButton = (FloatingActionButton) findViewById(R.id.add_list_button);
+        assert addListButton != null;
         addListButton.hide();
 
         addListButton.setOnClickListener(new View.OnClickListener() {
@@ -185,13 +186,13 @@ public class MainActivity extends AppCompatActivity
 
         final ViewPager viewPager = (ViewPager) findViewById(R.id.view_pager);
         final PagerAdapter adapter = new PagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount());
+        assert viewPager != null;
         viewPager.setAdapter(adapter);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 viewPager.setCurrentItem(tab.getPosition());
-
                 if (tab.equals(myLists)) {
                     addListButton.show();
                 }
@@ -207,7 +208,6 @@ public class MainActivity extends AppCompatActivity
 
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
-                viewPager.setCurrentItem(tab.getPosition());
 
                 if (tab.equals(myLists)) {
                     addListButton.show();
@@ -357,7 +357,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     /**
-     *
+     * AsyncTask class used to update list items
      */
     private class UpdateListTask extends AsyncTask<String, Void, String> {
 

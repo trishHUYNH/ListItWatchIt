@@ -19,18 +19,26 @@
     <string name="released">Released:</string>
     <string name="synopsis">Synopsis:</string>
 
-    <!-- Tabs -->
-    <string name="watched">We\'re in the Watched tab. To be implemented.</string>
-    <string name="my_list">We\'re in the My Lists tab. To be implemented</string>
-
     <!-- Buttons -->
     <string name="watched_button">Watched</string>
     <string name="delete_button">Delete</string>
 
-    <!-- Dialogs -->
+    <!-- Add List Dialog -->
     <string name="enter_list_name">Enter list name </string>
     <string name="create_list">Create List</string>
     <string name="cancel">Cancel</string>
+
+    <!-- Add Movie Dialog -->
+    <string name="select_list">Select List</string>
+    <array name="toppings_array">
+        <item name="pepperoni">Pepperoni</item>
+        <item name="mushrooms">Mushrooms</item>
+        <item name="peppers">Peppers</item>
+    </array>
+    <string name="add">Add</string>
+
+    <string name="launch_multi_dialog">Launch Multiple Dialog</string>
+
 
 
 </resources>

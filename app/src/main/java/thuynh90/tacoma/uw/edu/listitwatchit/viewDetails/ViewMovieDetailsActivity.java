@@ -5,11 +5,15 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -29,7 +33,7 @@ import thuynh90.tacoma.uw.edu.listitwatchit.R;
 /**
  * An Activity which shows the details of a movie (Title, Poster, Release Date, and Synopsis) on one screen
  */
-public class ViewMovieDetailsActivity extends AppCompatActivity {
+public class ViewMovieDetailsActivity extends AppCompatActivity implements AddToListDialogFragment.OnAddToListDialogFragmentInteractionListener {
 
     private final static String ADD_MOVIE_URL = "http://cssgate.insttech.washington.edu/~_450atm6/addMovie.php?";
     private final static String DELETE_MOVIE_URL = "http://cssgate.insttech.washington.edu/~_450atm6/deleteMovie.php?";
@@ -64,6 +68,15 @@ public class ViewMovieDetailsActivity extends AppCompatActivity {
 
         if(lastLocation.equals("fromSearch") || lastLocation.equals("fromWatched")) {
             setContentView(R.layout.activity_view_movie_details);
+            Button mAddMovieButton = (Button) findViewById(R.id.add_to_list_button);
+            assert mAddMovieButton != null;
+            mAddMovieButton.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    DialogFragment addToListDialog = new AddToListDialogFragment();
+                    addToListDialog.show(getSupportFragmentManager(), "launch");
+                }
+            });
         } else if (lastLocation.equals("fromToWatch")){
             setContentView(R.layout.activity_view_movie_details_from_watched);
         }
@@ -72,6 +85,10 @@ public class ViewMovieDetailsActivity extends AppCompatActivity {
         mReleaseDateTextView = (TextView) findViewById(R.id.release_date);
         mSynopsisTextView = (TextView) findViewById(R.id.synopsis);
         mPosterImageView = (ImageView) findViewById(R.id.poster);
+    }
+
+    @Override
+    public void onAddToListDialogFragmentInteraction(Uri uri) {
     }
 
     /**
@@ -180,7 +197,7 @@ public class ViewMovieDetailsActivity extends AppCompatActivity {
      * Builds a URL that will be sent to the database so that a movie can be added to a User's list
      * @return The URL that was built
      */
-    private String buildAddMovieURL() {
+    private String buildAddMovieURL(String listName) {
 
         StringBuilder urlBuilder = new StringBuilder(ADD_MOVIE_URL);
         mSharedPreferences = getSharedPreferences(getString(R.string.LOGIN_PREFS), Context.MODE_PRIVATE);
@@ -189,6 +206,9 @@ public class ViewMovieDetailsActivity extends AppCompatActivity {
         try {
             urlBuilder.append("movie_id=");
             urlBuilder.append(id.replaceAll(" ", "+").trim());
+
+            urlBuilder.append("&list_name=");
+            urlBuilder.append(listName.replaceAll(" ", "+").trim());
 
             urlBuilder.append("&movie_title=");
             urlBuilder.append(movieTitle.replaceAll(" ", "+").replace("\'", "\\'").trim());
@@ -212,10 +232,10 @@ public class ViewMovieDetailsActivity extends AppCompatActivity {
     /**
      * Runs an AsyncTask helper method to send movie information to the database so that the movie
      * may be added to a user's list
-     * @param view
+     * @param listName Value returned when user selects list
      */
-    public void addMovie(View view) {
-        String movieDetails = buildAddMovieURL();
+    public void addMovie(String listName) {
+        String movieDetails = buildAddMovieURL(listName);
         System.out.println(movieDetails);
 
         UpdateListTask addMovie = new UpdateListTask();

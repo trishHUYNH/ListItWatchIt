@@ -67,7 +67,6 @@ public class WatchedFragment extends Fragment {
         }
         // Retrieve movie list data
         downloadHelper();
-
         return view;
     }
 
