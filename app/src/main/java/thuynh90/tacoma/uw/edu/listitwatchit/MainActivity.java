@@ -304,6 +304,11 @@ public class MainActivity extends AppCompatActivity
      */
     public void myListFragmentInteraction(MyList eachList, String task) {
         if(task.equals("deleteList")) {
+            // Prevent user from deleting "To Watch" or "Watched"
+            if(eachList.getListName().equals("To Watch") || eachList.getListName().equals("Watched")) {
+                Toast.makeText(getApplicationContext(), "This list cannot be deleted.", Toast.LENGTH_SHORT).show();
+                return;
+            }
             StringBuilder urlBuilder = new StringBuilder(DELETE_LIST_URL);
             mSharedPreferences = getSharedPreferences(getString(R.string.LOGIN_PREFS), Context.MODE_PRIVATE);
             String email = mSharedPreferences.getString(getString(R.string.USERNAME), "error");
@@ -319,7 +324,6 @@ public class MainActivity extends AppCompatActivity
                 Toast.makeText(getApplicationContext(), "URL error: " + e.getMessage(), Toast.LENGTH_LONG).show();
             }
 
-            System.out.println(urlBuilder.toString());
             UpdateListTask newListTask = new UpdateListTask();
             newListTask.execute(urlBuilder.toString());
 
@@ -389,7 +393,7 @@ public class MainActivity extends AppCompatActivity
                 JSONObject jsonObject = new JSONObject(result);
                 String status = (String) jsonObject.get("result");
                 if (status.equals("success")) {
-                    Toast.makeText(getApplicationContext(), jsonObject.get("message").toString(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), jsonObject.get("message").toString(), Toast.LENGTH_SHORT).show();
 
                 } else {
                     Toast.makeText(getApplicationContext(), jsonObject.get("error").toString(), Toast.LENGTH_LONG).show();

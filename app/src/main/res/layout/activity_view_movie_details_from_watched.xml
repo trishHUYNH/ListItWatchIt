@@ -72,8 +72,9 @@
             <ImageButton
                 android:id="@+id/delete_movie_detail"
                 android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_height="49dp"
                 android:onClick="deleteMovie"
+                android:elevation="2dp"
                 android:src="@drawable/trash"
                 android:scaleType="fitCenter"
                 android:layout_gravity="center"/>
