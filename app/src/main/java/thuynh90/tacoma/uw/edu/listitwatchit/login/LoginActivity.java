@@ -4,9 +4,13 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.Signature;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Base64;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -17,6 +21,10 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+
+import com.facebook.FacebookSdk;
 
 import thuynh90.tacoma.uw.edu.listitwatchit.MainActivity;
 import thuynh90.tacoma.uw.edu.listitwatchit.R;
@@ -32,11 +40,29 @@ public class LoginActivity extends AppCompatActivity implements RegisterInteract
 
     private static final String REGISTER_URL = "http://cssgate.insttech.washington.edu/~_450atm6/registerUser.php?";
     private static final String LOGIN_URL = "http://cssgate.insttech.washington.edu/~_450atm6/login.php?";
+    private static final String FB_LOGIN_URL = "http://cssgate.insttech.washington.edu/~_450atm6/facebookLogin.php?";
     private SharedPreferences mSharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        FacebookSdk.sdkInitialize(getApplicationContext());
+
+        try {
+            PackageInfo info = getPackageManager().getPackageInfo(
+                    "thuynh90.tacoma.uw.edu.listitwatchit",
+                    PackageManager.GET_SIGNATURES);
+            for (Signature signature : info.signatures) {
+                MessageDigest md = MessageDigest.getInstance("SHA");
+                md.update(signature.toByteArray());
+                Log.d("KeyHash:", Base64.encodeToString(md.digest(), Base64.DEFAULT));
+            }
+        } catch (PackageManager.NameNotFoundException e) {
+
+        } catch (NoSuchAlgorithmException e) {
+
+        }
 
         //this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_login);
@@ -185,6 +211,56 @@ public class LoginActivity extends AppCompatActivity implements RegisterInteract
         LoginTask newLogin = new LoginTask();
         newLogin.execute(userInformation);
 
+    }
+
+    public void socialMediaLogin(final String userID) {
+        class FacebookLogin extends AsyncTask<String, Void, String> {
+
+            @Override
+            protected String doInBackground(String... params) {
+                String id = params[0];
+                BufferedReader bufferedReader;
+                HttpURLConnection connection = null;
+                String result;
+                try {
+                    URL url = new URL(FB_LOGIN_URL + "userID=" + id);
+                    connection = (HttpURLConnection) url.openConnection();
+                    bufferedReader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+
+                    result = bufferedReader.readLine();
+                    Log.d("PHP response result", result);
+
+                    return result;
+                } catch (Exception e) {
+                    Log.d("exception caught ", e.getMessage());
+                    return result = "Unable to login. Reason: " + e.getMessage();
+                }
+                finally {
+                    if (connection != null)
+                        connection.disconnect();
+                }
+            }
+
+            @Override
+            protected void onPostExecute(String result) {
+                try {
+                    JSONObject jsonObject = new JSONObject(result);
+                    String status = (String) jsonObject.get("result");
+                    if (status.equals("success")) {
+                        directToMain(userID);
+
+                    } else {
+                        Toast.makeText(getApplicationContext(), "Login failed: " + jsonObject.get("error"), Toast.LENGTH_LONG).show();
+                    }
+                } catch (JSONException e) {
+                    Toast.makeText(getApplicationContext(), "Data problem: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                    System.out.println(e.getMessage());
+                }
+            }
+        }
+
+        FacebookLogin fbLogin = new FacebookLogin();
+        fbLogin.execute(userID);
     }
 
     /**

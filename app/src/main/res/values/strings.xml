@@ -28,6 +28,8 @@
     <string name="create_list">Create List</string>
     <string name="cancel">Cancel</string>
 
+    <string name="facebook_app_id">1035527773195949</string>
+
     <!-- Add Movie Dialog -->
     <string name="select_list">Select List</string>
     <array name="toppings_array">
