@@ -336,7 +336,8 @@ public class MainActivity extends AppCompatActivity
     /**
      * TODO: Update "My Lists" tab when new list is created
      * TODO: Edit PHP file to display "success" message
-     * @param listName
+     * TODO: Edit PHP file to prevent duplicate lists from being created
+     * @param listName List name entered by user from ListNameDialogFragment
      */
     public void createList(String listName){
 

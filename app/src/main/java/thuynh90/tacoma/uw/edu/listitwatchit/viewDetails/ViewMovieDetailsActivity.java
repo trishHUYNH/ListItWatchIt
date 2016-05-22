@@ -247,7 +247,6 @@ public class ViewMovieDetailsActivity extends AppCompatActivity implements AddTo
     /**
      * Runs an AsyncTask helper method to send movie information to the database so that the movie
      * selected movie can be deleted from "To Watch" and added to "Watched"
-     * TODO: Implement moveToWatched from details activity
      * @param view
      */
     public void moveToWatched(View view) {

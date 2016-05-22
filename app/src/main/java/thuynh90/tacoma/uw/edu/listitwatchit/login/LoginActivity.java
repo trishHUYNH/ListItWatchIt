@@ -93,7 +93,7 @@ public class LoginActivity extends AppCompatActivity implements RegisterInteract
                     JSONObject jsonObject = new JSONObject(result);
                     String status = (String) jsonObject.get("result");
                     if (status.equals("success")) {
-                        Toast.makeText(getApplicationContext(), "List It Watch It account created! Please login.", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(), "List It Watch It account created! Please login.", Toast.LENGTH_SHORT).show();
                         returnToLogin();
 
                     } else {
@@ -168,7 +168,7 @@ public class LoginActivity extends AppCompatActivity implements RegisterInteract
                     JSONObject jsonObject = new JSONObject(result);
                     String status = (String) jsonObject.get("result");
                     if (status.equals("success")) {
-                        Toast.makeText(getApplicationContext(), "Login successful. Hello again!", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(), "Login successful. Hello again!", Toast.LENGTH_SHORT).show();
                         directToMain(emailSharedPrefs);
 
                     } else {
