@@ -2,9 +2,11 @@ package thuynh90.tacoma.uw.edu.listitwatchit.login;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -12,6 +14,12 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.login.LoginResult;
+import com.facebook.login.widget.LoginButton;
 
 import thuynh90.tacoma.uw.edu.listitwatchit.R;
 
@@ -23,6 +31,11 @@ import thuynh90.tacoma.uw.edu.listitwatchit.R;
 public class LoginFragment extends Fragment {
 
     private LoginInteractionListener mListener;
+
+    private TextView info;
+    private LoginButton fbloginButton;
+    private CallbackManager callbackManager;
+
 
     public LoginFragment() {
         // Required empty public constructor
@@ -77,6 +90,26 @@ public class LoginFragment extends Fragment {
             }
         });
 
+        //facebook
+        callbackManager = CallbackManager.Factory.create();
+        info = (TextView)view.findViewById(R.id.info);
+        fbloginButton = (LoginButton)view.findViewById(R.id.fb_login_button);
+
+        fbloginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+            @Override
+            public void onSuccess(LoginResult loginResult) {
+                Log.d("userId", loginResult.getAccessToken().getUserId());
+                ( (LoginActivity) getActivity()).socialMediaLogin(loginResult.getAccessToken().getUserId());
+            }
+
+            @Override
+            public void onCancel() {
+            }
+
+            @Override
+            public void onError(FacebookException e) {
+            }
+        });
         return view;
     }
 
