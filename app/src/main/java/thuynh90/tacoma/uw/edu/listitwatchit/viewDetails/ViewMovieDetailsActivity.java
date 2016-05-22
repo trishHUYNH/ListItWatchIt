@@ -39,7 +39,6 @@ public class ViewMovieDetailsActivity extends AppCompatActivity implements AddTo
     private final static String DELETE_MOVIE_URL = "http://cssgate.insttech.washington.edu/~_450atm6/deleteMovie.php?";
     private static final String MOVE_TO_WATCHED_URL = "http://cssgate.insttech.washington.edu/~_450atm6/moveToWatched.php?";
     private SharedPreferences mSharedPreferences;
-    static private String API_KEY = "6e2537d9c135091718d558d8d56a7cde";
 
     private TextView mMovieTitleTextView;
     private TextView mReleaseDateTextView;
@@ -74,7 +73,9 @@ public class ViewMovieDetailsActivity extends AppCompatActivity implements AddTo
             mAddMovieButton.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    //Bundle bundle = new Bundle();
                     DialogFragment addToListDialog = new AddToListDialogFragment();
+                    //addToListDialog.setArguments(bundle);
                     addToListDialog.show(getSupportFragmentManager(), "launch");
                 }
             });

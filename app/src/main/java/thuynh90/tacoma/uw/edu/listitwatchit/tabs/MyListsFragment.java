@@ -30,9 +30,6 @@ import thuynh90.tacoma.uw.edu.listitwatchit.R;
  */
 public class MyListsFragment extends Fragment {
 
-
-    private int mColumnCount = 1;
-    //Change this for My Lists
     private static final String VIEW_LIST_URL = "http://cssgate.insttech.washington.edu/~_450atm6/viewList.php?cmd=mylists&email=";
     private myListsFragmentInteractionListener mListener;
     private RecyclerView mRecyclerView;
@@ -58,6 +55,7 @@ public class MyListsFragment extends Fragment {
         if (view instanceof RecyclerView) {
             Context context = view.getContext();
             mRecyclerView = (RecyclerView) view;
+            int mColumnCount = 1;
             if (mColumnCount <= 1) {
                 mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
             } else {
@@ -110,7 +108,6 @@ public class MyListsFragment extends Fragment {
     /**
      * Opens URL connection and parses JSON result to view lists specific
      * to users. Called from onCreate.
-     * TODO: Remove "Watched" and "To Watch" from "My Lists" tab
      */
     private class DownloadMyListsTask extends AsyncTask<String, Void, String> {
 
@@ -156,8 +153,6 @@ public class MyListsFragment extends Fragment {
             // Everything is good, show the list of movies.
             if (!myList.isEmpty()) {
                 mRecyclerView.setAdapter(new MyListsRecyclerViewAdapter(myList, mListener));
-            } else {
-                Toast.makeText(getActivity().getApplicationContext(), "You haven't created any lists yet!", Toast.LENGTH_LONG).show();
             }
         }
     }

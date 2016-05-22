@@ -10,7 +10,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
+import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
@@ -24,17 +24,16 @@ import thuynh90.tacoma.uw.edu.listitwatchit.R;
 import thuynh90.tacoma.uw.edu.listitwatchit.tabs.MyList;
 
 /**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link OnAddToListDialogFragmentInteractionListener} interface
- * to handle interaction events.
+ * Dialog fragment that prompts user to choose a list to add their selected
+ * movie to.
  */
 public class AddToListDialogFragment extends DialogFragment {
 
     List<MyList> movieLists;
-    public static CharSequence[] movieTitles = {"To Watch", "Watched", "Don't click me, please. :("};
-    private static final String VIEW_LIST_URL = "http://cssgate.insttech.washington.edu/~_450atm6/viewList.php?cmd=mylists&email=";
+    ArrayAdapter<String> adapter;
+    String jSONResult;
     private OnAddToListDialogFragmentInteractionListener mListener;
+    private static final String VIEW_LIST_URL = "http://cssgate.insttech.washington.edu/~_450atm6/viewList.php?cmd=mylists&email=";
 
     public AddToListDialogFragment() {
     }
@@ -42,20 +41,22 @@ public class AddToListDialogFragment extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
+        adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1);
+        downloadList();
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+
         // Set the dialog title
         builder.setTitle(R.string.select_list);
-        builder.setItems(movieTitles, new DialogInterface.OnClickListener() {
+
+        // Set adapter that to dialog that contains movie lists
+        builder.setAdapter(adapter, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
-                ((ViewMovieDetailsActivity) getActivity()).addMovie(movieTitles[which].toString());
+                ((ViewMovieDetailsActivity) getActivity()).addMovie(adapter.getItem(which));
             }
         });
-
-
         return builder.create();
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
             mListener.onAddToListDialogFragmentInteraction(uri);
@@ -85,77 +86,77 @@ public class AddToListDialogFragment extends DialogFragment {
      * activity.
      */
     public interface OnAddToListDialogFragmentInteractionListener {
-        // TODO: Update argument type and name
         void onAddToListDialogFragmentInteraction(Uri uri);
     }
 
     /**
-     * Helper method that retrieves user email and creates an instance of
-     * DownloadMoviesTask to retrieve movie list from database.
+     * Parses JSON results from MyList class. Adds list names to ArrayAdapter for
+     * dialog
      */
-    public void downloadHelper()  {
+    public void inputList() {
+        // Something wrong with the network or the URL.
+        if (jSONResult.startsWith("Unable to")) {
+            Toast.makeText(getActivity().getApplicationContext(), jSONResult, Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        movieLists = new ArrayList<>();
+        jSONResult = MyList.parseListJSON(jSONResult, movieLists);
+        // Something wrong with the JSON returned.
+        if (jSONResult != null) {
+            Toast.makeText(getActivity().getApplicationContext(), jSONResult, Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        // For every list the user has, add it to the adapter
+        if (!movieLists.isEmpty()) {
+            for (MyList list : movieLists) {
+                adapter.add(list.getListName());
+            }
+        }
+    }
+
+    /**
+     * Opens URL connection and calls inputList() to parse JSON results to view lists specific
+     * to users. Called from onCreateDialog.
+     */
+
+    private void downloadList() {
+        class DownloadMyListsTask extends AsyncTask<String, Void, String> {
+
+            @Override
+            protected String doInBackground(String... params) {
+
+                String myListsValues = params[0];
+                BufferedReader bufferedReader;
+                HttpURLConnection connection = null;
+                String result;
+                try {
+                    URL url = new URL(myListsValues);
+                    connection = (HttpURLConnection) url.openConnection();
+                    bufferedReader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+
+                    result = bufferedReader.readLine();
+
+                    return result;
+                } catch (Exception e) {
+                    return "Unable to view lists. Reason: " + e.getMessage();
+                } finally {
+                    if (connection != null)
+                        connection.disconnect();
+                }
+            }
+
+            protected void onPostExecute(String result) {
+                jSONResult = result;
+                inputList();
+            }
+        }
+
         SharedPreferences mSharedPreferences = this.getActivity().getSharedPreferences(getString(R.string.LOGIN_PREFS), Context.MODE_PRIVATE);
         // Retrieves email from SharedPreferences, return 'error' if email not found
         String email = mSharedPreferences.getString(getString(R.string.USERNAME), "error");
         DownloadMyListsTask downloadMovies = new DownloadMyListsTask();
         downloadMovies.execute(VIEW_LIST_URL + email);
-    }
-
-    /**
-     * Opens URL connection and parses JSON result to view lists specific
-     * to users. Called from onCreate.
-     */
-    public class DownloadMyListsTask extends AsyncTask<String, Void, String> {
-
-        @Override
-        protected String doInBackground(String... params) {
-
-            String myListsValues = params[0];
-            BufferedReader bufferedReader;
-            HttpURLConnection connection = null;
-            String result;
-            try {
-                URL url = new URL(myListsValues);
-                connection = (HttpURLConnection) url.openConnection();
-                bufferedReader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-
-                result = bufferedReader.readLine();
-
-                return result;
-            } catch (Exception e) {
-                return result = "Unable to view lists. Reason: " + e.getMessage();
-            }
-            finally {
-                if (connection != null)
-                    connection.disconnect();
-            }
-        }
-
-        protected void onPostExecute(String result) {
-            // Something wrong with the network or the URL.
-            if (result.startsWith("Unable to")) {
-                Toast.makeText(getActivity().getApplicationContext(), result, Toast.LENGTH_LONG).show();
-                return;
-            }
-
-            movieLists = new ArrayList<MyList>();
-            result = MyList.parseListJSON(result, movieLists);
-            // Something wrong with the JSON returned.
-            if (result != null) {
-                Toast.makeText(getActivity().getApplicationContext(), result, Toast.LENGTH_LONG).show();
-                return;
-            }
-
-            if (!movieLists.isEmpty()) {
-                int i = 0;
-                AddToListDialogFragment.movieTitles = new String[movieLists.size()];
-                for(MyList list : movieLists) {
-                    System.out.println("List name: " + list.getListName());
-                    System.out.println("List ID: " + list.getListID());
-                    AddToListDialogFragment.movieTitles[i] = list.getListName();
-                    i++;
-                }
-            }
-        }
     }
 }

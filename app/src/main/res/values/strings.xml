@@ -24,21 +24,11 @@
     <string name="delete_button">Delete</string>
 
     <!-- Add List Dialog -->
-    <string name="enter_list_name">Enter list name </string>
+    <string name="enter_list_name">Enter List Name </string>
     <string name="create_list">Create List</string>
     <string name="cancel">Cancel</string>
 
     <!-- Add Movie Dialog -->
-    <string name="select_list">Select List</string>
-    <array name="toppings_array">
-        <item name="pepperoni">Pepperoni</item>
-        <item name="mushrooms">Mushrooms</item>
-        <item name="peppers">Peppers</item>
-    </array>
-    <string name="add">Add</string>
-
-    <string name="launch_multi_dialog">Launch Multiple Dialog</string>
-
-
+    <string name="select_list">Select a List</string>
 
 </resources>
