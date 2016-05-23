@@ -16,8 +16,10 @@
     <string name="USERNAME">username</string>
 
     <!-- Movie Details -->
-    <string name="released">Released:</string>
-    <string name="synopsis">Synopsis:</string>
+    <string name="released">Released: </string>
+    <string name="synopsis">Synopsis: </string>
+    <string name="mpaa">MPAA Rating: </string>
+    <string name="tmdbrating">User Rating: </string>
 
     <!-- Buttons -->
     <string name="watched_button">Watched</string>
