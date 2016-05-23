@@ -66,6 +66,8 @@ public class ViewMovieDetailsActivity extends AppCompatActivity implements AddTo
         loadMovieDetailsTask task = new loadMovieDetailsTask();
         task.execute();
 
+        mSharedPreferences = getSharedPreferences(getString(R.string.LOGIN_PREFS), Context.MODE_PRIVATE);
+
         if(lastLocation.equals("fromSearch") || lastLocation.equals("fromWatched")) {
             setContentView(R.layout.activity_view_movie_details);
             Button mAddMovieButton = (Button) findViewById(R.id.add_to_list_button);
@@ -73,10 +75,15 @@ public class ViewMovieDetailsActivity extends AppCompatActivity implements AddTo
             mAddMovieButton.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    //Bundle bundle = new Bundle();
-                    DialogFragment addToListDialog = new AddToListDialogFragment();
-                    //addToListDialog.setArguments(bundle);
-                    addToListDialog.show(getSupportFragmentManager(), "launch");
+                    //User not logged in. Can't add movie
+                    if (!mSharedPreferences.getBoolean(getString(R.string.LOGGEDIN), false)) {
+                        Toast.makeText(getApplicationContext(), "Please login to add a movie." , Toast.LENGTH_LONG).show();
+                    } else {
+                        //Bundle bundle = new Bundle();
+                        DialogFragment addToListDialog = new AddToListDialogFragment();
+                        //addToListDialog.setArguments(bundle);
+                        addToListDialog.show(getSupportFragmentManager(), "launch");
+                    }
                 }
             });
         } else if (lastLocation.equals("fromToWatch")){

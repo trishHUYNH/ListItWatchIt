@@ -80,7 +80,7 @@ public class MainActivity extends AppCompatActivity
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
 
-        final SearchView searchView = (SearchView) menu.findItem(R.id.search).getActionView();
+        SearchView searchView = (SearchView) menu.findItem(R.id.search).getActionView();
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {

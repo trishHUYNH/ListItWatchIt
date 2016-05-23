@@ -14,6 +14,8 @@ import android.util.Base64;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.facebook.FacebookSdk;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -23,8 +25,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-
-import com.facebook.FacebookSdk;
 
 import thuynh90.tacoma.uw.edu.listitwatchit.MainActivity;
 import thuynh90.tacoma.uw.edu.listitwatchit.R;
@@ -50,9 +50,7 @@ public class LoginActivity extends AppCompatActivity implements RegisterInteract
         FacebookSdk.sdkInitialize(getApplicationContext());
 
         try {
-            PackageInfo info = getPackageManager().getPackageInfo(
-                    "thuynh90.tacoma.uw.edu.listitwatchit",
-                    PackageManager.GET_SIGNATURES);
+            PackageInfo info = getPackageManager().getPackageInfo("thuynh90.tacoma.uw.edu.listitwatchit", PackageManager.GET_SIGNATURES);
             for (Signature signature : info.signatures) {
                 MessageDigest md = MessageDigest.getInstance("SHA");
                 md.update(signature.toByteArray());
@@ -175,8 +173,6 @@ public class LoginActivity extends AppCompatActivity implements RegisterInteract
                     if (connection != null)
                         connection.disconnect();
                 }
-
-
             }
 
             @Override
@@ -210,7 +206,6 @@ public class LoginActivity extends AppCompatActivity implements RegisterInteract
         }
         LoginTask newLogin = new LoginTask();
         newLogin.execute(userInformation);
-
     }
 
     public void socialMediaLogin(final String userID) {
