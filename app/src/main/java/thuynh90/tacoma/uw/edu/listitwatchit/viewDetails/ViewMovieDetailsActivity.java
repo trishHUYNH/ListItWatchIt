@@ -25,11 +25,9 @@ import org.json.JSONObject;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 
 import thuynh90.tacoma.uw.edu.listitwatchit.R;
@@ -50,6 +48,7 @@ public class ViewMovieDetailsActivity extends AppCompatActivity implements AddTo
     private TextView mMPAATextView;
     private TextView mSynopsisTextView;
     private ImageView mPosterImageView;
+    private Button mAddMovieButton;
     String id;
     String movieTitle = "";
     String releaseDate= "";
@@ -77,7 +76,7 @@ public class ViewMovieDetailsActivity extends AppCompatActivity implements AddTo
 
         if(lastLocation.equals("fromSearch") || lastLocation.equals("fromWatched")) {
             setContentView(R.layout.activity_view_movie_details);
-            Button mAddMovieButton = (Button) findViewById(R.id.add_to_list_button);
+            mAddMovieButton = (Button) findViewById(R.id.add_to_list_button);
             assert mAddMovieButton != null;
             mAddMovieButton.setOnClickListener(new OnClickListener() {
                 @Override
@@ -86,9 +85,7 @@ public class ViewMovieDetailsActivity extends AppCompatActivity implements AddTo
                     if (!mSharedPreferences.getBoolean(getString(R.string.LOGGEDIN), false)) {
                         Toast.makeText(getApplicationContext(), "Please login to add a movie." , Toast.LENGTH_LONG).show();
                     } else {
-                        //Bundle bundle = new Bundle();
                         DialogFragment addToListDialog = new AddToListDialogFragment();
-                        //addToListDialog.setArguments(bundle);
                         addToListDialog.show(getSupportFragmentManager(), "launch");
                     }
                 }
