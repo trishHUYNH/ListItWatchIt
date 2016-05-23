@@ -15,17 +15,21 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 
 import thuynh90.tacoma.uw.edu.listitwatchit.R;
@@ -42,11 +46,14 @@ public class ViewMovieDetailsActivity extends AppCompatActivity implements AddTo
 
     private TextView mMovieTitleTextView;
     private TextView mReleaseDateTextView;
+    private RatingBar mRatingBar;
+    private TextView mMPAATextView;
     private TextView mSynopsisTextView;
     private ImageView mPosterImageView;
     String id;
     String movieTitle = "";
     String releaseDate= "";
+    String mpaaRating= "";
     String synopsis= "";
     Bitmap poster;
     String listName = "";
@@ -92,6 +99,8 @@ public class ViewMovieDetailsActivity extends AppCompatActivity implements AddTo
 
         mMovieTitleTextView = (TextView) findViewById(R.id.movie_title);
         mReleaseDateTextView = (TextView) findViewById(R.id.release_date);
+        mRatingBar = (RatingBar) findViewById(R.id.rating_bar);
+        mMPAATextView = (TextView) findViewById(R.id.mpaa);
         mSynopsisTextView = (TextView) findViewById(R.id.synopsis);
         mPosterImageView = (ImageView) findViewById(R.id.poster);
     }
@@ -107,7 +116,11 @@ public class ViewMovieDetailsActivity extends AppCompatActivity implements AddTo
 
         @Override
         protected Void doInBackground(Void... params) {
-            query(id);
+            String detailsRequestURL = "http://api.themoviedb.org/3/movie/" + id + "?api_key=6e2537d9c135091718d558d8d56a7cde";
+            String MPAARatingRequestURL = "http://api.themoviedb.org/3/movie/" + id + "/release_dates?api_key=6e2537d9c135091718d558d8d56a7cde";
+
+            loadDetails(requestFromTMDb(detailsRequestURL));
+            loadMPAARating(requestFromTMDb(MPAARatingRequestURL));
             return null;
         }
 
@@ -124,17 +137,16 @@ public class ViewMovieDetailsActivity extends AppCompatActivity implements AddTo
         /**
          * Opens HTTP connection to query TMDb for details of a specified movie,
          * parses JSON response to get string values for movieTitle, releaseDate, and synopsis, and a url for the poster
-         * @param movieID TMDb id for the movie that is being looked up
+         * @param urlString String that represents the URL that will be queried
+         * @return String response from the URL
          */
-        public void query(String movieID) {
-            Log.d("Context", "Beginning of Query");
+        public String requestFromTMDb(String urlString) {
             BufferedReader reader;
             HttpURLConnection urlConnection = null;
-            String urlString;
-            String jsonString;
+            String jsonString = null;
 
+            
             try {
-                urlString = "http://api.themoviedb.org/3/movie/" + movieID + "?api_key=6e2537d9c135091718d558d8d56a7cde";
                 URL url = new URL(urlString);
                 urlConnection = (HttpURLConnection) url.openConnection();
 
@@ -156,21 +168,6 @@ public class ViewMovieDetailsActivity extends AppCompatActivity implements AddTo
                 finally {
                     urlConnection.disconnect();
                 }
-
-
-                JSONObject JSONmovie = new JSONObject(jsonString);
-
-                movieTitle = JSONmovie.getString("title");
-                releaseDate = JSONmovie.getString("release_date");
-                synopsis = JSONmovie.getString("overview");
-
-                String posterUrlString = "http://image.tmdb.org/t/p/w500" + JSONmovie.getString("poster_path");
-                Log.d("URL", posterUrlString);
-
-                //get poster
-                URL posterURL = new URL(posterUrlString);
-                poster = BitmapFactory.decodeStream(posterURL.openConnection().getInputStream());
-
             }
             catch (Exception e) {
                 e.printStackTrace();
@@ -178,10 +175,50 @@ public class ViewMovieDetailsActivity extends AppCompatActivity implements AddTo
                 if (urlConnection != null) {
                     urlConnection.disconnect();
                 }
+                return jsonString;
             }
         }
 
+        public void loadMPAARating(String jsonString) {
+            JSONObject JSONmovie = null;
+            try {
+                JSONmovie = new JSONObject(jsonString);
+                JSONArray resultsArray = JSONmovie.getJSONArray("results");
 
+                //Iterate through the array of releases to find the US release
+                for (int i = 0; i < resultsArray.length(); i++) {
+                    JSONObject currentObj = resultsArray.getJSONObject(i);
+                    if (currentObj.getString("iso_3166_1").equals("US")) {
+                        mpaaRating = currentObj.getJSONArray("release_dates").getJSONObject(0).getString("certification");
+                        break;
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        public void loadDetails(String jsonString) {
+            JSONObject JSONmovie = null;
+            try {
+                JSONmovie = new JSONObject(jsonString);
+                movieTitle = JSONmovie.getString("title");
+                releaseDate = JSONmovie.getString("release_date");
+                synopsis = JSONmovie.getString("overview");
+
+                String posterUrlString = "http://image.tmdb.org/t/p/original" + JSONmovie.getString("poster_path");
+
+                //get poster
+                URL posterURL = new URL(posterUrlString);
+                poster = BitmapFactory.decodeStream(posterURL.openConnection().getInputStream());
+
+                Double rating = JSONmovie.getDouble("vote_average");
+                float starRating =  (float) (rating/2);
+                mRatingBar.setRating(starRating);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     /**
@@ -190,6 +227,7 @@ public class ViewMovieDetailsActivity extends AppCompatActivity implements AddTo
     public void updateView(){
         mMovieTitleTextView.setText(movieTitle);
         mReleaseDateTextView.setText(releaseDate);
+        mMPAATextView.setText(mpaaRating);
         mSynopsisTextView.setText(synopsis);
         mPosterImageView.setImageBitmap(poster);
     }
