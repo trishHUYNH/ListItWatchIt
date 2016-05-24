@@ -52,7 +52,7 @@ public class ToWatchFragment extends Fragment {
      * Calls DownloadMoviesTask to retrieve movie from database.
      */
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_movie_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_movie_list_to_watch, container, false);
 
         // Set the adapter
         if (view instanceof RecyclerView) {
@@ -65,7 +65,7 @@ public class ToWatchFragment extends Fragment {
             }
         }
         // Retrieve movie list data
-        downloadHelper();
+        downloadToWatch();
 
         return view;
     }
@@ -94,7 +94,7 @@ public class ToWatchFragment extends Fragment {
      */
     public void onResume(){
         super.onResume();
-        downloadHelper();
+        downloadToWatch();
     }
 
     /**
@@ -105,6 +105,19 @@ public class ToWatchFragment extends Fragment {
      */
     public interface toWatchFragmentInteractionListener {
         void toWatchFragmentInteraction(Movie item, String task);
+    }
+
+
+    /**
+     * Helper method that retrieves user email and creates an instance of
+     * DownloadMoviesTask to retrieve movie list from database.
+     */
+    public void downloadToWatch() {
+        mSharedPreferences = this.getActivity().getSharedPreferences(getString(R.string.LOGIN_PREFS), Context.MODE_PRIVATE);
+        // Retrieves email from SharedPreferences, return 'error' if email not found
+        String email = mSharedPreferences.getString(getString(R.string.USERNAME), "error");
+        DownloadMoviesTask downloadMovies = new DownloadMoviesTask();
+        downloadMovies.execute(VIEW_LIST_URL + email);
     }
 
     /**
@@ -159,17 +172,5 @@ public class ToWatchFragment extends Fragment {
                 Toast.makeText(getActivity().getApplicationContext(), "You haven't added any movies yet!", Toast.LENGTH_SHORT).show();
             }
         }
-    }
-
-    /**
-     * Helper method that retrieves user email and creates an instance of
-     * DownloadMoviesTask to retrieve movie list from database.
-     */
-    public void downloadHelper() {
-        mSharedPreferences = this.getActivity().getSharedPreferences(getString(R.string.LOGIN_PREFS), Context.MODE_PRIVATE);
-        // Retrieves email from SharedPreferences, return 'error' if email not found
-        String email = mSharedPreferences.getString(getString(R.string.USERNAME), "error");
-        DownloadMoviesTask downloadMovies = new DownloadMoviesTask();
-        downloadMovies.execute(VIEW_LIST_URL + email);
     }
 }

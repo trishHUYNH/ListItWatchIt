@@ -10,7 +10,6 @@ import java.util.List;
 /**
  * MyList object class for users' custom lists. Creates an instance of MyList for each value
  * returned from JSON results.
- * TODO: Remove "Watched" & "To Watch" from results
  */
 public class MyList implements Serializable {
 

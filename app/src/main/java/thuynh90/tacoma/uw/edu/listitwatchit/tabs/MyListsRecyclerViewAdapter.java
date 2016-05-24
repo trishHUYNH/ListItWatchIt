@@ -10,7 +10,7 @@ import android.widget.TextView;
 import java.util.List;
 
 import thuynh90.tacoma.uw.edu.listitwatchit.R;
-import thuynh90.tacoma.uw.edu.listitwatchit.tabs.MyListsFragment.myListsFragmentInteractionListener;
+import thuynh90.tacoma.uw.edu.listitwatchit.tabs.MyListsFragment.MyListsFragmentInteractionListener;
 
 /**
  * Provides layout for My Lists tab
@@ -18,9 +18,9 @@ import thuynh90.tacoma.uw.edu.listitwatchit.tabs.MyListsFragment.myListsFragment
 public class MyListsRecyclerViewAdapter extends RecyclerView.Adapter<MyListsRecyclerViewAdapter.ViewHolder> {
 
     private final List<MyList> mValues;
-    private final myListsFragmentInteractionListener mListener;
+    private final MyListsFragmentInteractionListener mListener;
 
-    public MyListsRecyclerViewAdapter(List<MyList> items, myListsFragmentInteractionListener listener) {
+    public MyListsRecyclerViewAdapter(List<MyList> items, MyListsFragmentInteractionListener listener) {
         mValues = items;
         mListener = listener;
     }

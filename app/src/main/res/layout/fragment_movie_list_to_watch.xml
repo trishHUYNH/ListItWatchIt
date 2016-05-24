@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.RecyclerView
-    android:id="@+id/list"
-    android:name="thuynh90.tacoma.uw.edu.listitwatchit.tabs.WatchedFragment"
+    android:id="@+id/to_watch_list"
+    android:name="thuynh90.tacoma.uw.edu.listitwatchit.tabs.ToWatchFragment"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -11,6 +11,6 @@
     android:layout_marginRight="16dp"
     app:layoutManager="LinearLayoutManager"
     tools:context="thuynh90.tacoma.uw.edu.listitwatchit.tabs.ToWatchFragment"
-    tools:listitem="@layout/fragment_movie_watched">
+    tools:listitem="@layout/fragment_movie_to_watch">
 
 </android.support.v7.widget.RecyclerView>

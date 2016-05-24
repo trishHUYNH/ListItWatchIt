@@ -33,7 +33,7 @@ public class ToWatchRecyclerViewAdapter extends RecyclerView.Adapter<ToWatchRecy
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_movie, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_movie_to_watch, parent, false);
         return new ViewHolder(view);
     }
 

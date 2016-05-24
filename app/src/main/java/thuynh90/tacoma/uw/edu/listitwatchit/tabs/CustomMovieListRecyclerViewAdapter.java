@@ -10,23 +10,18 @@ import android.widget.TextView;
 import java.util.List;
 
 import thuynh90.tacoma.uw.edu.listitwatchit.R;
-import thuynh90.tacoma.uw.edu.listitwatchit.tabs.WatchedFragment.WatchedListFragmentInteractionListener;
-
+import thuynh90.tacoma.uw.edu.listitwatchit.tabs.CustomMovieListFragment.CustomMovieListFragmentInteractionListener;
 
 /**
- * Provides layout for movie lists in tabs.
+ * {@link RecyclerView.Adapter} that can display a {@link Movie} and makes a call to the
+ * specified {@link CustomMovieListFragmentInteractionListener}.
  */
-public class WatchedRecyclerViewAdapter extends RecyclerView.Adapter<WatchedRecyclerViewAdapter.ViewHolder> {
+public class CustomMovieListRecyclerViewAdapter extends RecyclerView.Adapter<CustomMovieListRecyclerViewAdapter.ViewHolder> {
 
     private final List<Movie> mValues;
-    private final WatchedListFragmentInteractionListener mListener;
+    private final CustomMovieListFragmentInteractionListener mListener;
 
-    /**
-     * Creates a RecyclerViewAdapter for movie lists
-     * @param items List of movies
-     * @param listener toWatchFragmentInteractionListener
-     */
-    public WatchedRecyclerViewAdapter(List<Movie> items, WatchedListFragmentInteractionListener listener) {
+    public CustomMovieListRecyclerViewAdapter(List<Movie> items, CustomMovieListFragmentInteractionListener listener) {
         mValues = items;
         mListener = listener;
     }
@@ -41,7 +36,6 @@ public class WatchedRecyclerViewAdapter extends RecyclerView.Adapter<WatchedRecy
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
         holder.mContentView.setText(mValues.get(position).getMovieTitle());
-        //holder.mIdView.setText(mValues.get(position).getMovieReleaseDate());
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -49,7 +43,8 @@ public class WatchedRecyclerViewAdapter extends RecyclerView.Adapter<WatchedRecy
                 if (null != mListener) {
                     // Notify the active callbacks interface (the activity, if the
                     // fragment is attached to one) that an item has been selected.
-                    mListener.watchedFragmentInteraction(holder.mItem, "viewDetails");
+                    mListener.onCustomMovieListFragmentInteraction(holder.mItem);
+                    // viewDetails
                 }
             }
         });
@@ -57,7 +52,8 @@ public class WatchedRecyclerViewAdapter extends RecyclerView.Adapter<WatchedRecy
         holder.mDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mListener.watchedFragmentInteraction(holder.mItem, "deleteMovie");
+                mListener.onCustomMovieListFragmentInteraction(holder.mItem);
+                //deleteMovie
             }
         });
     }
@@ -69,7 +65,6 @@ public class WatchedRecyclerViewAdapter extends RecyclerView.Adapter<WatchedRecy
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
-        //public final TextView mIdView;
         public final TextView mContentView;
         public final ImageButton mDelete;
         public Movie mItem;

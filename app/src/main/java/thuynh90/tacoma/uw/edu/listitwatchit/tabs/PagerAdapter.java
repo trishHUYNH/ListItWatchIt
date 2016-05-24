@@ -10,6 +10,9 @@ import android.support.v4.app.FragmentStatePagerAdapter;
  */
 public class PagerAdapter extends FragmentStatePagerAdapter {
     int mNumberOfTabs;
+    Fragment toWatchTab;
+    Fragment watchedTab;
+    Fragment myListsTab;
 
     public PagerAdapter(FragmentManager fm, int numberOfTabs) {
         super(fm);
@@ -26,13 +29,19 @@ public class PagerAdapter extends FragmentStatePagerAdapter {
 
         switch (position) {
             case 0:
-                ToWatchFragment toWatchTab = new ToWatchFragment();
+                if (toWatchTab == null) {
+                    toWatchTab = new ToWatchFragment();
+                }
                 return toWatchTab;
             case 1:
-                WatchedFragment watchedTab = new WatchedFragment();
+                if (watchedTab == null) {
+                    watchedTab = new WatchedFragment();
+                }
                 return watchedTab;
             case 2:
-                MyListsFragment myListsTab = new MyListsFragment();
+                if (myListsTab == null) {
+                    myListsTab = new MyListsFragment();
+                }
                 return myListsTab;
             default:
                 return null;

@@ -23,35 +23,33 @@ import java.util.List;
 import thuynh90.tacoma.uw.edu.listitwatchit.R;
 
 /**
- * A fragment representing a list of Movie items for the user's "Watched" list.
- * MainActivity implements watchedFragmentInteractionListener.
+ * A fragment representing the list of movies in a user's custom list.
+ * <p/>
+ * Activities containing this fragment MUST implement the {@link CustomMovieListFragmentInteractionListener}
+ * interface.
  */
-public class WatchedFragment extends Fragment {
+public class CustomMovieListFragment extends Fragment {
 
     private int mColumnCount = 1;
-    // Change this for Watched list
     private static final String VIEW_LIST_URL = "http://cssgate.insttech.washington.edu/~_450atm6/viewList.php?cmd=watched&email=";
-    private WatchedListFragmentInteractionListener mListener;
     private RecyclerView mRecyclerView;
     private SharedPreferences mSharedPreferences;
+    private CustomMovieListFragmentInteractionListener mListener;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
-     * fragment.
+     * fragment (e.g. upon screen orientation changes).
      */
-    public WatchedFragment() {
+    public CustomMovieListFragment() {
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
     }
 
     @Override
-    /**
-     * Concatenates URL with user's email from SharedPreferences.
-     * Calls DownloadMoviesTask to retrieve movie from database.
-     */
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_movie_list, container, false);
 
@@ -64,9 +62,9 @@ public class WatchedFragment extends Fragment {
             } else {
                 mRecyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
+            // Retrieve movie list data
+            downloadHelper();
         }
-        // Retrieve movie list data
-        downloadWatched();
         return view;
     }
 
@@ -74,10 +72,10 @@ public class WatchedFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof WatchedListFragmentInteractionListener) {
-            mListener = (WatchedListFragmentInteractionListener) context;
+        if (context instanceof CustomMovieListFragmentInteractionListener) {
+            mListener = (CustomMovieListFragmentInteractionListener) context;
         } else {
-            throw new RuntimeException(context.toString() + " must implement toWatchFragmentInteractionListener");
+            throw new RuntimeException(context.toString() + " must implement CustomMovieListFragmentInteractionListener");
         }
     }
 
@@ -94,7 +92,7 @@ public class WatchedFragment extends Fragment {
      */
     public void onResume(){
         super.onResume();
-        downloadWatched();
+        downloadHelper();
     }
 
     /**
@@ -103,20 +101,8 @@ public class WatchedFragment extends Fragment {
      * to the activity and potentially other fragments contained in that
      * activity.
      */
-    public interface WatchedListFragmentInteractionListener {
-        void watchedFragmentInteraction(Movie item, String task);
-    }
-
-    /**
-     * Helper method that retrieves user email and creates an instance of
-     * DownloadMoviesTask to retrieve movie list from database.
-     */
-    public void downloadWatched() {
-        mSharedPreferences = this.getActivity().getSharedPreferences(getString(R.string.LOGIN_PREFS), Context.MODE_PRIVATE);
-        // Retrieves email from SharedPreferences, return 'error' if email not found
-        String email = mSharedPreferences.getString(getString(R.string.USERNAME), "error");
-        DownloadMoviesTask downloadMovies = new DownloadMoviesTask();
-        downloadMovies.execute(VIEW_LIST_URL + email);
+    public interface CustomMovieListFragmentInteractionListener {
+        void onCustomMovieListFragmentInteraction(Movie item);
     }
 
     /**
@@ -166,8 +152,20 @@ public class WatchedFragment extends Fragment {
 
             // Everything is good, show the list of movies.
             if (!movieList.isEmpty()) {
-                mRecyclerView.setAdapter(new WatchedRecyclerViewAdapter(movieList, mListener));
+                mRecyclerView.setAdapter(new CustomMovieListRecyclerViewAdapter(movieList, mListener));
             }
         }
+    }
+
+    /**
+     * Helper method that retrieves user email and creates an instance of
+     * DownloadMoviesTask to retrieve movie list from database.
+     */
+    public void downloadHelper() {
+        mSharedPreferences = this.getActivity().getSharedPreferences(getString(R.string.LOGIN_PREFS), Context.MODE_PRIVATE);
+        // Retrieves email from SharedPreferences, return 'error' if email not found
+        String email = mSharedPreferences.getString(getString(R.string.USERNAME), "error");
+        DownloadMoviesTask downloadMovies = new DownloadMoviesTask();
+        downloadMovies.execute(VIEW_LIST_URL + email);
     }
 }

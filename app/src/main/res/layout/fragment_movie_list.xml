@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.RecyclerView
-    android:id="@+id/list"
-    android:name="thuynh90.tacoma.uw.edu.listitwatchit.tabs.ToWatchFragment"
+    android:id="@+id/movie_list"
+    android:name="thuynh90.tacoma.uw.edu.listitwatchit.tabs.WatchedFragment"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"

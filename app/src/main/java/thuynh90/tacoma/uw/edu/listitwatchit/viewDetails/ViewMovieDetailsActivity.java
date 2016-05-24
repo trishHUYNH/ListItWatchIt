@@ -74,7 +74,10 @@ public class ViewMovieDetailsActivity extends AppCompatActivity implements AddTo
 
         mSharedPreferences = getSharedPreferences(getString(R.string.LOGIN_PREFS), Context.MODE_PRIVATE);
 
-        if(lastLocation.equals("fromSearch") || lastLocation.equals("fromWatched")) {
+        // Viewing from "To Watch" list
+        if (lastLocation.equals("fromToWatch")){
+            setContentView(R.layout.activity_view_movie_details_from_to_watch);
+        } else {
             setContentView(R.layout.activity_view_movie_details);
             mAddMovieButton = (Button) findViewById(R.id.add_to_list_button);
             assert mAddMovieButton != null;
@@ -90,8 +93,6 @@ public class ViewMovieDetailsActivity extends AppCompatActivity implements AddTo
                     }
                 }
             });
-        } else if (lastLocation.equals("fromToWatch")){
-            setContentView(R.layout.activity_view_movie_details_from_watched);
         }
 
         mMovieTitleTextView = (TextView) findViewById(R.id.movie_title);

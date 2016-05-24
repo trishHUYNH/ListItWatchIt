@@ -28,12 +28,16 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 import thuynh90.tacoma.uw.edu.listitwatchit.login.LoginActivity;
+import thuynh90.tacoma.uw.edu.listitwatchit.tabs.CustomMovieListFragment.CustomMovieListFragmentInteractionListener;
 import thuynh90.tacoma.uw.edu.listitwatchit.tabs.ListNameDialogFragment;
 import thuynh90.tacoma.uw.edu.listitwatchit.tabs.Movie;
 import thuynh90.tacoma.uw.edu.listitwatchit.tabs.MyList;
-import thuynh90.tacoma.uw.edu.listitwatchit.tabs.MyListsFragment.myListsFragmentInteractionListener;
+import thuynh90.tacoma.uw.edu.listitwatchit.tabs.MyListsFragment;
+import thuynh90.tacoma.uw.edu.listitwatchit.tabs.MyListsFragment.MyListsFragmentInteractionListener;
 import thuynh90.tacoma.uw.edu.listitwatchit.tabs.PagerAdapter;
+import thuynh90.tacoma.uw.edu.listitwatchit.tabs.ToWatchFragment;
 import thuynh90.tacoma.uw.edu.listitwatchit.tabs.ToWatchFragment.toWatchFragmentInteractionListener;
+import thuynh90.tacoma.uw.edu.listitwatchit.tabs.WatchedFragment;
 import thuynh90.tacoma.uw.edu.listitwatchit.tabs.WatchedFragment.WatchedListFragmentInteractionListener;
 import thuynh90.tacoma.uw.edu.listitwatchit.viewDetails.ViewMovieDetailsActivity;
 
@@ -41,13 +45,15 @@ import thuynh90.tacoma.uw.edu.listitwatchit.viewDetails.ViewMovieDetailsActivity
  * Activity that is the home screen on the app. Houses the search function and has links to the other Activities
  */
 public class MainActivity extends AppCompatActivity
-        implements toWatchFragmentInteractionListener, WatchedListFragmentInteractionListener, myListsFragmentInteractionListener {
+        implements toWatchFragmentInteractionListener, WatchedListFragmentInteractionListener, MyListsFragmentInteractionListener, CustomMovieListFragmentInteractionListener {
 
     private SharedPreferences mSharedPreferences;
     private static final String ADD_LIST_URL = "http://cssgate.insttech.washington.edu/~_450atm6/addList.php?";
     private static final String DELETE_LIST_URL = "http://cssgate.insttech.washington.edu/~_450atm6/deleteList.php?";
     private static final String MOVE_TO_WATCHED_URL = "http://cssgate.insttech.washington.edu/~_450atm6/moveToWatched.php?";
     private final static String DELETE_MOVIE_URL = "http://cssgate.insttech.washington.edu/~_450atm6/deleteMovie.php?";
+    private ViewPager viewPager;
+    private PagerAdapter adapter;
 
     @Override
     /**
@@ -163,9 +169,9 @@ public class MainActivity extends AppCompatActivity
     public void createTabs() {
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         assert tabLayout != null;
-        final TabLayout.Tab toWatch = tabLayout.newTab().setText("To Watch");
-        final TabLayout.Tab watched = tabLayout.newTab().setText("Watched");
-        final TabLayout.Tab myLists = tabLayout.newTab().setText("My Lists");
+        final TabLayout.Tab toWatch = tabLayout.newTab().setText("To Watch").setTag("TO_WATCH");
+        final TabLayout.Tab watched = tabLayout.newTab().setText("Watched").setTag("WATCHED");
+        final TabLayout.Tab myLists = tabLayout.newTab().setText("My Lists").setTag("MY_LISTS");
 
         tabLayout.addTab(toWatch);
         tabLayout.addTab(watched);
@@ -184,8 +190,8 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-        final ViewPager viewPager = (ViewPager) findViewById(R.id.view_pager);
-        final PagerAdapter adapter = new PagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount());
+        viewPager = (ViewPager) findViewById(R.id.view_pager);
+        adapter = new PagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount());
         assert viewPager != null;
         viewPager.setAdapter(adapter);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
@@ -203,16 +209,13 @@ public class MainActivity extends AppCompatActivity
                 if (tab.equals(myLists)) {
                     addListButton.hide();
                 }
-
             }
 
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
-
                 if (tab.equals(myLists)) {
                     addListButton.show();
                 }
-
             }
         });
     }
@@ -222,7 +225,6 @@ public class MainActivity extends AppCompatActivity
      * Fragment interaction for To Watch tab.
      * Passes movie ID as intent to ViewMovieDetailsActivity if task is to view details
      * Else makes an instance of UpdateListTask to move movie to "Watched"
-     * TODO: Update "To Watch" tab when movie is moved to "Watched"
      * @param item Movie item in list
      * @param task String that describes task that describes whether to view or move movie to "Watched"
      */
@@ -252,14 +254,20 @@ public class MainActivity extends AppCompatActivity
             UpdateListTask newListTask = new UpdateListTask();
             newListTask.execute(urlBuilder.toString());
         }
+
+        // Refresh "To Watch" & "Watched" when moving movie to "Watched"
+        ToWatchFragment toWatchList = (ToWatchFragment) adapter.getItem(viewPager.getCurrentItem());
+        WatchedFragment watchedList = (WatchedFragment) adapter.getItem(1);
+        if(toWatchList != null && watchedList != null) {
+            toWatchList.downloadToWatch();
+            watchedList.downloadWatched();
+        }
     }
 
     @Override
     /**
      * Fragment interaction for Watched tab.
      * Passes movie ID as intent to ViewMovieDetailsActivity
-     * TODO: Update "Watched" tab when movie is deleted
-     * TODO: Update "Watched" tab when movie is added
      * @param item Movie item in list
      * @param task String that describes task that describes whether to view or delete movie
      */
@@ -292,12 +300,17 @@ public class MainActivity extends AppCompatActivity
             System.out.println(urlBuilder.toString());
             UpdateListTask newListTask = new UpdateListTask();
             newListTask.execute(urlBuilder.toString());
+
+            // Refresh "Watched" when moving movie is deleted
+            WatchedFragment watchedList = (WatchedFragment) adapter.getItem(viewPager.getCurrentItem());
+            if(watchedList != null) {
+                watchedList.downloadWatched();
+            }
         }
     }
 
     /**
-     * Fragment interaction for My Lists tab. If d
-     * TODO: Update "My Lists" tab when list is deleted
+     * Fragment interaction for My Lists tab.
      * TODO: View list details when selecting list
      * @param eachList List item in My Lists
      * @param task String that describes task that describes whether to view or delete list
@@ -327,16 +340,32 @@ public class MainActivity extends AppCompatActivity
             UpdateListTask newListTask = new UpdateListTask();
             newListTask.execute(urlBuilder.toString());
 
+            // Refreshes "My Lists" tab after deleting
+            MyListsFragment myLists = (MyListsFragment) adapter.getItem(viewPager.getCurrentItem());
+            if(myLists != null) {
+                myLists.downloadMyLists();
+            }
+
         } else {
-            System.out.println("View list details");
+//            CustomMovieListFragment customList = new CustomMovieListFragment();
+//            FragmentTransaction transaction = getFragmentManager().beginTransaction();
+//
+//            transaction.replace(R.id.tab_layout, customList);
+//            transaction.addToBackStack(null);
+//
+//            // Commit the transaction
+//            transaction.commit();
         }
+    }
+
+    @Override
+    public void onCustomMovieListFragmentInteraction(Movie item) {
+
     }
 
 
     /**
-     * TODO: Update "My Lists" tab when new list is created
-     * TODO: Edit PHP file to display "success" message
-     * TODO: Edit PHP file to prevent duplicate lists from being created
+     * Builds the URL to access PHP file and create the user's list
      * @param listName List name entered by user from ListNameDialogFragment
      */
     public void createList(String listName){
@@ -356,9 +385,15 @@ public class MainActivity extends AppCompatActivity
             Toast.makeText(getApplicationContext(), "URL error: " + e.getMessage(), Toast.LENGTH_LONG).show();
         }
 
-        System.out.println(urlBuilder.toString());
         UpdateListTask newListTask = new UpdateListTask();
         newListTask.execute(urlBuilder.toString());
+
+        // Refreshes "My Lists" tab
+        MyListsFragment myLists = (MyListsFragment) adapter.getItem(viewPager.getCurrentItem());
+        if(myLists != null) {
+            myLists.downloadMyLists();
+        }
+
     }
 
     /**
@@ -395,7 +430,6 @@ public class MainActivity extends AppCompatActivity
                 String status = (String) jsonObject.get("result");
                 if (status.equals("success")) {
                     Toast.makeText(getApplicationContext(), jsonObject.get("message").toString(), Toast.LENGTH_SHORT).show();
-
                 } else {
                     Toast.makeText(getApplicationContext(), jsonObject.get("error").toString(), Toast.LENGTH_LONG).show();
                 }

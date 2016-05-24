@@ -25,15 +25,16 @@ import thuynh90.tacoma.uw.edu.listitwatchit.R;
 /**
  * A fragment representing a list of user's custom movie lists.
  * <p/>
- * Activities containing this fragment MUST implement the {@link myListsFragmentInteractionListener}
+ * Activities containing this fragment MUST implement the {@link MyListsFragmentInteractionListener}
  * interface.
  */
 public class MyListsFragment extends Fragment {
 
     private static final String VIEW_LIST_URL = "http://cssgate.insttech.washington.edu/~_450atm6/viewList.php?cmd=mylists&email=";
-    private myListsFragmentInteractionListener mListener;
+    private MyListsFragmentInteractionListener mListener;
     private RecyclerView mRecyclerView;
     private SharedPreferences mSharedPreferences;
+    List<MyList> myList;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -63,7 +64,7 @@ public class MyListsFragment extends Fragment {
             }
         }
         // Retrieve user's custom list data
-        downloadHelper();
+        downloadMyLists();
         return view;
     }
 
@@ -71,10 +72,10 @@ public class MyListsFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof myListsFragmentInteractionListener) {
-            mListener = (myListsFragmentInteractionListener) context;
+        if (context instanceof MyListsFragmentInteractionListener) {
+            mListener = (MyListsFragmentInteractionListener) context;
         } else {
-            throw new RuntimeException(context.toString() + " must implement myListsFragmentInteractionListener");
+            throw new RuntimeException(context.toString() + " must implement MyListsFragmentInteractionListener");
         }
     }
 
@@ -84,15 +85,16 @@ public class MyListsFragment extends Fragment {
         mListener = null;
     }
 
-    @Override
+
     /**
      * Refreshes "My lists" list when user returns back to fragment after viewing a different
      * activity.
      * Calls helper method to retrieve data.
      */
+    @Override
     public void onResume(){
         super.onResume();
-        downloadHelper();
+        downloadMyLists();
     }
 
     /**
@@ -101,7 +103,7 @@ public class MyListsFragment extends Fragment {
      * to the activity and potentially other fragments contained in that
      * activity.
      */
-    public interface myListsFragmentInteractionListener {
+    public interface MyListsFragmentInteractionListener {
         void myListFragmentInteraction(MyList eachList, String task);
     }
 
@@ -161,12 +163,11 @@ public class MyListsFragment extends Fragment {
      * Helper method that retrieves user email and creates an instance of
      * DownloadMoviesTask to retrieve movie list from database.
      */
-    public void downloadHelper() {
+    public void downloadMyLists() {
         mSharedPreferences = this.getActivity().getSharedPreferences(getString(R.string.LOGIN_PREFS), Context.MODE_PRIVATE);
         // Retrieves email from SharedPreferences, return 'error' if email not found
         String email = mSharedPreferences.getString(getString(R.string.USERNAME), "error");
         DownloadMyListsTask downloadMovies = new DownloadMyListsTask();
         downloadMovies.execute(VIEW_LIST_URL + email);
     }
-
 }
