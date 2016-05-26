@@ -64,6 +64,7 @@ public class LoginActivity extends AppCompatActivity implements RegisterInteract
 
         //this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_login);
+        getSupportActionBar().hide();
         getSupportFragmentManager().beginTransaction().add(R.id.login_container, new LoginFragment() ).commit();
     }
 

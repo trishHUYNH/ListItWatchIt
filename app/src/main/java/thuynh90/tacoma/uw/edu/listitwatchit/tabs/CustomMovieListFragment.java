@@ -24,17 +24,17 @@ import thuynh90.tacoma.uw.edu.listitwatchit.R;
 
 /**
  * A fragment representing the list of movies in a user's custom list.
- * <p/>
+ *
  * Activities containing this fragment MUST implement the {@link CustomMovieListFragmentInteractionListener}
  * interface.
  */
 public class CustomMovieListFragment extends Fragment {
 
-    private int mColumnCount = 1;
-    private static final String VIEW_LIST_URL = "http://cssgate.insttech.washington.edu/~_450atm6/viewList.php?cmd=watched&email=";
+    private static final String VIEW_LIST_URL = "http://cssgate.insttech.washington.edu/~_450atm6/viewList.php?cmd=view_custom&email=";
     private RecyclerView mRecyclerView;
-    private SharedPreferences mSharedPreferences;
     private CustomMovieListFragmentInteractionListener mListener;
+    private String listName = "";
+    private String listID = "";
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -52,18 +52,21 @@ public class CustomMovieListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_movie_list, container, false);
+        listName = this.getArguments().getString("listName");
+        listID = this.getArguments().getString("listID");
 
         // Set the adapter
         if (view instanceof RecyclerView) {
             Context context = view.getContext();
             mRecyclerView = (RecyclerView) view;
+            int mColumnCount = 1;
             if (mColumnCount <= 1) {
                 mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
             } else {
                 mRecyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
             // Retrieve movie list data
-            downloadHelper();
+            downloadCustomList();
         }
         return view;
     }
@@ -92,7 +95,7 @@ public class CustomMovieListFragment extends Fragment {
      */
     public void onResume(){
         super.onResume();
-        downloadHelper();
+        downloadCustomList();
     }
 
     /**
@@ -153,6 +156,8 @@ public class CustomMovieListFragment extends Fragment {
             // Everything is good, show the list of movies.
             if (!movieList.isEmpty()) {
                 mRecyclerView.setAdapter(new CustomMovieListRecyclerViewAdapter(movieList, mListener));
+            } else {
+                Toast.makeText(getActivity().getApplicationContext(), "You haven't added any movies to \"" + listName + "\".", Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -161,11 +166,11 @@ public class CustomMovieListFragment extends Fragment {
      * Helper method that retrieves user email and creates an instance of
      * DownloadMoviesTask to retrieve movie list from database.
      */
-    public void downloadHelper() {
-        mSharedPreferences = this.getActivity().getSharedPreferences(getString(R.string.LOGIN_PREFS), Context.MODE_PRIVATE);
+    public void downloadCustomList() {
+        SharedPreferences mSharedPreferences = this.getActivity().getSharedPreferences(getString(R.string.LOGIN_PREFS), Context.MODE_PRIVATE);
         // Retrieves email from SharedPreferences, return 'error' if email not found
         String email = mSharedPreferences.getString(getString(R.string.USERNAME), "error");
         DownloadMoviesTask downloadMovies = new DownloadMoviesTask();
-        downloadMovies.execute(VIEW_LIST_URL + email);
+        downloadMovies.execute(VIEW_LIST_URL + email + "&list_id=" + listID);
     }
 }

@@ -28,12 +28,12 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 import thuynh90.tacoma.uw.edu.listitwatchit.login.LoginActivity;
-import thuynh90.tacoma.uw.edu.listitwatchit.tabs.CustomMovieListFragment.CustomMovieListFragmentInteractionListener;
 import thuynh90.tacoma.uw.edu.listitwatchit.tabs.ListNameDialogFragment;
 import thuynh90.tacoma.uw.edu.listitwatchit.tabs.Movie;
 import thuynh90.tacoma.uw.edu.listitwatchit.tabs.MyList;
 import thuynh90.tacoma.uw.edu.listitwatchit.tabs.MyListsFragment;
 import thuynh90.tacoma.uw.edu.listitwatchit.tabs.MyListsFragment.MyListsFragmentInteractionListener;
+import thuynh90.tacoma.uw.edu.listitwatchit.tabs.MyListsHolderActivity;
 import thuynh90.tacoma.uw.edu.listitwatchit.tabs.PagerAdapter;
 import thuynh90.tacoma.uw.edu.listitwatchit.tabs.ToWatchFragment;
 import thuynh90.tacoma.uw.edu.listitwatchit.tabs.ToWatchFragment.toWatchFragmentInteractionListener;
@@ -45,13 +45,14 @@ import thuynh90.tacoma.uw.edu.listitwatchit.viewDetails.ViewMovieDetailsActivity
  * Activity that is the home screen on the app. Houses the search function and has links to the other Activities
  */
 public class MainActivity extends AppCompatActivity
-        implements toWatchFragmentInteractionListener, WatchedListFragmentInteractionListener, MyListsFragmentInteractionListener, CustomMovieListFragmentInteractionListener {
+        implements toWatchFragmentInteractionListener, WatchedListFragmentInteractionListener, MyListsFragmentInteractionListener {
 
     private SharedPreferences mSharedPreferences;
     private static final String ADD_LIST_URL = "http://cssgate.insttech.washington.edu/~_450atm6/addList.php?";
     private static final String DELETE_LIST_URL = "http://cssgate.insttech.washington.edu/~_450atm6/deleteList.php?";
     private static final String MOVE_TO_WATCHED_URL = "http://cssgate.insttech.washington.edu/~_450atm6/moveToWatched.php?";
     private final static String DELETE_MOVIE_URL = "http://cssgate.insttech.washington.edu/~_450atm6/deleteMovie.php?";
+
     private ViewPager viewPager;
     private PagerAdapter adapter;
 
@@ -311,7 +312,6 @@ public class MainActivity extends AppCompatActivity
 
     /**
      * Fragment interaction for My Lists tab.
-     * TODO: View list details when selecting list
      * @param eachList List item in My Lists
      * @param task String that describes task that describes whether to view or delete list
      */
@@ -347,20 +347,11 @@ public class MainActivity extends AppCompatActivity
             }
 
         } else {
-//            CustomMovieListFragment customList = new CustomMovieListFragment();
-//            FragmentTransaction transaction = getFragmentManager().beginTransaction();
-//
-//            transaction.replace(R.id.tab_layout, customList);
-//            transaction.addToBackStack(null);
-//
-//            // Commit the transaction
-//            transaction.commit();
+            Intent detailIntent = new Intent(this, MyListsHolderActivity.class);
+            detailIntent.putExtra("listName", eachList.getListName());
+            detailIntent.putExtra("listID", eachList.getListID());
+            startActivity(detailIntent);
         }
-    }
-
-    @Override
-    public void onCustomMovieListFragmentInteraction(Movie item) {
-
     }
 
 
