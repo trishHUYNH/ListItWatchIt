@@ -43,7 +43,7 @@ public class CustomMovieListRecyclerViewAdapter extends RecyclerView.Adapter<Cus
                 if (null != mListener) {
                     // Notify the active callbacks interface (the activity, if the
                     // fragment is attached to one) that an item has been selected.
-                    mListener.onCustomMovieListFragmentInteraction(holder.mItem);
+                    mListener.onCustomMovieListFragmentInteraction(holder.mItem, "viewDetails");
                     // viewDetails
                 }
             }
@@ -52,7 +52,7 @@ public class CustomMovieListRecyclerViewAdapter extends RecyclerView.Adapter<Cus
         holder.mDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mListener.onCustomMovieListFragmentInteraction(holder.mItem);
+                mListener.onCustomMovieListFragmentInteraction(holder.mItem, "deleteMovie");
                 //deleteMovie
             }
         });

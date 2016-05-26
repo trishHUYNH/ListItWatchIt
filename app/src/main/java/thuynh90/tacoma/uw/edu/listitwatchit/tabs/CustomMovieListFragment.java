@@ -105,7 +105,7 @@ public class CustomMovieListFragment extends Fragment {
      * activity.
      */
     public interface CustomMovieListFragmentInteractionListener {
-        void onCustomMovieListFragmentInteraction(Movie item);
+        void onCustomMovieListFragmentInteraction(Movie item, String task);
     }
 
     /**
