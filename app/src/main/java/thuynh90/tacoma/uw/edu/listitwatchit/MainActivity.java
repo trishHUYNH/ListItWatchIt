@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity
     private static final String ADD_LIST_URL = "http://cssgate.insttech.washington.edu/~_450atm6/addList.php?";
     private static final String DELETE_LIST_URL = "http://cssgate.insttech.washington.edu/~_450atm6/deleteList.php?";
     private static final String MOVE_TO_WATCHED_URL = "http://cssgate.insttech.washington.edu/~_450atm6/moveToWatched.php?";
-    private final static String DELETE_MOVIE_URL = "http://cssgate.insttech.washington.edu/~_450atm6/deleteMovie.php?";
+    private final static String DELETE_MOVIE_URL = "http://cssgate.insttech.washington.edu/~_450atm6/deleteMovie.php?cmd=default&";
 
     private ViewPager viewPager;
     private PagerAdapter adapter;

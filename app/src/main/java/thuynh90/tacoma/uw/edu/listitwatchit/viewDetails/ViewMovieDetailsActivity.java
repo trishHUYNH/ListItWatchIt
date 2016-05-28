@@ -38,7 +38,7 @@ import thuynh90.tacoma.uw.edu.listitwatchit.R;
 public class ViewMovieDetailsActivity extends AppCompatActivity implements AddToListDialogFragment.OnAddToListDialogFragmentInteractionListener {
 
     private final static String ADD_MOVIE_URL = "http://cssgate.insttech.washington.edu/~_450atm6/addMovie.php?";
-    private final static String DELETE_MOVIE_URL = "http://cssgate.insttech.washington.edu/~_450atm6/deleteMovie.php?";
+    private final static String DELETE_MOVIE_URL = "http://cssgate.insttech.washington.edu/~_450atm6/deleteMovie.php?cmd=default&";
     private static final String MOVE_TO_WATCHED_URL = "http://cssgate.insttech.washington.edu/~_450atm6/moveToWatched.php?";
     private SharedPreferences mSharedPreferences;
 

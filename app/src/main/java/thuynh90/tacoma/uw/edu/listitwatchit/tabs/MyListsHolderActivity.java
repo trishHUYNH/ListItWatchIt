@@ -28,7 +28,7 @@ public class MyListsHolderActivity extends AppCompatActivity implements CustomMo
 
     private String listName = "";
     private String listID = "";
-    private final static String DELETE_MOVIE_URL = "http://cssgate.insttech.washington.edu/~_450atm6/deleteMovie.php?";
+    private final static String DELETE_MOVIE_URL = "http://cssgate.insttech.washington.edu/~_450atm6/deleteMovie.php?cmd=custom&";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,8 +52,6 @@ public class MyListsHolderActivity extends AppCompatActivity implements CustomMo
 
     @Override
     /**
-     * TODO: Refresh list when movie is deleted
-     * TODO: Delete movie only works for "To Watch" & "Watched". FIX ME.
      * Fragment interaction for details of a custom list.
      * Passes movie ID as intent to ViewMovieDetailsActivity
      * @param item Movie item in list
@@ -72,11 +70,8 @@ public class MyListsHolderActivity extends AppCompatActivity implements CustomMo
             String email = mSharedPreferences.getString(getString(R.string.USERNAME), "error");
 
             try {
-                urlBuilder.append("email=");
-                urlBuilder.append(email.trim());
-
-                urlBuilder.append("&list=");
-                urlBuilder.append(listName.trim());
+                urlBuilder.append("list_id=");
+                urlBuilder.append(listID.trim());
 
                 urlBuilder.append("&movie_id=");
                 urlBuilder.append(item.getMovieID().trim());
@@ -88,6 +83,14 @@ public class MyListsHolderActivity extends AppCompatActivity implements CustomMo
             newListTask.execute(urlBuilder.toString());
 
             //Refresh
+            Bundle listBundle = new Bundle();
+            listBundle.putString("listName", listName);
+            listBundle.putString("listID", listID);
+
+            CustomMovieListFragment viewCustomList = new CustomMovieListFragment();
+            viewCustomList.setArguments(listBundle);
+
+            getSupportFragmentManager().beginTransaction().replace(R.id.my_lists_container, viewCustomList).commit();
         }
     }
 
