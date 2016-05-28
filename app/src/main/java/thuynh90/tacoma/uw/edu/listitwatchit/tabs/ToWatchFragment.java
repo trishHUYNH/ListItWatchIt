@@ -2,6 +2,8 @@ package thuynh90.tacoma.uw.edu.listitwatchit.tabs;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -21,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import thuynh90.tacoma.uw.edu.listitwatchit.R;
+import thuynh90.tacoma.uw.edu.listitwatchit.data.WatchlistDB;
 
 /**
  * A fragment representing a list of Movie items for the user's "To Watch" list.
@@ -33,6 +36,7 @@ public class ToWatchFragment extends Fragment {
     private toWatchFragmentInteractionListener mListener;
     private RecyclerView mRecyclerView;
     private SharedPreferences mSharedPreferences;
+    private WatchlistDB mWatchlistDB;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -64,8 +68,30 @@ public class ToWatchFragment extends Fragment {
                 mRecyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
         }
-        // Retrieve movie list data
-        downloadToWatch();
+
+
+
+        //Check for network connection.
+        //If network exists, load list from web database. If not, load list from locally stored data
+        ConnectivityManager connMgr = (ConnectivityManager)
+                getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+        if (networkInfo != null && networkInfo.isConnected()) {
+            // Retrieve movie list data
+            downloadToWatch();
+        }
+        else {
+            Toast.makeText(view.getContext(),
+                    "No network connection available. Displaying locally stored data",
+                    Toast.LENGTH_SHORT).show();
+
+            if (mWatchlistDB == null) {
+                mWatchlistDB = new WatchlistDB(getActivity());
+            }
+            List<Movie> movieList = mWatchlistDB.getMovies();
+
+            mRecyclerView.setAdapter(new ToWatchRecyclerViewAdapter(movieList, mListener));
+        }
 
         return view;
     }
@@ -157,7 +183,7 @@ public class ToWatchFragment extends Fragment {
                 return;
             }
 
-            List<Movie> movieList = new ArrayList<Movie>();
+            List<Movie> movieList = new ArrayList<>();
             result = Movie.parseMovieJSON(result, movieList);
             // Something wrong with the JSON returned.
             if (result != null) {
@@ -168,6 +194,22 @@ public class ToWatchFragment extends Fragment {
             // Everything is good, show the list of movies.
             if (!movieList.isEmpty()) {
                 mRecyclerView.setAdapter(new ToWatchRecyclerViewAdapter(movieList, mListener));
+
+                //SQLite
+                if (mWatchlistDB == null) {
+                    mWatchlistDB = new WatchlistDB(getActivity());
+                }
+
+                // Delete old data so that you can refresh the local
+                // database with the network data.
+                mWatchlistDB.deleteMovies();
+
+                // Add all movies in the list to the local database
+                for (int i=0; i<movieList.size(); i++) {
+                    Movie movie = movieList.get(i);
+                    mWatchlistDB.insertMovie(movie.getMovieTitle(),
+                            movie.getMovieID());
+                }
             } else {
                 Toast.makeText(getActivity().getApplicationContext(), "You haven't added any movies yet!", Toast.LENGTH_SHORT).show();
             }

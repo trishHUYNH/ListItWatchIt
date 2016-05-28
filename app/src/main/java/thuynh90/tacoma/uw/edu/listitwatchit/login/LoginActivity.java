@@ -14,8 +14,6 @@ import android.util.Base64;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.facebook.FacebookSdk;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -46,21 +44,6 @@ public class LoginActivity extends AppCompatActivity implements RegisterInteract
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        FacebookSdk.sdkInitialize(getApplicationContext());
-
-        try {
-            PackageInfo info = getPackageManager().getPackageInfo("thuynh90.tacoma.uw.edu.listitwatchit", PackageManager.GET_SIGNATURES);
-            for (Signature signature : info.signatures) {
-                MessageDigest md = MessageDigest.getInstance("SHA");
-                md.update(signature.toByteArray());
-                Log.d("KeyHash:", Base64.encodeToString(md.digest(), Base64.DEFAULT));
-            }
-        } catch (PackageManager.NameNotFoundException e) {
-
-        } catch (NoSuchAlgorithmException e) {
-
-        }
 
         //this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_login);
@@ -250,7 +233,6 @@ public class LoginActivity extends AppCompatActivity implements RegisterInteract
                     }
                 } catch (JSONException e) {
                     Toast.makeText(getApplicationContext(), "Data problem: " + e.getMessage(), Toast.LENGTH_LONG).show();
-                    System.out.println(e.getMessage());
                 }
             }
         }

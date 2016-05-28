@@ -18,6 +18,7 @@ import android.widget.TextView;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
+import com.facebook.FacebookSdk;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 
@@ -32,9 +33,12 @@ public class LoginFragment extends Fragment {
 
     private LoginInteractionListener mListener;
 
-    private TextView info;
+
     private LoginButton fbloginButton;
     private CallbackManager callbackManager;
+
+    boolean loggedInToFacebook = false;
+    String facebookID;
 
 
     public LoginFragment() {
@@ -44,6 +48,9 @@ public class LoginFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        FacebookSdk.sdkInitialize(getActivity().getApplicationContext());
+        callbackManager = CallbackManager.Factory.create();
+
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_login, container, false);
         final EditText emailLogin = (EditText) view.findViewById(R.id.login_email);
@@ -91,15 +98,20 @@ public class LoginFragment extends Fragment {
         });
 
         //facebook
-        callbackManager = CallbackManager.Factory.create();
-        info = (TextView)view.findViewById(R.id.info);
+
         fbloginButton = (LoginButton)view.findViewById(R.id.fb_login_button);
+        fbloginButton.setFragment(this);
+
+
 
         fbloginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+
             @Override
             public void onSuccess(LoginResult loginResult) {
-                Log.d("userId", loginResult.getAccessToken().getUserId());
-                ( (LoginActivity) getActivity()).socialMediaLogin(loginResult.getAccessToken().getUserId());
+                Log.d("1234", "onSuccess");
+                loggedInToFacebook = true;
+                facebookID = loginResult.getAccessToken().getUserId();
+                Log.d("userId", facebookID);
             }
 
             @Override
@@ -134,6 +146,16 @@ public class LoginFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        callbackManager.onActivityResult(requestCode, resultCode, data);
+
+        if (loggedInToFacebook) {
+            ( (LoginActivity) getActivity()).socialMediaLogin(facebookID);
+        }
     }
 
 }
