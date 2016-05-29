@@ -56,12 +56,12 @@ public class MainActivity extends AppCompatActivity
     private ViewPager viewPager;
     private PagerAdapter adapter;
 
-    @Override
     /**
      * If not logged in, only search functionality is available.
      * Provides link for user to log in.
      * Sets different layout depending on status of login.
      */
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         mSharedPreferences = getSharedPreferences(getString(R.string.LOGIN_PREFS), Context.MODE_PRIVATE);
@@ -127,18 +127,16 @@ public class MainActivity extends AppCompatActivity
             startActivity(i);
             finish();
             return true;
-
         }
-
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
     /**
      * Handles search intents.
      * Suggestion selection returns movie ID from TMDb
      * @param intent The new intent that was created
      */
+    @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
@@ -221,7 +219,6 @@ public class MainActivity extends AppCompatActivity
         });
     }
 
-    @Override
     /**
      * Fragment interaction for To Watch tab.
      * Passes movie ID as intent to ViewMovieDetailsActivity if task is to view details
@@ -229,6 +226,7 @@ public class MainActivity extends AppCompatActivity
      * @param item Movie item in list
      * @param task String that describes task that describes whether to view or move movie to "Watched"
      */
+    @Override
     public void toWatchFragmentInteraction(Movie item, String task) {
         if(task.equals("viewDetails")) {
             Intent detailIntent = new Intent(this, ViewMovieDetailsActivity.class);
@@ -265,13 +263,13 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    @Override
     /**
      * Fragment interaction for Watched tab.
      * Passes movie ID as intent to ViewMovieDetailsActivity
      * @param item Movie item in list
      * @param task String that describes task that describes whether to view or delete movie
      */
+    @Override
     public void watchedFragmentInteraction(Movie item, String task) {
         if(task.equals("viewDetails")) {
             Intent detailIntent = new Intent(this, ViewMovieDetailsActivity.class);
@@ -383,7 +381,6 @@ public class MainActivity extends AppCompatActivity
         if(myLists != null) {
             myLists.downloadMyLists();
         }
-
     }
 
     /**
@@ -411,7 +408,6 @@ public class MainActivity extends AppCompatActivity
                 if (connection != null)
                     connection.disconnect();
             }
-
         }
         @Override
         protected void onPostExecute(String result)  {

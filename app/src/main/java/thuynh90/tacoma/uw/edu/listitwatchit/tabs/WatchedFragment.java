@@ -28,7 +28,6 @@ import thuynh90.tacoma.uw.edu.listitwatchit.R;
  */
 public class WatchedFragment extends Fragment {
 
-    private int mColumnCount = 1;
     // Change this for Watched list
     private static final String VIEW_LIST_URL = "http://cssgate.insttech.washington.edu/~_450atm6/viewList.php?cmd=watched&email=";
     private WatchedListFragmentInteractionListener mListener;
@@ -46,11 +45,11 @@ public class WatchedFragment extends Fragment {
         super.onCreate(savedInstanceState);
     }
 
-    @Override
     /**
      * Concatenates URL with user's email from SharedPreferences.
      * Calls DownloadMoviesTask to retrieve movie from database.
      */
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_movie_list, container, false);
 
@@ -58,6 +57,7 @@ public class WatchedFragment extends Fragment {
         if (view instanceof RecyclerView) {
             Context context = view.getContext();
             mRecyclerView = (RecyclerView) view;
+            int mColumnCount = 1;
             if (mColumnCount <= 1) {
                 mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
             } else {

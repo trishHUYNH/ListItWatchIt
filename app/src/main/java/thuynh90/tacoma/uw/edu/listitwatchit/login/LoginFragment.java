@@ -26,6 +26,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
 
@@ -50,6 +51,12 @@ public class LoginFragment extends Fragment implements GoogleApiClient.OnConnect
         // Required empty public constructor
     }
 
+    /**
+     * Validates EditText fields to prevent empty fields, invalid emails,
+     * and non-matching passwords.
+     * Calls login from LoginActivity.
+     * Sets listener to link back to registration page
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         FacebookSdk.sdkInitialize(getActivity().getApplicationContext());
@@ -58,7 +65,7 @@ public class LoginFragment extends Fragment implements GoogleApiClient.OnConnect
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build();
 
         mGoogleApiClient = new GoogleApiClient.Builder(this.getContext())
-                .enableAutoManage(this.getActivity(), this)
+                .addOnConnectionFailedListener(this)
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
 
@@ -110,10 +117,10 @@ public class LoginFragment extends Fragment implements GoogleApiClient.OnConnect
 
         // Facebook login
 
-        LoginButton fbloginButton = (LoginButton) view.findViewById(R.id.fb_login_button);
-        fbloginButton.setFragment(this);
+        LoginButton fbLoginButton = (LoginButton) view.findViewById(R.id.fb_login_button);
+        fbLoginButton.setFragment(this);
 
-        fbloginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+        fbLoginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
 
             @Override
             public void onSuccess(LoginResult loginResult) {
@@ -147,15 +154,18 @@ public class LoginFragment extends Fragment implements GoogleApiClient.OnConnect
     }
 
     @Override
-    public void onConnectionFailed(ConnectionResult connectionResult) {
-
+    public void onStart() {
+        super.onStart();
+        if (mGoogleApiClient != null)
+            mGoogleApiClient.connect();
     }
 
-    /**
-     * Listener interface for when Login is selected
-     */
-    public interface LoginInteractionListener {
-        void login(String email, String password);
+    @Override
+    public void onStop() {
+        if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
+            mGoogleApiClient.disconnect();
+        }
+        super.onStop();
     }
 
     @Override
@@ -174,6 +184,31 @@ public class LoginFragment extends Fragment implements GoogleApiClient.OnConnect
         mListener = null;
     }
 
+    /**
+     * Displays error message on connection failure
+     * @param connectionResult Result of connection
+     */
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+        if (!connectionResult.hasResolution()) {
+            GooglePlayServicesUtil.getErrorDialog(connectionResult.getErrorCode(), this.getActivity(), 0).show();
+            return;
+        }
+    }
+
+    /**
+     * Listener interface for when Login is selected
+     */
+    public interface LoginInteractionListener {
+        void login(String email, String password);
+    }
+
+    /**
+     * Called from Google or Facebook login to pass Hash ID to LoginActivity
+     * @param requestCode Specifies which sign in to process
+     * @param resultCode
+     * @param data User ID values returned from API
+     */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -185,6 +220,8 @@ public class LoginFragment extends Fragment implements GoogleApiClient.OnConnect
             GoogleSignInAccount acct = result.getSignInAccount();
             if(acct != null) {
                 ((LoginActivity) getActivity()).socialMediaLogin(acct.getId());
+                // Clears default account so user can choose a different account when logging in
+                mGoogleApiClient.clearDefaultAccountAndReconnect();
             }
         } // Facebook sign in
         else if (loggedInToFacebook) {

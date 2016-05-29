@@ -35,14 +35,14 @@ public class MovieSuggestionProvider extends ContentProvider{
         return false;
     }
 
-    @Nullable
-    @Override
     /**
      * Submits query to TMDb with each character typed.
      * Parses JSON result.
      * Returns cursor array of suggested results.
      * Returns "No results found" if cursor count is zero
      */
+    @Nullable
+    @Override
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
 
         BufferedReader reader = null;

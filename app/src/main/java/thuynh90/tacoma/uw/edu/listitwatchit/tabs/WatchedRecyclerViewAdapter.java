@@ -41,7 +41,6 @@ public class WatchedRecyclerViewAdapter extends RecyclerView.Adapter<WatchedRecy
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
         holder.mContentView.setText(mValues.get(position).getMovieTitle());
-        //holder.mIdView.setText(mValues.get(position).getMovieReleaseDate());
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -69,7 +68,6 @@ public class WatchedRecyclerViewAdapter extends RecyclerView.Adapter<WatchedRecy
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
-        //public final TextView mIdView;
         public final TextView mContentView;
         public final ImageButton mDelete;
         public Movie mItem;

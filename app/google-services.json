@@ -1,0 +1,56 @@
+{
+  "project_info": {
+    "project_number": "771210273030",
+    "project_id": "list-it-watch-it"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:771210273030:android:60b142b4c4d45207",
+        "android_client_info": {
+          "package_name": "thuynh90.tacoma.uw.edu.listitwatchit"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "771210273030-7io8a5aiijml7djgifm6s5t9m7jfmjkl.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "thuynh90.tacoma.uw.edu.listitwatchit",
+            "certificate_hash": "D4521EB5ED43E851D592AD29B0FE1086497D293A"
+          }
+        },
+        {
+          "client_id": "771210273030-n5l0kg0cetrka1ij5epga3n2mgibvtdf.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "thuynh90.tacoma.uw.edu.listitwatchit",
+            "certificate_hash": "C6C40520B991B1B2FF33A55C470D63B2566FD47B"
+          }
+        },
+        {
+          "client_id": "771210273030-bgd9eusquicjrfilmeui07sck6vmd15j.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAWCsd01Xa9baenvWhs49q8hcEXAhuhjGo"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

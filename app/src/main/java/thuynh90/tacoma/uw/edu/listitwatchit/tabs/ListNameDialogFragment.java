@@ -15,10 +15,11 @@ import android.widget.Toast;
 import thuynh90.tacoma.uw.edu.listitwatchit.MainActivity;
 import thuynh90.tacoma.uw.edu.listitwatchit.R;
 
-
+/**
+ * Dialog to display when user creates a custom list.
+ * Allows user to enter list name in text field to create a new list.
+ */
 public class ListNameDialogFragment extends DialogFragment {
-
-
 
     private SharedPreferences mSharedPreferences;
 
@@ -26,8 +27,14 @@ public class ListNameDialogFragment extends DialogFragment {
         // Required empty public constructor
     }
 
-
-
+    /**
+     * User enters list name and selects positive button to create list.
+     * Empty text field and positive button closes list. Prevents an empty
+     * list from being created.
+     * Negative button closes dialog.
+     * @param savedInstanceState Previous fragment activity
+     * @return
+     */
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());

@@ -28,14 +28,13 @@ public class RegisterFragment extends Fragment {
         // Required empty public constructor
     }
 
-
-    @Override
     /**
      * Validates EditText fields to prevent empty fields, invalid emails,
      * and non-matching passwords.
      * Calls register from LoginActivity.
      * Sets listener to link back to login page
      */
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_register, container, false);

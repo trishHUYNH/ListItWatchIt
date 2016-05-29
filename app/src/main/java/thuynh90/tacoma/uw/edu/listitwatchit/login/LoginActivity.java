@@ -44,7 +44,6 @@ public class LoginActivity extends AppCompatActivity implements RegisterInteract
         getSupportFragmentManager().beginTransaction().add(R.id.login_container, new LoginFragment() ).commit();
     }
 
-    @Override
     /**
      * Called from RegisterFragment.
      * Processes inputs passed into one String for query.
@@ -54,6 +53,7 @@ public class LoginActivity extends AppCompatActivity implements RegisterInteract
      * @param email The email address entered
      * @param password The password entered
      */
+    @Override
     public void register(String email, String password) {
         String userInformation = "email=" + email + "&password=" + password;
         class RegisterTask extends AsyncTask<String, Void, String> {
@@ -110,7 +110,6 @@ public class LoginActivity extends AppCompatActivity implements RegisterInteract
         newRegistration.execute(userInformation);
     }
 
-    @Override
     /**
      * Called from LoginFragment for regular sign in.
      * Processes inputs passed into one String for query.
@@ -120,6 +119,7 @@ public class LoginActivity extends AppCompatActivity implements RegisterInteract
      * @param email The email address entered
      * @param password The password entered
      */
+    @Override
     public void login(String email, String password) {
         String userInformation = "email=" + email + "&password=" + password;
         final String emailSharedPrefs = email;
@@ -228,7 +228,6 @@ public class LoginActivity extends AppCompatActivity implements RegisterInteract
                     String status = (String) jsonObject.get("result");
                     if (status.equals("success")) {
                         directToMain(userID);
-
                     } else {
                         Toast.makeText(getApplicationContext(), "Login failed: " + jsonObject.get("error"), Toast.LENGTH_LONG).show();
                     }
@@ -237,7 +236,6 @@ public class LoginActivity extends AppCompatActivity implements RegisterInteract
                 }
             }
         }
-
         SocialMediaLoginTask fbLogin = new SocialMediaLoginTask();
         fbLogin.execute(userID);
     }
@@ -246,7 +244,6 @@ public class LoginActivity extends AppCompatActivity implements RegisterInteract
      * Helper method to return user to login fragment after successful registration.
      */
     public void returnToLogin() {
-
         getSupportFragmentManager().beginTransaction().replace(R.id.login_container, new LoginFragment()).commit();
     }
 

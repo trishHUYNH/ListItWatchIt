@@ -41,14 +41,12 @@ public class ToWatchRecyclerViewAdapter extends RecyclerView.Adapter<ToWatchRecy
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
         holder.mContentView.setText(mValues.get(position).getMovieTitle());
-        //holder.mIdView.setText(mValues.get(position).getMovieReleaseDate());
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (null != mListener) {
-                    // Notify the active callbacks interface (the activity, if the
-                    // fragment is attached to one) that an item has been selected.
+                    // Notify the active callbacks interface to view details of a movie
                     mListener.toWatchFragmentInteraction(holder.mItem, "viewDetails");
                 }
             }
@@ -58,13 +56,11 @@ public class ToWatchRecyclerViewAdapter extends RecyclerView.Adapter<ToWatchRecy
             @Override
             public void onClick(View v) {
                 if (null != mListener) {
-                    // Notify the active callbacks interface (the activity, if the
-                    // fragment is attached to one) that an item has been selected.
+                    // Notify the active callbacks interface to move movie from "To Watch" to "Watched"
                     mListener.toWatchFragmentInteraction(holder.mItem, "watchedMovie");
                 }
             }
         });
-
     }
 
     @Override
@@ -74,19 +70,15 @@ public class ToWatchRecyclerViewAdapter extends RecyclerView.Adapter<ToWatchRecy
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
-        // public final TextView mIdView;
         public final TextView mContentView;
         public final ImageButton mWatched;
-       // public final ImageButton delete;
         public Movie mItem;
 
         public ViewHolder(View view) {
             super(view);
             mView = view;
-            //mIdView = (TextView) view.findViewById(R.id.title);
             mContentView = (TextView) view.findViewById(R.id.title);
             mWatched = (ImageButton) view.findViewById(R.id.watched_to_watch);
-            //delete = (ImageButton) view.findViewById(R.id.delete_to_watch);
         }
 
         @Override

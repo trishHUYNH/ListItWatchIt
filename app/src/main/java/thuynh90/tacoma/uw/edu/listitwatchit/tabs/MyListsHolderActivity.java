@@ -1,8 +1,6 @@
 package thuynh90.tacoma.uw.edu.listitwatchit.tabs;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -50,13 +48,13 @@ public class MyListsHolderActivity extends AppCompatActivity implements CustomMo
         getSupportFragmentManager().beginTransaction().add(R.id.my_lists_container, viewCustomList).commit();
     }
 
-    @Override
     /**
      * Fragment interaction for details of a custom list.
      * Passes movie ID as intent to ViewMovieDetailsActivity
      * @param item Movie item in list
      * @param task String that describes task that describes whether to view or delete movie
      */
+    @Override
     public void onCustomMovieListFragmentInteraction(Movie item, String task) {
         if(task.equals("viewDetails")) {
             Intent detailIntent = new Intent(this, ViewMovieDetailsActivity.class);
@@ -66,8 +64,6 @@ public class MyListsHolderActivity extends AppCompatActivity implements CustomMo
             startActivity(detailIntent);
         } else if(task.equals("deleteMovie")) {
             StringBuilder urlBuilder = new StringBuilder(DELETE_MOVIE_URL);
-            SharedPreferences mSharedPreferences = getSharedPreferences(getString(R.string.LOGIN_PREFS), Context.MODE_PRIVATE);
-            String email = mSharedPreferences.getString(getString(R.string.USERNAME), "error");
 
             try {
                 urlBuilder.append("list_id=");
@@ -82,7 +78,7 @@ public class MyListsHolderActivity extends AppCompatActivity implements CustomMo
             UpdateListTask newListTask = new UpdateListTask();
             newListTask.execute(urlBuilder.toString());
 
-            //Refresh
+            //Refresh "My Lists"
             Bundle listBundle = new Bundle();
             listBundle.putString("listName", listName);
             listBundle.putString("listID", listID);

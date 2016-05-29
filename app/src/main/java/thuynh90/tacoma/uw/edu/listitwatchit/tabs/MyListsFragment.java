@@ -33,8 +33,6 @@ public class MyListsFragment extends Fragment {
     private static final String VIEW_LIST_URL = "http://cssgate.insttech.washington.edu/~_450atm6/viewList.php?cmd=mylists&email=";
     private MyListsFragmentInteractionListener mListener;
     private RecyclerView mRecyclerView;
-    private SharedPreferences mSharedPreferences;
-    List<MyList> myList;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -108,6 +106,18 @@ public class MyListsFragment extends Fragment {
     }
 
     /**
+     * Helper method that retrieves user email and creates an instance of
+     * DownloadMoviesTask to retrieve movie list from database.
+     */
+    public void downloadMyLists() {
+        SharedPreferences mSharedPreferences = this.getActivity().getSharedPreferences(getString(R.string.LOGIN_PREFS), Context.MODE_PRIVATE);
+        // Retrieves email from SharedPreferences, return 'error' if email not found
+        String email = mSharedPreferences.getString(getString(R.string.USERNAME), "error");
+        DownloadMyListsTask downloadMovies = new DownloadMyListsTask();
+        downloadMovies.execute(VIEW_LIST_URL + email);
+    }
+
+    /**
      * Opens URL connection and parses JSON result to view lists specific
      * to users. Called from onCreate.
      */
@@ -157,17 +167,5 @@ public class MyListsFragment extends Fragment {
                 mRecyclerView.setAdapter(new MyListsRecyclerViewAdapter(myList, mListener));
             }
         }
-    }
-
-    /**
-     * Helper method that retrieves user email and creates an instance of
-     * DownloadMoviesTask to retrieve movie list from database.
-     */
-    public void downloadMyLists() {
-        mSharedPreferences = this.getActivity().getSharedPreferences(getString(R.string.LOGIN_PREFS), Context.MODE_PRIVATE);
-        // Retrieves email from SharedPreferences, return 'error' if email not found
-        String email = mSharedPreferences.getString(getString(R.string.USERNAME), "error");
-        DownloadMyListsTask downloadMovies = new DownloadMyListsTask();
-        downloadMovies.execute(VIEW_LIST_URL + email);
     }
 }

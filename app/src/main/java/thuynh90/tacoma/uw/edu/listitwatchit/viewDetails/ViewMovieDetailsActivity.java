@@ -60,7 +60,7 @@ public class ViewMovieDetailsActivity extends AppCompatActivity implements AddTo
 
     /**
      * Runs AsyncTask to load movie details and sets the TextView and ImageView variables to the proper layout views from the XML file
-     * @param savedInstanceState
+     * @param savedInstanceState Previous fragment activity
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -143,7 +143,6 @@ public class ViewMovieDetailsActivity extends AppCompatActivity implements AddTo
             HttpURLConnection urlConnection = null;
             String jsonString = null;
 
-            
             try {
                 URL url = new URL(urlString);
                 urlConnection = (HttpURLConnection) url.openConnection();
@@ -159,7 +158,6 @@ public class ViewMovieDetailsActivity extends AppCompatActivity implements AddTo
                         stringBuilder.append(line);
                         stringBuilder.append("\n");
                     }
-
                     jsonString = stringBuilder.toString();
                     reader.close();
                 }
@@ -314,7 +312,7 @@ public class ViewMovieDetailsActivity extends AppCompatActivity implements AddTo
     /**
      * Runs an AsyncTask helper method to send movie information to the database so that the movie
      * can be deleted from the selected list
-     * @param view
+     * @param view Current view that app is on
      */
     public void deleteMovie(View view) {
 
@@ -388,7 +386,6 @@ public class ViewMovieDetailsActivity extends AppCompatActivity implements AddTo
                 }
             } catch (JSONException e) {
                 Toast.makeText(getApplicationContext(), "Data problem: " + e.getMessage(), Toast.LENGTH_LONG).show();
-                System.out.println(e.getMessage());
             }
         }
     }

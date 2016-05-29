@@ -35,9 +35,9 @@ public class MyListsRecyclerViewAdapter extends RecyclerView.Adapter<MyListsRecy
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         holder.mItem = mValues.get(position);
-        //holder.mIdView.setText(mValues.get(position).getListID());
         holder.mContentView.setText(mValues.get(position).getListName());
 
+        // View list listener
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -49,6 +49,7 @@ public class MyListsRecyclerViewAdapter extends RecyclerView.Adapter<MyListsRecy
             }
         });
 
+        // Delete list listener
         holder.mDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -64,7 +65,6 @@ public class MyListsRecyclerViewAdapter extends RecyclerView.Adapter<MyListsRecy
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
-        //public final TextView mIdView;
         public final TextView mContentView;
         public final ImageButton mDelete;
         public MyList mItem;
@@ -72,7 +72,6 @@ public class MyListsRecyclerViewAdapter extends RecyclerView.Adapter<MyListsRecy
         public ViewHolder(View view) {
             super(view);
             mView = view;
-            //mIdView = (TextView) view.findViewById(R.id.id);
             mContentView = (TextView) view.findViewById(R.id.content);
             mDelete = (ImageButton) view.findViewById(R.id.delete_my_lists);
         }

@@ -14,7 +14,6 @@ import java.util.List;
 public class Movie implements Serializable {
 
     private String mMovieTitle;
-    private String mReleaseDate;
     private String mMovieID;
 
     public static final String MOVIE_TITLE = "Title";
@@ -47,9 +46,9 @@ public class Movie implements Serializable {
     }
 
     /**
-     * Parses JSONObject that holds movie information to retreive the movie's title and release date
-     * @param movieJSON
-     * @param movieList
+     * Parses JSONObject that holds movie information to retrieve the movie's title and release date
+     * @param movieJSON JSON result to be parsed
+     * @param movieList List of movies with title & ID to be returned
      * @return String of error. Else, returns null
      */
     public static String parseMovieJSON(String movieJSON, List<Movie> movieList) {

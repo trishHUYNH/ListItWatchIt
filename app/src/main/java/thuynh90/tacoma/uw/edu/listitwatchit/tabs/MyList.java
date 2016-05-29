@@ -47,8 +47,8 @@ public class MyList implements Serializable {
 
     /**
      * Parses JSONObject that holds list information to retrieve the list's name & ID
-     * @param listJSON
-     * @param myLists
+     * @param listJSON JSON result to be parsed
+     * @param myLists List of custom movie lists with list names & ID to be returned
      * @return String of error. Else, returns null
      */
     public static String parseListJSON(String listJSON, List<MyList> myLists) {

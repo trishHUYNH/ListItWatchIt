@@ -31,11 +31,9 @@ import thuynh90.tacoma.uw.edu.listitwatchit.data.WatchlistDB;
  */
 public class ToWatchFragment extends Fragment {
 
-    private int mColumnCount = 1;
     private static final String VIEW_LIST_URL = "http://cssgate.insttech.washington.edu/~_450atm6/viewList.php?cmd=towatch&email=";
     private toWatchFragmentInteractionListener mListener;
     private RecyclerView mRecyclerView;
-    private SharedPreferences mSharedPreferences;
     private WatchlistDB mWatchlistDB;
 
     /**
@@ -50,11 +48,11 @@ public class ToWatchFragment extends Fragment {
         super.onCreate(savedInstanceState);
     }
 
-    @Override
     /**
      * Concatenates URL with user's email from SharedPreferences.
      * Calls DownloadMoviesTask to retrieve movie from database.
      */
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_movie_list_to_watch, container, false);
 
@@ -62,6 +60,7 @@ public class ToWatchFragment extends Fragment {
         if (view instanceof RecyclerView) {
             Context context = view.getContext();
             mRecyclerView = (RecyclerView) view;
+            int mColumnCount = 1;
             if (mColumnCount <= 1) {
                 mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
             } else {
@@ -69,21 +68,16 @@ public class ToWatchFragment extends Fragment {
             }
         }
 
-
-
         //Check for network connection.
         //If network exists, load list from web database. If not, load list from locally stored data
-        ConnectivityManager connMgr = (ConnectivityManager)
-                getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        ConnectivityManager connMgr = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
         if (networkInfo != null && networkInfo.isConnected()) {
             // Retrieve movie list data
             downloadToWatch();
         }
         else {
-            Toast.makeText(view.getContext(),
-                    "No network connection available. Displaying locally stored data",
-                    Toast.LENGTH_SHORT).show();
+            Toast.makeText(view.getContext(), "No network connection available. Displaying locally stored data", Toast.LENGTH_SHORT).show();
 
             if (mWatchlistDB == null) {
                 mWatchlistDB = new WatchlistDB(getActivity());
@@ -113,11 +107,11 @@ public class ToWatchFragment extends Fragment {
         mListener = null;
     }
 
-    @Override
     /**
      * Refreshes "To Watch" list when user returns back to fragment after searching a movie.
      * Calls helper method to retrieve data.
      */
+    @Override
     public void onResume(){
         super.onResume();
         downloadToWatch();
@@ -139,7 +133,7 @@ public class ToWatchFragment extends Fragment {
      * DownloadMoviesTask to retrieve movie list from database.
      */
     public void downloadToWatch() {
-        mSharedPreferences = this.getActivity().getSharedPreferences(getString(R.string.LOGIN_PREFS), Context.MODE_PRIVATE);
+        SharedPreferences mSharedPreferences = this.getActivity().getSharedPreferences(getString(R.string.LOGIN_PREFS), Context.MODE_PRIVATE);
         // Retrieves email from SharedPreferences, return 'error' if email not found
         String email = mSharedPreferences.getString(getString(R.string.USERNAME), "error");
         DownloadMoviesTask downloadMovies = new DownloadMoviesTask();
@@ -208,7 +202,6 @@ public class ToWatchFragment extends Fragment {
                 mWatchlistDB.insertMovie(movie.getMovieTitle(),
                         movie.getMovieID());
             }
-
         }
     }
 }
