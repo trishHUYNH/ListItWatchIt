@@ -33,7 +33,6 @@ public class WatchedFragment extends Fragment {
     private static final String VIEW_LIST_URL = "http://cssgate.insttech.washington.edu/~_450atm6/viewList.php?cmd=watched&email=";
     private WatchedListFragmentInteractionListener mListener;
     private RecyclerView mRecyclerView;
-    private SharedPreferences mSharedPreferences;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -112,9 +111,10 @@ public class WatchedFragment extends Fragment {
      * DownloadMoviesTask to retrieve movie list from database.
      */
     public void downloadWatched() {
-        mSharedPreferences = this.getActivity().getSharedPreferences(getString(R.string.LOGIN_PREFS), Context.MODE_PRIVATE);
+        SharedPreferences mSharedPreferences = this.getActivity().getSharedPreferences(getString(R.string.LOGIN_PREFS), Context.MODE_PRIVATE);
         // Retrieves email from SharedPreferences, return 'error' if email not found
         String email = mSharedPreferences.getString(getString(R.string.USERNAME), "error");
+        System.out.println(email);
         DownloadMoviesTask downloadMovies = new DownloadMoviesTask();
         downloadMovies.execute(VIEW_LIST_URL + email);
     }
@@ -163,11 +163,8 @@ public class WatchedFragment extends Fragment {
                 Toast.makeText(getActivity().getApplicationContext(), result, Toast.LENGTH_LONG).show();
                 return;
             }
-
-            // Everything is good, show the list of movies.
-            if (!movieList.isEmpty()) {
-                mRecyclerView.setAdapter(new WatchedRecyclerViewAdapter(movieList, mListener));
-            }
+            // Set adapter regardless of list size
+            mRecyclerView.setAdapter(new WatchedRecyclerViewAdapter(movieList, mListener));
         }
     }
 }

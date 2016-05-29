@@ -21,6 +21,13 @@ import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.auth.api.signin.GoogleSignInResult;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.SignInButton;
+import com.google.android.gms.common.api.GoogleApiClient;
 
 import thuynh90.tacoma.uw.edu.listitwatchit.R;
 
@@ -29,27 +36,31 @@ import thuynh90.tacoma.uw.edu.listitwatchit.R;
  * Validates user inputs before calling login method.
  * Calls RegistrationFragment when users select link.
  */
-public class LoginFragment extends Fragment {
+public class LoginFragment extends Fragment implements GoogleApiClient.OnConnectionFailedListener {
 
     private LoginInteractionListener mListener;
-
-
-    private LoginButton fbloginButton;
     private CallbackManager callbackManager;
-
+    private static final int RC_GOOGLE_SIGN_IN = 9001;
     boolean loggedInToFacebook = false;
     String facebookID;
+    GoogleApiClient mGoogleApiClient;
 
 
     public LoginFragment() {
         // Required empty public constructor
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         FacebookSdk.sdkInitialize(getActivity().getApplicationContext());
         callbackManager = CallbackManager.Factory.create();
+
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build();
+
+        mGoogleApiClient = new GoogleApiClient.Builder(this.getContext())
+                .enableAutoManage(this.getActivity(), this)
+                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
+                .build();
 
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_login, container, false);
@@ -97,12 +108,10 @@ public class LoginFragment extends Fragment {
             }
         });
 
-        //facebook
+        // Facebook login
 
-        fbloginButton = (LoginButton)view.findViewById(R.id.fb_login_button);
+        LoginButton fbloginButton = (LoginButton) view.findViewById(R.id.fb_login_button);
         fbloginButton.setFragment(this);
-
-
 
         fbloginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
 
@@ -122,7 +131,24 @@ public class LoginFragment extends Fragment {
             public void onError(FacebookException e) {
             }
         });
+
+        // Google login
+
+        SignInButton googleLoginButton = (SignInButton) view.findViewById(R.id.google_login_button);
+        googleLoginButton.setOnClickListener(new OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
+                startActivityForResult(signInIntent, RC_GOOGLE_SIGN_IN);
+            }
+        });
         return view;
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+
     }
 
     /**
@@ -153,9 +179,16 @@ public class LoginFragment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
         callbackManager.onActivityResult(requestCode, resultCode, data);
 
-        if (loggedInToFacebook) {
+        // Google sign In
+        if (requestCode == RC_GOOGLE_SIGN_IN) {
+            GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
+            GoogleSignInAccount acct = result.getSignInAccount();
+            if(acct != null) {
+                ((LoginActivity) getActivity()).socialMediaLogin(acct.getId());
+            }
+        } // Facebook sign in
+        else if (loggedInToFacebook) {
             ( (LoginActivity) getActivity()).socialMediaLogin(facebookID);
         }
     }
-
 }

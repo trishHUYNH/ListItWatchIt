@@ -293,7 +293,6 @@ public class MainActivity extends AppCompatActivity
 
                 urlBuilder.append("&movie_id=");
                 urlBuilder.append(item.getMovieID().trim());
-
             }
             catch(Exception e) {
                 Toast.makeText(getApplicationContext(), "URL error: " + e.getMessage(), Toast.LENGTH_LONG).show();

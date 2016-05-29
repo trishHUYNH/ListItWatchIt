@@ -4,13 +4,9 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.Signature;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Base64;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -21,8 +17,6 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 
 import thuynh90.tacoma.uw.edu.listitwatchit.MainActivity;
 import thuynh90.tacoma.uw.edu.listitwatchit.R;
@@ -38,8 +32,7 @@ public class LoginActivity extends AppCompatActivity implements RegisterInteract
 
     private static final String REGISTER_URL = "http://cssgate.insttech.washington.edu/~_450atm6/registerUser.php?";
     private static final String LOGIN_URL = "http://cssgate.insttech.washington.edu/~_450atm6/login.php?";
-    private static final String FB_LOGIN_URL = "http://cssgate.insttech.washington.edu/~_450atm6/facebookLogin.php?";
-    private SharedPreferences mSharedPreferences;
+    private static final String SOCIAL_MEDIA_LOGIN_URL = "http://cssgate.insttech.washington.edu/~_450atm6/facebookLogin.php?";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -119,7 +112,7 @@ public class LoginActivity extends AppCompatActivity implements RegisterInteract
 
     @Override
     /**
-     * Called from LoginFragment.
+     * Called from LoginFragment for regular sign in.
      * Processes inputs passed into one String for query.
      * Parses JSON result looking for 'success' if login went through,
      * then redirects user to MainActivity.
@@ -192,8 +185,16 @@ public class LoginActivity extends AppCompatActivity implements RegisterInteract
         newLogin.execute(userInformation);
     }
 
+    /**
+     * Called from LoginFragment for Facebook and/or Google sign in.
+     * Processes inputs passed into one String for query.
+     * Parses JSON result looking for 'success' if login went through,
+     * then redirects user to MainActivity.
+     * Creates instance of inner class LoginTask.
+     * @param userID Hash value of user's FB/Google login
+     */
     public void socialMediaLogin(final String userID) {
-        class FacebookLogin extends AsyncTask<String, Void, String> {
+        class SocialMediaLoginTask extends AsyncTask<String, Void, String> {
 
             @Override
             protected String doInBackground(String... params) {
@@ -202,7 +203,7 @@ public class LoginActivity extends AppCompatActivity implements RegisterInteract
                 HttpURLConnection connection = null;
                 String result;
                 try {
-                    URL url = new URL(FB_LOGIN_URL + "userID=" + id);
+                    URL url = new URL(SOCIAL_MEDIA_LOGIN_URL + "userID=" + id);
                     connection = (HttpURLConnection) url.openConnection();
                     bufferedReader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
 
@@ -237,7 +238,7 @@ public class LoginActivity extends AppCompatActivity implements RegisterInteract
             }
         }
 
-        FacebookLogin fbLogin = new FacebookLogin();
+        SocialMediaLoginTask fbLogin = new SocialMediaLoginTask();
         fbLogin.execute(userID);
     }
 
@@ -256,7 +257,7 @@ public class LoginActivity extends AppCompatActivity implements RegisterInteract
      * @param email The email address of the user who has just logged in
      */
     public void directToMain(String email) {
-        mSharedPreferences = getSharedPreferences(getString(R.string.LOGIN_PREFS), Context.MODE_PRIVATE);
+        SharedPreferences mSharedPreferences = getSharedPreferences(getString(R.string.LOGIN_PREFS), Context.MODE_PRIVATE);
         mSharedPreferences.edit().putBoolean(getString(R.string.LOGGEDIN), true).apply();
         mSharedPreferences.edit().putString(getString(R.string.USERNAME), email).apply();
 

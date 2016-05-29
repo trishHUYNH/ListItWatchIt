@@ -153,10 +153,8 @@ public class CustomMovieListFragment extends Fragment {
                 return;
             }
 
-            // Everything is good, show the list of movies.
-            if (!movieList.isEmpty()) {
-                mRecyclerView.setAdapter(new CustomMovieListRecyclerViewAdapter(movieList, mListener));
-            } else {
+            mRecyclerView.setAdapter(new CustomMovieListRecyclerViewAdapter(movieList, mListener));
+            if (movieList.isEmpty()) {
                 Toast.makeText(getActivity().getApplicationContext(), "You haven't added any movies to \"" + listName + "\".", Toast.LENGTH_SHORT).show();
             }
         }

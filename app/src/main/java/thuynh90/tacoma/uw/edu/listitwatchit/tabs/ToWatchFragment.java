@@ -191,28 +191,24 @@ public class ToWatchFragment extends Fragment {
                 return;
             }
 
-            // Everything is good, show the list of movies.
-            if (!movieList.isEmpty()) {
-                mRecyclerView.setAdapter(new ToWatchRecyclerViewAdapter(movieList, mListener));
+            mRecyclerView.setAdapter(new ToWatchRecyclerViewAdapter(movieList, mListener));
 
-                //SQLite
-                if (mWatchlistDB == null) {
-                    mWatchlistDB = new WatchlistDB(getActivity());
-                }
-
-                // Delete old data so that you can refresh the local
-                // database with the network data.
-                mWatchlistDB.deleteMovies();
-
-                // Add all movies in the list to the local database
-                for (int i=0; i<movieList.size(); i++) {
-                    Movie movie = movieList.get(i);
-                    mWatchlistDB.insertMovie(movie.getMovieTitle(),
-                            movie.getMovieID());
-                }
-            } else {
-                Toast.makeText(getActivity().getApplicationContext(), "You haven't added any movies yet!", Toast.LENGTH_SHORT).show();
+            //SQLite
+            if (mWatchlistDB == null) {
+                mWatchlistDB = new WatchlistDB(getActivity());
             }
+
+            // Delete old data so that you can refresh the local
+            // database with the network data.
+            mWatchlistDB.deleteMovies();
+
+            // Add all movies in the list to the local database
+            for (int i = 0; i < movieList.size(); i++) {
+                Movie movie = movieList.get(i);
+                mWatchlistDB.insertMovie(movie.getMovieTitle(),
+                        movie.getMovieID());
+            }
+
         }
     }
 }
