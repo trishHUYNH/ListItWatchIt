@@ -36,7 +36,7 @@ import thuynh90.tacoma.uw.edu.listitwatchit.tabs.MyListsFragment.MyListsFragment
 import thuynh90.tacoma.uw.edu.listitwatchit.tabs.MyListsHolderActivity;
 import thuynh90.tacoma.uw.edu.listitwatchit.tabs.PagerAdapter;
 import thuynh90.tacoma.uw.edu.listitwatchit.tabs.ToWatchFragment;
-import thuynh90.tacoma.uw.edu.listitwatchit.tabs.ToWatchFragment.toWatchFragmentInteractionListener;
+import thuynh90.tacoma.uw.edu.listitwatchit.tabs.ToWatchFragment.ToWatchFragmentInteractionListener;
 import thuynh90.tacoma.uw.edu.listitwatchit.tabs.WatchedFragment;
 import thuynh90.tacoma.uw.edu.listitwatchit.tabs.WatchedFragment.WatchedListFragmentInteractionListener;
 import thuynh90.tacoma.uw.edu.listitwatchit.viewDetails.ViewMovieDetailsActivity;
@@ -45,7 +45,7 @@ import thuynh90.tacoma.uw.edu.listitwatchit.viewDetails.ViewMovieDetailsActivity
  * Activity that is the home screen on the app. Houses the search function and has links to the other Activities
  */
 public class MainActivity extends AppCompatActivity
-        implements toWatchFragmentInteractionListener, WatchedListFragmentInteractionListener, MyListsFragmentInteractionListener {
+        implements ToWatchFragmentInteractionListener, WatchedListFragmentInteractionListener, MyListsFragmentInteractionListener {
 
     private SharedPreferences mSharedPreferences;
     private static final String ADD_LIST_URL = "http://cssgate.insttech.washington.edu/~_450atm6/addList.php?";

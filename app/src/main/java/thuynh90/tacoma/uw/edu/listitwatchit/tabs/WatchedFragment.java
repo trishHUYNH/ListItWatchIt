@@ -79,7 +79,7 @@ public class WatchedFragment extends Fragment {
         if (context instanceof WatchedListFragmentInteractionListener) {
             mListener = (WatchedListFragmentInteractionListener) context;
         } else {
-            throw new RuntimeException(context.toString() + " must implement toWatchFragmentInteractionListener");
+            throw new RuntimeException(context.toString() + " must implement ToWatchFragmentInteractionListener");
         }
     }
 

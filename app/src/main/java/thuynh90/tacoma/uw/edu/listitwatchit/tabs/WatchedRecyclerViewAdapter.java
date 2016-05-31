@@ -24,7 +24,7 @@ public class WatchedRecyclerViewAdapter extends RecyclerView.Adapter<WatchedRecy
     /**
      * Creates a RecyclerViewAdapter for movie lists
      * @param items List of movies
-     * @param listener toWatchFragmentInteractionListener
+     * @param listener ToWatchFragmentInteractionListener
      */
     public WatchedRecyclerViewAdapter(List<Movie> items, WatchedListFragmentInteractionListener listener) {
         mValues = items;

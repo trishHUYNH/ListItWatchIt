@@ -69,7 +69,7 @@ public class ViewMovieDetailsActivity extends AppCompatActivity implements AddTo
         id = intent.getStringExtra("movieID");
         listName = intent.getStringExtra("listName");
         String lastLocation = intent.getStringExtra("location");
-        loadMovieDetailsTask task = new loadMovieDetailsTask();
+        LoadMovieDetailsTask task = new LoadMovieDetailsTask();
         task.execute();
 
         mSharedPreferences = getSharedPreferences(getString(R.string.LOGIN_PREFS), Context.MODE_PRIVATE);
@@ -110,7 +110,7 @@ public class ViewMovieDetailsActivity extends AppCompatActivity implements AddTo
     /**
      * AsyncTask to retrieve movie details from TMDb
      */
-    public class loadMovieDetailsTask extends AsyncTask<Void, Void, Void> {
+    public class LoadMovieDetailsTask extends AsyncTask<Void, Void, Void> {
 
         @Override
         protected Void doInBackground(Void... params) {

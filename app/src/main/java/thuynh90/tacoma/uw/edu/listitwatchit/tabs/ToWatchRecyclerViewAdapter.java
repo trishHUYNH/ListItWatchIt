@@ -10,7 +10,7 @@ import android.widget.TextView;
 import java.util.List;
 
 import thuynh90.tacoma.uw.edu.listitwatchit.R;
-import thuynh90.tacoma.uw.edu.listitwatchit.tabs.ToWatchFragment.toWatchFragmentInteractionListener;
+import thuynh90.tacoma.uw.edu.listitwatchit.tabs.ToWatchFragment.ToWatchFragmentInteractionListener;
 
 
 /**
@@ -19,14 +19,14 @@ import thuynh90.tacoma.uw.edu.listitwatchit.tabs.ToWatchFragment.toWatchFragment
 public class ToWatchRecyclerViewAdapter extends RecyclerView.Adapter<ToWatchRecyclerViewAdapter.ViewHolder> {
 
     private final List<Movie> mValues;
-    private final toWatchFragmentInteractionListener mListener;
+    private final ToWatchFragmentInteractionListener mListener;
 
     /**
      * Creates a RecyclerViewAdapter for movie lists
      * @param items List of movies
-     * @param listener toWatchFragmentInteractionListener
+     * @param listener ToWatchFragmentInteractionListener
      */
-    public ToWatchRecyclerViewAdapter(List<Movie> items, toWatchFragmentInteractionListener listener) {
+    public ToWatchRecyclerViewAdapter(List<Movie> items, ToWatchFragmentInteractionListener listener) {
         mValues = items;
         mListener = listener;
     }

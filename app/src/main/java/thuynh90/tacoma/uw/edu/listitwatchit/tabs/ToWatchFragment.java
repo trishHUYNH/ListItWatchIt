@@ -27,12 +27,12 @@ import thuynh90.tacoma.uw.edu.listitwatchit.data.WatchlistDB;
 
 /**
  * A fragment representing a list of Movie items for the user's "To Watch" list.
- * MainActivity implements toWatchFragmentInteractionListener.
+ * MainActivity implements ToWatchFragmentInteractionListener.
  */
 public class ToWatchFragment extends Fragment {
 
     private static final String VIEW_LIST_URL = "http://cssgate.insttech.washington.edu/~_450atm6/viewList.php?cmd=towatch&email=";
-    private toWatchFragmentInteractionListener mListener;
+    private ToWatchFragmentInteractionListener mListener;
     private RecyclerView mRecyclerView;
     private WatchlistDB mWatchlistDB;
 
@@ -94,10 +94,10 @@ public class ToWatchFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof toWatchFragmentInteractionListener) {
-            mListener = (toWatchFragmentInteractionListener) context;
+        if (context instanceof ToWatchFragmentInteractionListener) {
+            mListener = (ToWatchFragmentInteractionListener) context;
         } else {
-            throw new RuntimeException(context.toString() + " must implement toWatchFragmentInteractionListener");
+            throw new RuntimeException(context.toString() + " must implement ToWatchFragmentInteractionListener");
         }
     }
 
@@ -123,7 +123,7 @@ public class ToWatchFragment extends Fragment {
      * to the activity and potentially other fragments contained in that
      * activity.
      */
-    public interface toWatchFragmentInteractionListener {
+    public interface ToWatchFragmentInteractionListener {
         void toWatchFragmentInteraction(Movie item, String task);
     }
 
