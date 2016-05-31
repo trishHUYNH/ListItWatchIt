@@ -2,6 +2,8 @@ package thuynh90.tacoma.uw.edu.listitwatchit.tabs;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -64,6 +66,7 @@ public class WatchedFragment extends Fragment {
                 mRecyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
         }
+
         // Retrieve movie list data
         downloadWatched();
         return view;
@@ -86,11 +89,11 @@ public class WatchedFragment extends Fragment {
         mListener = null;
     }
 
-    @Override
     /**
      * Refreshes "To Watch" list when user returns back to fragment after searching a movie.
      * Calls helper method to retrieve data.
      */
+    @Override
     public void onResume(){
         super.onResume();
         downloadWatched();
@@ -114,9 +117,15 @@ public class WatchedFragment extends Fragment {
         SharedPreferences mSharedPreferences = this.getActivity().getSharedPreferences(getString(R.string.LOGIN_PREFS), Context.MODE_PRIVATE);
         // Retrieves email from SharedPreferences, return 'error' if email not found
         String email = mSharedPreferences.getString(getString(R.string.USERNAME), "error");
-        System.out.println(email);
-        DownloadMoviesTask downloadMovies = new DownloadMoviesTask();
-        downloadMovies.execute(VIEW_LIST_URL + email);
+
+        //Check for network connection.
+        //If network exists, load list from web database.
+        ConnectivityManager connMgr = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+        if (networkInfo != null && networkInfo.isConnected()) {
+            DownloadMoviesTask downloadMovies = new DownloadMoviesTask();
+            downloadMovies.execute(VIEW_LIST_URL + email);
+        }
     }
 
     /**

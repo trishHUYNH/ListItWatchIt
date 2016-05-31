@@ -2,6 +2,8 @@ package thuynh90.tacoma.uw.edu.listitwatchit.tabs;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -113,8 +115,15 @@ public class MyListsFragment extends Fragment {
         SharedPreferences mSharedPreferences = this.getActivity().getSharedPreferences(getString(R.string.LOGIN_PREFS), Context.MODE_PRIVATE);
         // Retrieves email from SharedPreferences, return 'error' if email not found
         String email = mSharedPreferences.getString(getString(R.string.USERNAME), "error");
-        DownloadMyListsTask downloadMovies = new DownloadMyListsTask();
-        downloadMovies.execute(VIEW_LIST_URL + email);
+
+        //Check for network connection.
+        //If network exists, load list from web database.
+        ConnectivityManager connMgr = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+        if (networkInfo != null && networkInfo.isConnected()) {
+            DownloadMyListsTask downloadMovies = new DownloadMyListsTask();
+            downloadMovies.execute(VIEW_LIST_URL + email);
+        }
     }
 
     /**

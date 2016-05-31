@@ -77,7 +77,7 @@ public class ToWatchFragment extends Fragment {
             downloadToWatch();
         }
         else {
-            Toast.makeText(view.getContext(), "No network connection available. Displaying locally stored data", Toast.LENGTH_SHORT).show();
+            Toast.makeText(view.getContext(), "No network connection available. Displaying locally stored data.", Toast.LENGTH_SHORT).show();
 
             if (mWatchlistDB == null) {
                 mWatchlistDB = new WatchlistDB(getActivity());
@@ -136,8 +136,15 @@ public class ToWatchFragment extends Fragment {
         SharedPreferences mSharedPreferences = this.getActivity().getSharedPreferences(getString(R.string.LOGIN_PREFS), Context.MODE_PRIVATE);
         // Retrieves email from SharedPreferences, return 'error' if email not found
         String email = mSharedPreferences.getString(getString(R.string.USERNAME), "error");
-        DownloadMoviesTask downloadMovies = new DownloadMoviesTask();
-        downloadMovies.execute(VIEW_LIST_URL + email);
+
+        //Check for network connection.
+        //If network exists, load list from web database. If not, load list from locally stored data
+        ConnectivityManager connMgr = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+        if (networkInfo != null && networkInfo.isConnected()) {
+            DownloadMoviesTask downloadMovies = new DownloadMoviesTask();
+            downloadMovies.execute(VIEW_LIST_URL + email);
+        }
     }
 
     /**
