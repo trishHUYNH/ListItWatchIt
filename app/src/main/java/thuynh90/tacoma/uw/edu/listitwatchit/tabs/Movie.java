@@ -38,10 +38,16 @@ public class Movie implements Serializable {
     }
 
     public void setMovieTitle(String movieTitle) {
+        if(movieTitle == null) {
+            throw new IllegalArgumentException("Movie ID cannot be null");
+        }
         this.mMovieTitle = movieTitle;
     }
 
     public void setMovieID(String movieID) {
+        if(movieID == null) {
+            throw new IllegalArgumentException("Movie ID cannot be null");
+        }
         this.mMovieID = movieID;
     }
 
