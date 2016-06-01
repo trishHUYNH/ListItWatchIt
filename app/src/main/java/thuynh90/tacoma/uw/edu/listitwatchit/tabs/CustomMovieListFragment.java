@@ -35,6 +35,7 @@ public class CustomMovieListFragment extends Fragment {
     private CustomMovieListFragmentInteractionListener mListener;
     private String listName = "";
     private String listID = "";
+    private List<Movie> movieList;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -145,7 +146,7 @@ public class CustomMovieListFragment extends Fragment {
                 return;
             }
 
-            List<Movie> movieList = new ArrayList<Movie>();
+            movieList = new ArrayList<Movie>();
             result = Movie.parseMovieJSON(result, movieList);
             // Something wrong with the JSON returned.
             if (result != null) {
@@ -170,5 +171,9 @@ public class CustomMovieListFragment extends Fragment {
         String email = mSharedPreferences.getString(getString(R.string.USERNAME), "error");
         DownloadMoviesTask downloadMovies = new DownloadMoviesTask();
         downloadMovies.execute(VIEW_LIST_URL + email + "&list_id=" + listID);
+    }
+
+    public List<Movie> getMovieList () {
+        return movieList;
     }
 }

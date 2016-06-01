@@ -20,8 +20,11 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import thuynh90.tacoma.uw.edu.listitwatchit.MainActivity;
 import thuynh90.tacoma.uw.edu.listitwatchit.R;
+import thuynh90.tacoma.uw.edu.listitwatchit.tabs.CustomMovieListFragment;
 import thuynh90.tacoma.uw.edu.listitwatchit.tabs.MyList;
+import thuynh90.tacoma.uw.edu.listitwatchit.tabs.MyListsFragment;
 
 /**
  * Dialog fragment that prompts user to choose a list to add their selected
@@ -51,7 +54,13 @@ public class AddToListDialogFragment extends DialogFragment {
         // Set adapter that to dialog that contains movie lists
         builder.setAdapter(adapter, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
-                ((ViewMovieDetailsActivity) getActivity()).addMovie(adapter.getItem(which));
+                if (getActivity() instanceof ViewMovieDetailsActivity) {
+                    ((ViewMovieDetailsActivity) getActivity()).addMovie(adapter.getItem(which));
+                }
+                else if (getActivity() instanceof MainActivity) {
+
+                }
+
             }
         });
         return builder.create();

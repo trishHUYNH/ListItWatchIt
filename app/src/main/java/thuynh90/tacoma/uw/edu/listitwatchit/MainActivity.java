@@ -6,10 +6,12 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
@@ -26,6 +28,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.List;
 
 import thuynh90.tacoma.uw.edu.listitwatchit.login.LoginActivity;
 import thuynh90.tacoma.uw.edu.listitwatchit.tabs.ListNameDialogFragment;
@@ -116,6 +119,28 @@ public class MainActivity extends AppCompatActivity
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
+        }
+
+        if (id == R.id.share) {
+            List<Movie> currentList = null;
+            String listName = null;
+            if (adapter != null) {
+                Fragment currentFragment = adapter.getItem(viewPager.getCurrentItem());
+                if (currentFragment instanceof ToWatchFragment) {
+                    currentList = ((ToWatchFragment) currentFragment).getMovieList();
+                    listName = "To Watch";
+                }
+                else if (currentFragment instanceof WatchedFragment) {
+                    currentList = ((WatchedFragment) currentFragment).getMovieList();
+                    listName = "Watched";
+                }
+                else if (currentFragment instanceof MyListsFragment) {
+                    //Dialog to select which list to share
+                }
+            }
+            if (currentList != null) {
+                shareList(currentList, listName);
+            }
         }
 
         if (id == R.id.logout) {
@@ -423,5 +448,30 @@ public class MainActivity extends AppCompatActivity
                 Toast.makeText(getApplicationContext(), "Data problem: " + e.getMessage(), Toast.LENGTH_LONG).show();
             }
         }
+    }
+
+    public void shareList (List<Movie> movieList, String listName){
+        StringBuilder emailBody = new StringBuilder();
+
+        for (int i = 0; i < movieList.size(); i++) {
+            Movie movie = movieList.get(i);
+            emailBody.append(movie.getMovieTitle());
+            emailBody.append("\n");
+        }
+
+        Intent i = new Intent(Intent.ACTION_SEND);
+        i.setData(Uri.parse("mailto:"));
+        i.setType("message/rfc822");
+        i.putExtra(Intent.EXTRA_SUBJECT, "My "+ listName +" list on List It Watch It");
+        i.putExtra(Intent.EXTRA_TEXT   , emailBody.toString());
+        try {
+            startActivity(Intent.createChooser(i, "Send mail..."));
+        } catch (android.content.ActivityNotFoundException ex) {
+            Toast.makeText(MainActivity.this, "There are no email clients installed.", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void openCustomList() {
+
     }
 }
