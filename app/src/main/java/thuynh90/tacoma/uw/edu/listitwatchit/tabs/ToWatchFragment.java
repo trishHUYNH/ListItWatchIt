@@ -1,9 +1,11 @@
 package thuynh90.tacoma.uw.edu.listitwatchit.tabs;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -35,6 +37,7 @@ public class ToWatchFragment extends Fragment {
     private ToWatchFragmentInteractionListener mListener;
     private RecyclerView mRecyclerView;
     private WatchlistDB mWatchlistDB;
+    private List<Movie> movieList;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -117,6 +120,8 @@ public class ToWatchFragment extends Fragment {
         downloadToWatch();
     }
 
+
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -184,7 +189,7 @@ public class ToWatchFragment extends Fragment {
                 return;
             }
 
-            List<Movie> movieList = new ArrayList<>();
+            movieList = new ArrayList<>();
             result = Movie.parseMovieJSON(result, movieList);
             // Something wrong with the JSON returned.
             if (result != null) {
@@ -211,4 +216,9 @@ public class ToWatchFragment extends Fragment {
             }
         }
     }
+
+    public List<Movie> getMovieList () {
+            return movieList;
+    }
+
 }

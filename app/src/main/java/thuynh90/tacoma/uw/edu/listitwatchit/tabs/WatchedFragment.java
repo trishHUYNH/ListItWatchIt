@@ -1,9 +1,11 @@
 package thuynh90.tacoma.uw.edu.listitwatchit.tabs;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -34,6 +36,7 @@ public class WatchedFragment extends Fragment {
     private static final String VIEW_LIST_URL = "http://cssgate.insttech.washington.edu/~_450atm6/viewList.php?cmd=watched&email=";
     private WatchedListFragmentInteractionListener mListener;
     private RecyclerView mRecyclerView;
+    private List<Movie> movieList;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -165,7 +168,7 @@ public class WatchedFragment extends Fragment {
                 return;
             }
 
-            List<Movie> movieList = new ArrayList<Movie>();
+            movieList = new ArrayList<Movie>();
             result = Movie.parseMovieJSON(result, movieList);
             // Something wrong with the JSON returned.
             if (result != null) {
@@ -174,6 +177,31 @@ public class WatchedFragment extends Fragment {
             }
             // Set adapter regardless of list size
             mRecyclerView.setAdapter(new WatchedRecyclerViewAdapter(movieList, mListener));
+        }
+    }
+
+    public List<Movie> getMovieList () {
+        return movieList;
+    }
+
+    public void shareList (){
+        StringBuilder emailBody = new StringBuilder();
+
+        for (int i = 0; i < movieList.size(); i++) {
+            Movie movie = movieList.get(i);
+            emailBody.append(movie.getMovieTitle());
+            emailBody.append("\n");
+        }
+
+        Intent i = new Intent(Intent.ACTION_SEND);
+        i.setData(Uri.parse("mailto:"));
+        i.setType("message/rfc822");
+        i.putExtra(Intent.EXTRA_SUBJECT, "My movie list on List It Watch It");
+        i.putExtra(Intent.EXTRA_TEXT   , emailBody.toString());
+        try {
+            startActivity(Intent.createChooser(i, "Send mail..."));
+        } catch (android.content.ActivityNotFoundException ex) {
+            Toast.makeText(getActivity().getApplicationContext(), "There are no email clients installed.", Toast.LENGTH_SHORT).show();
         }
     }
 }

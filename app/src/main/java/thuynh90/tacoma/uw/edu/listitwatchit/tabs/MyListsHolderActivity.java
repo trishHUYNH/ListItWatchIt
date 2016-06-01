@@ -27,7 +27,7 @@ public class MyListsHolderActivity extends AppCompatActivity implements CustomMo
     private String listName = "";
     private String listID = "";
     private final static String DELETE_MOVIE_URL = "http://cssgate.insttech.washington.edu/~_450atm6/deleteMovie.php?cmd=custom&";
-
+    private CustomMovieListFragment viewCustomList;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,7 +42,7 @@ public class MyListsHolderActivity extends AppCompatActivity implements CustomMo
         listBundle.putString("listName", listName);
         listBundle.putString("listID", listID);
 
-        CustomMovieListFragment viewCustomList = new CustomMovieListFragment();
+        viewCustomList = new CustomMovieListFragment();
         viewCustomList.setArguments(listBundle);
 
         getSupportFragmentManager().beginTransaction().add(R.id.my_lists_container, viewCustomList).commit();
@@ -131,5 +131,9 @@ public class MyListsHolderActivity extends AppCompatActivity implements CustomMo
                 Toast.makeText(getApplicationContext(), "Data problem: " + e.getMessage(), Toast.LENGTH_LONG).show();
             }
         }
+    }
+
+    public CustomMovieListFragment getCustomListFragment () {
+        return viewCustomList;
     }
 }
