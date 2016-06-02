@@ -10,6 +10,8 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Html;
+import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -44,6 +46,7 @@ public class ViewMovieDetailsActivity extends AppCompatActivity implements AddTo
 
     private TextView mMovieTitleTextView;
     private TextView mReleaseDateTextView;
+    private TextView mIMDbLink;
     private RatingBar mRatingBar;
     private TextView mMPAATextView;
     private TextView mSynopsisTextView;
@@ -52,6 +55,7 @@ public class ViewMovieDetailsActivity extends AppCompatActivity implements AddTo
     String id;
     String movieTitle = "";
     String releaseDate= "";
+    String imdbLink= "";
     String mpaaRating= "";
     String synopsis= "";
     Bitmap poster;
@@ -97,6 +101,7 @@ public class ViewMovieDetailsActivity extends AppCompatActivity implements AddTo
 
         mMovieTitleTextView = (TextView) findViewById(R.id.movie_title);
         mReleaseDateTextView = (TextView) findViewById(R.id.release_date);
+        mIMDbLink = (TextView) findViewById(R.id.imdb_link);
         mRatingBar = (RatingBar) findViewById(R.id.rating_bar);
         mMPAATextView = (TextView) findViewById(R.id.mpaa);
         mSynopsisTextView = (TextView) findViewById(R.id.synopsis);
@@ -200,6 +205,7 @@ public class ViewMovieDetailsActivity extends AppCompatActivity implements AddTo
                 JSONmovie = new JSONObject(jsonString);
                 movieTitle = JSONmovie.getString("title");
                 releaseDate = JSONmovie.getString("release_date");
+                imdbLink = "http://www.imdb.com/title/" + JSONmovie.getString("imdb_id") + "/";
                 synopsis = JSONmovie.getString("overview");
 
                 String posterUrlString = "http://image.tmdb.org/t/p/original" + JSONmovie.getString("poster_path");
@@ -215,6 +221,12 @@ public class ViewMovieDetailsActivity extends AppCompatActivity implements AddTo
                 e.printStackTrace();
             }
         }
+    }
+
+    public void openIMDb (View view){
+        Uri webpage = Uri.parse(imdbLink);
+        Intent webIntent = new Intent(Intent.ACTION_VIEW, webpage);
+        startActivity(webIntent);
     }
 
     /**
