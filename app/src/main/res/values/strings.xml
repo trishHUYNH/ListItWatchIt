@@ -20,6 +20,7 @@
     <string name="synopsis">Synopsis: </string>
     <string name="mpaa">MPAA Rating: </string>
     <string name="tmdbrating">User Rating: </string>
+    <string name="add_to_list">Add to List</string>
 
     <!-- Buttons -->
     <string name="watched_button">Watched</string>

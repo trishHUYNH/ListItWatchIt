@@ -135,7 +135,8 @@ public class MainActivity extends AppCompatActivity
                     listName = "Watched";
                 }
                 else if (currentFragment instanceof MyListsFragment) {
-                    //Dialog to select which list to share
+                    //Sharing custom lists is not functional yet
+                    Toast.makeText(getApplicationContext(), "Please navigate to your To Watch list or your Watched list to share", Toast.LENGTH_LONG).show();
                 }
             }
             if (currentList != null) {
@@ -450,6 +451,11 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    /**
+     * Exports a list to an email client. Mail client must be set up on the device.
+     * @param movieList The list that will be shared
+     * @param listName The name of the list that will be shared
+     */
     public void shareList (List<Movie> movieList, String listName){
         StringBuilder emailBody = new StringBuilder();
 
@@ -469,9 +475,5 @@ public class MainActivity extends AppCompatActivity
         } catch (android.content.ActivityNotFoundException ex) {
             Toast.makeText(MainActivity.this, "There are no email clients installed.", Toast.LENGTH_SHORT).show();
         }
-    }
-
-    public void openCustomList() {
-
     }
 }

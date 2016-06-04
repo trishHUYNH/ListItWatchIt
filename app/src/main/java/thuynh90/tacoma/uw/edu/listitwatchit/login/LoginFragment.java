@@ -1,6 +1,7 @@
 package thuynh90.tacoma.uw.edu.listitwatchit.login;
 
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,6 +14,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.facebook.CallbackManager;
@@ -30,6 +32,7 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
 
+import thuynh90.tacoma.uw.edu.listitwatchit.MainActivity;
 import thuynh90.tacoma.uw.edu.listitwatchit.R;
 
 /**
@@ -115,8 +118,17 @@ public class LoginFragment extends Fragment implements GoogleApiClient.OnConnect
             }
         });
 
-        // Facebook login
+        //Pressing the logo will bring user back to search screen
+        ImageView logoImage = (ImageView) view.findViewById(R.id.logo);
+        logoImage.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent goToSearch = new Intent(getActivity().getApplicationContext(), MainActivity.class);
+                startActivity(goToSearch);
+            }
+        });
 
+        // Facebook login
         LoginButton fbLoginButton = (LoginButton) view.findViewById(R.id.fb_login_button);
         fbLoginButton.setFragment(this);
 
