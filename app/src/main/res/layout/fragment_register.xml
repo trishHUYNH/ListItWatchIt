@@ -1,57 +1,70 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:tools="http://schemas.android.com/tools"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             android:orientation="vertical"
-             tools:context="thuynh90.tacoma.uw.edu.listitwatchit.login.RegisterFragment">
-
-    <ImageView android:src="@drawable/idk"
-               android:layout_width="wrap_content"
-               android:layout_height="120dp"
-               android:layout_marginTop="24dp"
-               android:layout_marginBottom="24dp"
-               android:layout_gravity="center_horizontal" />
-
-    <EditText android:id="@+id/register_email"
+              xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:layout_marginTop="8dp"
-              android:layout_marginBottom="8dp"
-              android:inputType="textEmailAddress"
-              android:hint="Your Email Address" />
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              tools:context="thuynh90.tacoma.uw.edu.listitwatchit.login.RegisterFragment">
 
-
-    <EditText android:id="@+id/register_password"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:layout_marginTop="8dp"
-              android:layout_marginBottom="8dp"
-              android:fontFamily="sans-serif"
-              android:inputType="textPassword"
-              android:hint="Your Password"/>
-
-    <EditText android:id="@+id/register_password_confirm"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:layout_marginTop="8dp"
-              android:layout_marginBottom="8dp"
-              android:fontFamily="sans-serif"
-              android:inputType="textPassword"
-              android:hint="Re-Enter Password"/>
-
-    <Button
-        android:id="@+id/register_button"
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Create Account"/>
+        android:fillViewport="true">
 
-    <TextView android:id="@+id/login_link"
-              android:layout_width="fill_parent"
-              android:layout_height="wrap_content"
-              android:layout_marginTop="24dp"
-              android:text="@string/register_login"
-              android:gravity="center"
-              android:textSize="16sp"/>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
+            <ImageView android:src="@drawable/appicon"
+                       android:layout_width="wrap_content"
+                       android:layout_height="250dp"
+                       android:layout_marginTop="24dp"
+                       android:layout_marginBottom="24dp"
+                       android:layout_gravity="center_horizontal" />
+
+            <EditText android:id="@+id/register_email"
+                      android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:layout_marginTop="8dp"
+                      android:layout_marginBottom="8dp"
+                      android:inputType="textEmailAddress"
+                      android:hint="Your Email Address" />
+
+
+            <EditText android:id="@+id/register_password"
+                      android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:layout_marginTop="8dp"
+                      android:layout_marginBottom="8dp"
+                      android:fontFamily="sans-serif"
+                      android:inputType="textPassword"
+                      android:hint="Your Password"/>
+
+            <EditText android:id="@+id/register_password_confirm"
+                      android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:layout_marginTop="8dp"
+                      android:layout_marginBottom="8dp"
+                      android:fontFamily="sans-serif"
+                      android:inputType="textPassword"
+                      android:hint="Re-Enter Password"/>
+
+            <Button
+                android:id="@+id/register_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Create Account"/>
+
+            <TextView android:id="@+id/login_link"
+                      android:layout_width="fill_parent"
+                      android:layout_height="wrap_content"
+                      android:layout_marginTop="24dp"
+                      android:text="@string/register_login"
+                      android:gravity="center"
+                      android:textSize="16sp"/>
+
+        </LinearLayout>
+
+    </ScrollView>
 
 </LinearLayout>
