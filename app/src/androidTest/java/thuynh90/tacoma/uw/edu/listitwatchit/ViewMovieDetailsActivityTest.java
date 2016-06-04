@@ -3,6 +3,7 @@ package thuynh90.tacoma.uw.edu.listitwatchit;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.test.ActivityInstrumentationTestCase2;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 
@@ -31,6 +32,9 @@ public class ViewMovieDetailsActivityTest extends ActivityInstrumentationTestCas
     }
 
 
+    /**
+     * Tests if the search function works and if the movie details page loads
+     */
     public void testViewDetails() {
         soloTest.clickOnView(getActivity().findViewById(R.id.search));
         boolean searchHintLoaded = soloTest.searchText("Search");
@@ -46,12 +50,16 @@ public class ViewMovieDetailsActivityTest extends ActivityInstrumentationTestCas
 
     }
 
+    /**
+     * Tests if the app functions properly when a user is not logged in.
+     * When the Add to List button is clicked a toast message should ask the user to log in
+     */
     public void testAddMovieLoggedOut() {
         soloTest.clickOnMenuItem("Logout");
         soloTest.clickOnImage(0);
         soloTest.waitForActivity("MainActivity");
 
-        soloTest.clickOnView(getActivity().findViewById(R.id.search));
+        soloTest.clickOnView(soloTest.getView(R.id.search));
         boolean searchHintLoaded = soloTest.searchText("Search");
         assertTrue("Search bar loaded", searchHintLoaded);
 
@@ -61,17 +69,20 @@ public class ViewMovieDetailsActivityTest extends ActivityInstrumentationTestCas
         assertTrue(soloTest.waitForText("Please login"));
     }
 
+    /**
+     * Tests if the app functions properly when a user is logged in.
+     * When the Add to List button is clicked and a list selected,
+     * the movie should be added to the list
+     */
     public void testAddMovieLoggedIn() {
         soloTest.clickOnMenuItem("Logout");
         soloTest.enterText(0, "userb@gmail.com");
         soloTest.enterText(1, "password");
         soloTest.clickOnButton("Login");
 
-        boolean redirectedToHome = soloTest.waitForText("successful");
-        assertTrue(redirectedToHome);
         soloTest.waitForActivity("MainActivity");
 
-        soloTest.clickOnView(getActivity().findViewById(R.id.search));
+        soloTest.clickOnView(soloTest.getView(R.id.search));
         boolean searchHintLoaded = soloTest.searchText("Search");
         assertTrue("Search bar loaded", searchHintLoaded);
 
